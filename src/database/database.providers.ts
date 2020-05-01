@@ -6,6 +6,7 @@ export const databaseProviders = [
     {
         provide: 'SEQUELIZE',
         useFactory: async (configService: ConfigService) => {
+            // @ts-ignore
             const sequelize = new Sequelize(configService.sequelizeOrmConfig);
             sequelize.addModels([User, ]);
             await sequelize.sync();
