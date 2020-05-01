@@ -3,29 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2636c18c-72b4-49f9-9fd7-42f1e977bf96" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.prettierrc" beforeDir="false" afterPath="$PROJECT_DIR$/.prettierrc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/config.development.ts" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.development.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/migrations/20190128160000-create-table-user.js" beforeDir="false" afterPath="$PROJECT_DIR$/db/migrations/20190128160000-create-table-user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/seeders-dev/20190129093300-test-data-users.js" beforeDir="false" afterPath="$PROJECT_DIR$/db/seeders-dev/20190129093300-test-data-users.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/database.providers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/database.providers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/posts/dto/create-post.dto.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/posts/dto/post.dto.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/posts/dto/update-post.dto.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/posts/post.entity.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/posts/posts.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/posts/posts.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/posts/posts.providers.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/posts/posts.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/swagger.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/swagger.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/users/dto/create-user.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/dto/create-user.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/users/dto/update-user.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/dto/update-user.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/users/dto/user.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/dto/user.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/users/user.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/user.entity.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/users/users.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/users.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/users/users.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/users.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +44,7 @@
       <workItem from="1587800824564" duration="640000" />
       <workItem from="1588073401305" duration="1969000" />
       <workItem from="1588307409152" duration="806000" />
-      <workItem from="1588313624987" duration="10061000" />
+      <workItem from="1588313624987" duration="12077000" />
     </task>
     <servers />
   </component>
