@@ -8,21 +8,19 @@ import {
     CreatedAt,
     UpdatedAt,
     DeletedAt,
-    HasMany,
 } from 'sequelize-typescript';
-import { Gender } from './../shared/enum/gender';
-import { Post } from './../posts/post.entity';
+// import { Gender } from './../shared/enum/gender';
+import { Role } from './../shared/enum/role';
 
 @Table({
     tableName: 'user',
 })
 export class User extends Model<User> {
     @Column({
-        type: DataType.UUID,
-        defaultValue: DataType.UUIDV4,
+        autoIncrement: true,
         primaryKey: true,
     })
-    id: string;
+    id: number;
 
     @Unique
     @IsEmail
@@ -32,17 +30,53 @@ export class User extends Model<User> {
     @Column
     password: string;
 
-    @Column({ field: 'first_name' })
-    firstName: string;
+    @Column({ field: 'name_ru' })
+    name_ru: string;
 
-    @Column({ field: 'last_name' })
-    lastName: string;
+    @Column({ field: 'name_en' })
+    name_en: string;
 
-    @Column({ type: DataType.ENUM(Gender.female, Gender.male) })
-    gender: Gender;
+    @Column({ field: 'position_ru' })
+    position_ru: string;
 
-    @Column(DataType.DATEONLY)
-    birthday: string;
+    @Column({ field: 'position_en' })
+    position_en: string;
+
+    @Column({ field: 'section_ru' })
+    section_ru: string;
+
+    @Column({ field: 'section_en' })
+    section_en: string;
+
+    @Column({ field: 'state_ru' })
+    state_ru: string;
+
+    @Column({ field: 'state_en' })
+    state_en: string;
+
+    @Column({ field: 'city_ru' })
+    city_ru: string;
+
+    @Column({ field: 'city_en' })
+    city_en: string;
+
+    @Column({ field: 'nomination_ru' })
+    nomination_ru: string;
+
+    @Column({ field: 'nomination_en' })
+    nomination_en: string;
+
+    @Column({ field: 'count_z', defaultValue:0 })
+    count_z: string;
+
+    @Column({ field: 'description_ru' })
+    description_ru: string;
+
+    @Column({ field: 'description_en' })
+    description_en: string;
+
+    @Column({ type: DataType.ENUM(Role.admin, Role.comittee, Role.user), defaultValue: Role.user })
+    role: Role;
 
     @CreatedAt
     @Column({ field: 'created_at' })
@@ -53,9 +87,6 @@ export class User extends Model<User> {
     updatedAt: Date;
 
     @DeletedAt
-    @Column({ field: 'deleted_at' })
+    @Column({ field: 'deleted_at'})
     deletedAt: Date;
-
-    @HasMany(() => Post)
-    posts: Post[];
 }

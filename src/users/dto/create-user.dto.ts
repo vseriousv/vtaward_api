@@ -1,12 +1,14 @@
 import {
     IsString,
     IsEmail,
+    IsInt,
     IsEnum,
     IsISO8601,
     IsOptional,
     MinLength,
 } from 'class-validator';
-import { Gender } from './../../shared/enum/gender';
+// import { Gender } from './../../shared/enum/gender';
+import  { Role } from '../../shared/enum/role';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
@@ -16,24 +18,67 @@ export class CreateUserDto {
 
     @ApiProperty()
     @IsString()
-    @MinLength(6)
     readonly password: string;
 
     @ApiProperty()
     @IsString()
-    readonly firstName: string;
+    readonly name_ru: string;
 
     @ApiProperty()
     @IsString()
-    readonly lastName: string;
+    readonly name_en: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly position_ru: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly position_en: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly section_ru: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly section_en: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly state_ru: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly state_en: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly city_ru: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly city_en: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly nomination_ru: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly nomination_en: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly description_ru: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly description_en: string;
 
     @ApiProperty()
     @IsOptional()
-    @IsEnum(Gender)
-    readonly gender: Gender;
+    @IsEnum(Role)
+    readonly role: Role;
 
-    @ApiProperty()
-    @IsOptional()
-    @IsISO8601()
-    readonly birthday: string;
 }

@@ -9,6 +9,7 @@ import {
     Req,
     UseGuards,
     Put,
+    Param,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
@@ -48,30 +49,31 @@ export class UsersController {
         return this.usersService.findAll();
     }
 
-    @Get('me')
+    @Get(':id')
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
     @ApiOkResponse({ type: UserDto })
-    async getUser(@Req() request): Promise<UserDto> {
-        return this.usersService.getUser(request.user.id);
+    async getUser(@Param('id') id): Promise<UserDto> {
+        return this.usersService.getUser(id);
     }
 
-    @Put('me')
+
+    @Put(':id')
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
     @ApiOkResponse({ type: UserDto })
     update(
         @Body() updateUserDto: UpdateUserDto,
-        @Req() request,
+        @Param('id') id,
     ): Promise<UserDto> {
-        return this.usersService.update(request.user.id, updateUserDto);
+        return this.usersService.update(id, updateUserDto);
     }
 
-    @Delete('me')
+    @Delete(':id')
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
     @ApiOkResponse({ type: UserDto })
-    delete(@Req() request): Promise<UserDto> {
-        return this.usersService.delete(request.user.id);
+    delete(@Param('id') id): Promise<UserDto> {
+        return this.usersService.delete(id);
     }
 }

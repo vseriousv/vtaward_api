@@ -1,4 +1,4 @@
-const sql = `
+ const sql = `
     create extension if not exists "uuid-ossp";
 
     insert into public."user"(
