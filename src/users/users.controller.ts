@@ -46,7 +46,6 @@ export class UsersController {
     @UseGuards(AuthGuard('jwt'))
     @ApiOkResponse({ type: [UserDto] })
     findAll(): Promise<UserDto[]> {
-        console.log(process.env.test);
         return this.usersService.findAll();
     }
 
