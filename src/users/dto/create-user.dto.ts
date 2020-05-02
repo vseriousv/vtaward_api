@@ -32,24 +32,24 @@ export class CreateUserDto {
     readonly name_en: string;
 
     @ApiProperty()
-    @IsString()
+    @IsInt()
     readonly position_id: number;
 
     @ApiProperty()
-    @IsString()
+    @IsInt()
     readonly section_id: number;
 
     @ApiProperty()
-    @IsString()
+    @IsInt()
     readonly state_id: number;
 
     @ApiProperty()
-    @IsString()
+    @IsInt()
     readonly city_id: number;
 
     @ApiProperty()
     @IsOptional()
-    @IsString()
+    @IsInt()
     readonly nomination_id: number;
 
     @ApiProperty()

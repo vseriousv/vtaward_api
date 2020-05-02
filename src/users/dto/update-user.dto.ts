@@ -21,27 +21,27 @@ export class UpdateUserDto {
 
     @ApiProperty()
     @IsOptional()
-    @IsString()
+    @IsInt()
     readonly position_id: number;
 
     @ApiProperty()
     @IsOptional()
-    @IsString()
+    @IsInt()
     readonly section_id: number;
 
     @ApiProperty()
     @IsOptional()
-    @IsString()
+    @IsInt()
     readonly state_id: number;
 
     @ApiProperty()
     @IsOptional()
-    @IsString()
+    @IsInt()
     readonly city_id: number;
 
     @ApiProperty()
     @IsOptional()
-    @IsString()
+    @IsInt()
     readonly nomination_id: number;
 
     @ApiProperty()
