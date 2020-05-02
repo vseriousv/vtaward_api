@@ -13,7 +13,7 @@ import {
 import { Role } from './../shared/enum/role';
 
 @Table({
-    tableName: 'user',
+    tableName: 'users',
 })
 export class User extends Model<User> {
     @Column({
