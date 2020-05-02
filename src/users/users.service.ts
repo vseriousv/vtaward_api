@@ -52,28 +52,19 @@ export class UsersService {
       const user = new User();
 
       user.email = createUserDto.email.trim().toLowerCase();
+      user.tab_number = createUserDto.tab_number;
       user.name_ru = createUserDto.name_ru;
       user.name_en = createUserDto.name_en;
-      user.position_ru = createUserDto.position_ru;
-      user.position_en = createUserDto.position_en;
-      user.section_ru = createUserDto.section_ru;
-      user.section_en = createUserDto.section_en;
-      user.state_ru = createUserDto.state_ru;
-      user.state_en = createUserDto.state_en;
-      user.city_ru = createUserDto.city_ru;
-      user.city_en = createUserDto.city_en;
-      user.nomination_ru = createUserDto.nomination_ru;
-      user.nomination_en = createUserDto.nomination_en;
+      user.position_id = createUserDto.position_id;
+      user.section_id = createUserDto.section_id;
+      user.state_id = createUserDto.state_id;
+      user.city_id = createUserDto.city_id;
+      user.nomination_id = createUserDto.nomination_id;
       user.description_ru = createUserDto.description_ru;
       user.description_en = createUserDto.description_en;
 
-
-      //   user.gender = createUserDto.gender;
-      //   user.birthday = createUserDto.birthday;
-
       const salt = await genSalt(10);
       user.password = await hash(createUserDto.password, salt);
-      // user.code = randomstring.generate();
 
       const userData = await user.save();
 
@@ -125,18 +116,14 @@ export class UsersService {
       throw new HttpException('User not found.', HttpStatus.NOT_FOUND);
     }
 
+    user.tab_number = updateUserDto.tab_number || user.tab_number;
     user.name_ru = updateUserDto.name_ru || user.name_ru;
     user.name_en = updateUserDto.name_en || user.name_en;
-    user.position_ru = updateUserDto.position_ru || user.position_ru;
-    user.position_en = updateUserDto.position_en || user.position_en;
-    user.section_ru = updateUserDto.section_ru || user.section_ru;
-    user.section_en = updateUserDto.section_en || user.section_en;
-    user.state_ru = updateUserDto.state_ru || user.state_ru;
-    user.state_en = updateUserDto.state_en || user.state_en;
-    user.city_ru = updateUserDto.city_ru || user.city_ru;
-    user.city_en = updateUserDto.city_en || user.city_en;
-    user.nomination_ru = updateUserDto.nomination_ru || user.nomination_ru;
-    user.nomination_en = updateUserDto.nomination_en || user.nomination_en;
+    user.position_id = updateUserDto.position_id || user.position_id;
+    user.section_id = updateUserDto.section_id || user.section_id;
+    user.state_id = updateUserDto.state_id || user.state_id;
+    user.city_id = updateUserDto.city_id || user.city_id;
+    user.nomination_id = updateUserDto.nomination_id || user.nomination_id;
     user.description_ru = updateUserDto.description_ru || user.description_ru;
     user.description_en = updateUserDto.description_en || user.description_en;
     user.role = updateUserDto.role || user.role;
