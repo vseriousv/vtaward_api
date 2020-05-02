@@ -22,32 +22,32 @@ export class UpdateUserDto {
     @ApiProperty()
     @IsOptional()
     @IsString()
-    readonly position_id: string;
+    readonly position_id: number;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    readonly section_id: string;
+    readonly section_id: number;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    readonly state_id: string;
+    readonly state_id: number;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    readonly city_id: string;
+    readonly city_id: number;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    readonly nomination_id: string;
+    readonly nomination_id: number;
 
     @ApiProperty()
     @IsOptional()
     @IsInt()
-    readonly count_z: string;
+    readonly count_z: number;
 
     @ApiProperty()
     @IsOptional()
