@@ -40,19 +40,19 @@ export class User extends Model<User> {
     name_en: string;
 
     @Column({ field: 'position_id' })
-    position_id: string;
+    position_id: number;
 
     @Column({ field: 'section_id' })
-    section_id: string;
+    section_id: number;
 
     @Column({ field: 'state_id' })
-    state_id: string;
+    state_id: number;
 
     @Column({ field: 'city_id' })
-    city_id: string;
+    city_id: number;
 
     @Column({ field: 'nomination_id' })
-    nomination_id: string;
+    nomination_id: number;
 
     @Column({ field: 'count_z', defaultValue:0 })
     count_z: number;

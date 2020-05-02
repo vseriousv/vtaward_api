@@ -20,22 +20,22 @@ export class UserDto {
   readonly name_en: string;
 
   @ApiProperty()
-  readonly position_id: string;
+  readonly position_id: number;
 
   @ApiProperty()
-  readonly section_id: string;
+  readonly section_id: number;
 
   @ApiProperty()
-  readonly state_id: string;
+  readonly state_id: number;
 
   @ApiProperty()
-  readonly city_id: string;
+  readonly city_id: number;
 
   @ApiProperty()
-  readonly nomination_id: string;
+  readonly nomination_id: number;
 
   @ApiProperty()
-  readonly count_z: string;
+  readonly count_z: number;
 
   @ApiProperty()
   readonly description_ru: string;
