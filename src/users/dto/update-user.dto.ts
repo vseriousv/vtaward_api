@@ -1,68 +1,48 @@
-// import { Gender } from './../../shared/enum/gender';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, IsEnum, IsISO8601, IsInt } from 'class-validator';
+import { IsOptional, IsString, IsEnum, IsInt } from 'class-validator';
 import { Role } from '../../shared/enum/role';
 
 export class UpdateUserDto {
+
     @ApiProperty()
     @IsOptional()
-    @IsString()
-    readonly name_ru?: string;
+    @IsInt()
+    readonly tab_number: number;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    readonly name_en?: string;
+    readonly name_ru: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    readonly position_ru: string;
+    readonly name_en: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    readonly position_en: string;
+    readonly position_id: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    readonly section_ru: string;
+    readonly section_id: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    readonly section_en: string;
+    readonly state_id: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    readonly state_ru: string;
+    readonly city_id: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    readonly state_en: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    readonly city_ru: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    readonly city_en: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    readonly nomination_ru: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    readonly nomination_en: string;
+    readonly nomination_id: string;
 
     @ApiProperty()
     @IsOptional()
