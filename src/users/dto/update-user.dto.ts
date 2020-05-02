@@ -12,12 +12,12 @@ export class UpdateUserDto {
     @ApiProperty()
     @IsOptional()
     @IsString()
-    readonly name_ru?: string;
+    readonly name_ru: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    readonly name_en?: string;
+    readonly name_en: string;
 
     @ApiProperty()
     @IsOptional()
