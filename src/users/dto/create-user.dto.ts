@@ -3,13 +3,11 @@ import {
     IsEmail,
     IsInt,
     IsEnum,
-    IsISO8601,
     IsOptional,
-    MinLength,
 } from 'class-validator';
-// import { Gender } from './../../shared/enum/gender';
 import  { Role } from '../../shared/enum/role';
 import { ApiProperty } from '@nestjs/swagger';
+import { Column } from 'sequelize-typescript';
 
 export class CreateUserDto {
     @ApiProperty()
@@ -21,6 +19,11 @@ export class CreateUserDto {
     readonly password: string;
 
     @ApiProperty()
+    @IsOptional()
+    @IsInt()
+    readonly tab_number: number;
+
+    @ApiProperty()
     @IsString()
     readonly name_ru: string;
 
@@ -30,49 +33,37 @@ export class CreateUserDto {
 
     @ApiProperty()
     @IsString()
-    readonly position_ru: string;
+    readonly position_id: string;
 
     @ApiProperty()
     @IsString()
-    readonly position_en: string;
+    readonly section_id: string;
 
     @ApiProperty()
     @IsString()
-    readonly section_ru: string;
+    readonly state_id: string;
 
     @ApiProperty()
     @IsString()
-    readonly section_en: string;
+    readonly city_id: string;
 
     @ApiProperty()
+    @IsOptional()
     @IsString()
-    readonly state_ru: string;
+    readonly nomination_id: string;
 
     @ApiProperty()
-    @IsString()
-    readonly state_en: string;
+    @IsOptional()
+    @IsInt()
+    readonly count_z: number;
 
     @ApiProperty()
-    @IsString()
-    readonly city_ru: string;
-
-    @ApiProperty()
-    @IsString()
-    readonly city_en: string;
-
-    @ApiProperty()
-    @IsString()
-    readonly nomination_ru: string;
-
-    @ApiProperty()
-    @IsString()
-    readonly nomination_en: string;
-
-    @ApiProperty()
+    @IsOptional()
     @IsString()
     readonly description_ru: string;
 
     @ApiProperty()
+    @IsOptional()
     @IsString()
     readonly description_en: string;
 
