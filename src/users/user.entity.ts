@@ -30,44 +30,32 @@ export class User extends Model<User> {
     @Column
     password: string;
 
+    @Column ({field: 'tab_number'})
+    tab_number: number;
+
     @Column({ field: 'name_ru' })
     name_ru: string;
 
     @Column({ field: 'name_en' })
     name_en: string;
 
-    @Column({ field: 'position_ru' })
-    position_ru: string;
+    @Column({ field: 'position_id' })
+    position_id: string;
 
-    @Column({ field: 'position_en' })
-    position_en: string;
+    @Column({ field: 'section_id' })
+    section_id: string;
 
-    @Column({ field: 'section_ru' })
-    section_ru: string;
+    @Column({ field: 'state_id' })
+    state_id: string;
 
-    @Column({ field: 'section_en' })
-    section_en: string;
+    @Column({ field: 'city_id' })
+    city_id: string;
 
-    @Column({ field: 'state_ru' })
-    state_ru: string;
-
-    @Column({ field: 'state_en' })
-    state_en: string;
-
-    @Column({ field: 'city_ru' })
-    city_ru: string;
-
-    @Column({ field: 'city_en' })
-    city_en: string;
-
-    @Column({ field: 'nomination_ru' })
-    nomination_ru: string;
-
-    @Column({ field: 'nomination_en' })
-    nomination_en: string;
+    @Column({ field: 'nomination_id' })
+    nomination_id: string;
 
     @Column({ field: 'count_z', defaultValue:0 })
-    count_z: string;
+    count_z: number;
 
     @Column({ field: 'description_ru' })
     description_ru: string;

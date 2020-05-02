@@ -57,6 +57,13 @@ export class UsersController {
         return this.usersService.getUser(id);
     }
 
+    @Get('check')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
+    @ApiOkResponse({ type: UserDto })
+    async getYourUser(@Req() request): Promise<UserDto> {
+        return this.usersService.getUser(request.user.id);
+    }
 
     @Put(':id')
     @ApiBearerAuth()
