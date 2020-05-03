@@ -36,6 +36,7 @@ export class VoteService {
       vote.user_from_id = createVoteDto.user_from_id;
       vote.user_to_id = createVoteDto.user_to_id;
       vote.type_voting = createVoteDto.type_voting;
+      vote.count_vote = createVoteDto.count_vote;
 
       const votesData = await vote.save();
 
@@ -66,6 +67,7 @@ export class VoteService {
     vote.user_from_id = updateVoteDto.user_from_id || vote.user_from_id;
     vote.user_to_id = updateVoteDto.user_to_id || vote.user_to_id;
     vote.type_voting = updateVoteDto.type_voting || vote.type_voting;
+    vote.count_vote = updateVoteDto.count_vote || vote.count_vote;
 
     try {
       const data = await vote.save();

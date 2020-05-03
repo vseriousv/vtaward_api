@@ -84,13 +84,13 @@ const sql = `
         "type_voting" varchar(40) NOT NULL,
         primary key ("id")
     );
-    
-     create table "votes" (
+   
+      create table "votes" (
         "id" serial, 
-        "user_from_id" integer NOT NULL, 
+        "user_form_id" integer NOT NULL,
         "user_to_id" integer NOT NULL,
-        "type_vote" varchar(40) NOT NULL,
-        "count_vote" varchar(40) NOT NULL
+        "type_voting" varchar(40) NOT NULL,
+        "count_vote" integer NOT NULL,
         primary key ("id")
     );
     
@@ -113,11 +113,10 @@ module.exports = {
       DROP TABLE "positions";
       DROP TABLE "states";
       DROP TABLE "cities";
+      DROP TABLE "votes";
       DROP TABLE "nominations";
       DROP TABLE "participants";
-      DROP TABLE "votes";
       DROP TABLE "winners";
-      DROP type "public"."enum_user_gender";
       DROP type "public"."enum_user_role";
     `);
   }

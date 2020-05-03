@@ -18,4 +18,10 @@ export class UpdateVoteDto {
   @IsString()
   readonly type_voting: string;
 
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  count_vote: number;
+
+
 }
