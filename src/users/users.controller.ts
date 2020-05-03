@@ -49,6 +49,13 @@ export class UsersController {
         return this.usersService.findAll();
     }
 
+    @Get('check')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
+    async check(): Promise<Object> {
+        return {result:true};
+    }
+
     @Get(':id')
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
@@ -57,13 +64,6 @@ export class UsersController {
         return this.usersService.getUser(id);
     }
 
-    @Get('check')
-    @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
-    @ApiOkResponse({ type: UserDto })
-    async getYourUser(@Req() request): Promise<UserDto> {
-        return this.usersService.getUser(request.user.id);
-    }
 
     @Put(':id')
     @ApiBearerAuth()
