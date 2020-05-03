@@ -15,10 +15,14 @@ export class VoteDto {
   @ApiProperty()
   readonly type_voting: string;
 
+  @ApiProperty()
+  readonly count_vote: number;
+
   constructor(vote: Vote) {
     this.id = vote.id;
     this.user_from_id = vote.user_from_id;
     this.user_to_id = vote.user_to_id;
     this.type_voting = vote.type_voting;
+    this.count_vote = vote.count_vote;
   }
 }

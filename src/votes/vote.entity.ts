@@ -23,4 +23,7 @@ export class Vote extends Model<Vote> {
   @Column
   type_voting: string;
 
+  @Column
+  count_vote: number;
+
 }

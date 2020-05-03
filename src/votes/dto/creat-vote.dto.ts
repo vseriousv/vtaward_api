@@ -3,6 +3,7 @@ import {
   IsInt
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Column } from 'sequelize-typescript';
 
 export class CreateVoteDto {
 
@@ -17,5 +18,9 @@ export class CreateVoteDto {
   @ApiProperty()
   @IsString()
   readonly type_voting: string;
+
+  @ApiProperty()
+  @IsInt()
+  count_vote: number;
 
 }
