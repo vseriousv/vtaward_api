@@ -41,6 +41,67 @@ const sql = `
         primary key ("id")
     );
     
+     create table "sections" (
+        "id" serial, 
+        "value_ru" varchar(255) NOT NULL, 
+        "value_en" varchar(255) NOT NULL,
+        primary key ("id")
+    );
+    
+     create table "positions" (
+        "id" serial, 
+        "value_ru" varchar(255) NOT NULL, 
+        "value_en" varchar(255) NOT NULL,
+        primary key ("id")
+    );
+    
+     create table "states" (
+        "id" serial, 
+        "value_ru" varchar(255) NOT NULL, 
+        "value_en" varchar(255) NOT NULL,
+        primary key ("id")
+    );
+    
+     create table "cities" (
+        "id" serial, 
+        "state_id" integer NOT NULL,
+        "value_ru" varchar(255) NOT NULL, 
+        "value_en" varchar(255) NOT NULL,
+        primary key ("id")
+    );
+    
+     create table "nominations" (
+        "id" serial, 
+        "value_ru" varchar(255) NOT NULL, 
+        "value_en" varchar(255) NOT NULL,
+        primary key ("id")
+    );
+    
+     create table "participants" (
+        "id" serial, 
+        "user_id" integer NOT NULL, 
+        "year_voting" integer NOT NULL, 
+        "type_voting" varchar(40) NOT NULL,
+        primary key ("id")
+    );
+    
+     create table "votes" (
+        "id" serial, 
+        "user_from_id" integer NOT NULL, 
+        "user_to_id" integer NOT NULL,
+        "type_vote" varchar(40) NOT NULL,
+        "count_vote" varchar(40) NOT NULL
+        primary key ("id")
+    );
+    
+     create table "winners" (
+        "id" serial, 
+        "user_id" integer NOT NULL, 
+        "year_voting" integer NOT NULL, 
+        "type_voting" varchar(40) NOT NULL,
+        primary key ("id")
+    );
+    
 `;
 
 module.exports = {
@@ -48,6 +109,14 @@ module.exports = {
   down: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.query(`
       DROP TABLE "user";
+      DROP TABLE "sections";
+      DROP TABLE "positions";
+      DROP TABLE "states";
+      DROP TABLE "cities";
+      DROP TABLE "nominations";
+      DROP TABLE "participants";
+      DROP TABLE "votes";
+      DROP TABLE "winners";
       DROP type "public"."enum_user_gender";
       DROP type "public"."enum_user_role";
     `);
