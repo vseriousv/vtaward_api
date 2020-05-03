@@ -5,7 +5,7 @@ import {
 } from 'sequelize-typescript';
 
 @Table({
-  tableName: 'particiants',
+  tableName: 'participants',
 })
 export class Participant extends Model<Participant> {
   @Column({
