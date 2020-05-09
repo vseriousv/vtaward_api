@@ -39,6 +39,7 @@ const sql = `
         "description_ru" varchar(40),
         "description_en" varchar(40),
         "role" "public"."enum_users_role" DEFAULT 'user',
+        "img" varchar(255),
         "created_at" timestamp with time zone, 
         "updated_at" timestamp with time zone, 
         "deleted_at" timestamp with time zone,

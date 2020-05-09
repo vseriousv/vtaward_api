@@ -80,6 +80,9 @@ export class User extends Model<User> {
   })
   role: Role;
 
+  @Column
+  img :string;
+
   @CreatedAt
   @Column({ field: 'created_at' })
   createdAt: Date;
