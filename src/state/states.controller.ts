@@ -35,12 +35,12 @@ export class StatesController {
     return this.stateService.findAll();
   }
 
-  @Get(':code')
+  @Get(':id')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: StateDto })
-  async getUser(@Param('code') code): Promise<StateDto> {
-    return this.stateService.getStateByCode(code);
+  async getUser(@Param('id') id): Promise<StateDto> {
+    return this.stateService.getState(id);
   }
 
   @Put(':id')

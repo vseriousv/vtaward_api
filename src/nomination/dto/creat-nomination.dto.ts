@@ -9,8 +9,4 @@ export class CreateNominationDto {
   @ApiProperty()
   @IsString()
   readonly value_en: string;
-
-  @ApiProperty()
-  @IsString()
-  readonly code: string;
 }

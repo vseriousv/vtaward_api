@@ -30,11 +30,11 @@ const sql = `
         "lastname_en" varchar(40) NOT NULL,
         "patronymic_ru" varchar(40),
         "patronymic_en" varchar(40),
-        "position_id" varchar(40),
-        "section_id" varchar(40),
-        "state_id" varchar(40) NOT NULL,
-        "city_id" varchar(40),
-        "nomination_id"varchar(40),
+        "position_id" integer,
+        "section_id" integer,
+        "state_id" integer NOT NULL,
+        "city_id" integer,
+        "nomination_id" integer,
         "count_z" integer NOT NULL default 0,
         "description_ru" varchar(40),
         "description_en" varchar(40),
@@ -44,7 +44,7 @@ const sql = `
         "updated_at" timestamp with time zone, 
         "deleted_at" timestamp with time zone,
         primary key ("id")
-    );  
+    );   
 `;
 
 module.exports = {

@@ -18,9 +18,9 @@ export class StatesService {
     return states.map(state => new StateDto(state));
   }
 
-  async getStateByCode(code: string) {
+  async getState(id: number) {
     const state = await this.stateRepository.findOne<State>({
-      where: { code },
+      where: { id },
     });
     if (!state) {
       throw new HttpException(
@@ -37,21 +37,11 @@ export class StatesService {
 
       state.value_ru = createStateDto.value_ru.trim().toLowerCase();
       state.value_en = createStateDto.value_en.trim().toLowerCase();
-      state.code = createStateDto.code;
 
       const stateData = await state.save();
 
       return new StateDto(stateData);
     } catch (err) {
-      if (
-        err.name === 'SequelizeUniqueConstraintError' &&
-        err.original.constraint === 'states_code_key'
-      ) {
-        throw new HttpException(
-          `'${createStateDto.code}' already exists`,
-          HttpStatus.CONFLICT,
-        );
-      }
 
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -64,7 +54,6 @@ export class StatesService {
     }
     state.value_ru = updateStateDto.value_ru || state.value_ru;
     state.value_en = updateStateDto.value_en || state.value_en;
-    state.code = updateStateDto.code || state.code;
 
     try {
       const data = await state.save();

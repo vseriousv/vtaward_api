@@ -18,9 +18,9 @@ export class PositionsService {
     return positions.map(position => new PositionDto(position));
   }
 
-  async getPositionByCode(code: string) {
+  async getPosition(id: number) {
     const position = await this.positionRepository.findOne<Position>({
-      where: { code },
+      where: { id },
     });
     if (!position) {
       throw new HttpException(
@@ -37,22 +37,11 @@ export class PositionsService {
 
       position.value_ru = createPositionDto.value_ru.trim().toLowerCase();
       position.value_en = createPositionDto.value_en.trim().toLowerCase();
-      position.code = createPositionDto.code;
 
       const positionsData = await position.save();
 
       return new PositionDto(positionsData);
     } catch (err) {
-      if (
-        err.name === 'SequelizeUniqueConstraintError' &&
-        err.original.constraint === 'positions_code_key'
-      ) {
-        throw new HttpException(
-          `'${createPositionDto.code}' already exists`,
-          HttpStatus.CONFLICT,
-        );
-      }
-
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -64,7 +53,6 @@ export class PositionsService {
     }
     position.value_ru = updatePositionDto.value_ru || position.value_ru;
     position.value_en = updatePositionDto.value_en || position.value_en;
-    position.code = updatePositionDto.code || position.code;
 
     try {
       const data = await position.save();

@@ -1,4 +1,6 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany, BelongsTo, ForeignKey } from 'sequelize-typescript';
+import { User } from '../users/user.entity';
+import { Nomination } from '../nomination/nomination.entity';
 
 @Table({
   tableName: 'participants',
@@ -10,6 +12,7 @@ export class Participant extends Model<Participant> {
   })
   id: number;
 
+  @ForeignKey(() => User)
   @Column
   user_id: number;
 
@@ -18,4 +21,7 @@ export class Participant extends Model<Participant> {
 
   @Column
   type_voting: string;
+
+  @BelongsTo(() => User)
+  user: User;
 }

@@ -10,7 +10,4 @@ export class CreatePositionDto {
   @IsString()
   readonly value_en: string;
 
-  @ApiProperty()
-  @IsString()
-  readonly code: string;
 }

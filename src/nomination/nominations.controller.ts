@@ -37,12 +37,12 @@ export class NominationsController {
     return this.nominationService.findAll();
   }
 
-  @Get(':code')
+  @Get(':id')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: NominationDto })
-  async getUser(@Param('code') code): Promise<NominationDto> {
-    return this.nominationService.getNominationByCode(code);
+  async getUser(@Param('id') id): Promise<NominationDto> {
+    return this.nominationService.getNomination(id);
   }
 
   @Put(':id')

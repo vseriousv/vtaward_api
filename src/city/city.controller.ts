@@ -35,12 +35,12 @@ export class CityController {
     return this.cityService.findAll();
   }
 
-  @Get(':code')
+  @Get(':id')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: CityDto })
-  async getUser(@Param('code') code): Promise<CityDto> {
-    return this.cityService.getCityByCode(code);
+  async getUser(@Param('id') id): Promise<CityDto> {
+    return this.cityService.getCity(id);
   }
 
   @Put(':id')

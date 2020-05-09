@@ -3,6 +3,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
 import { Role } from '../../shared/enum/role';
 import { Column } from 'sequelize-typescript';
+import { PositionDto } from '../../position/dto/position.dto';
+import { SectionDto } from '../../section/dto/section.dto';
+import { StateDto } from '../../state/dto/state.dto';
+import { CityDto } from '../../city/dto/city.dto';
+import { NominationDto } from '../../nomination/dto/nomination.dto';
 
 export class UserDto {
   @ApiProperty()
@@ -33,19 +38,19 @@ export class UserDto {
   readonly patronymic_en: string;
 
   @ApiProperty()
-  readonly position_id: string;
+  readonly position_id: number;
 
   @ApiProperty()
-  readonly section_id: string;
+  readonly section_id: number;
 
   @ApiProperty()
-  readonly state_id: string;
+  readonly state_id: number;
 
   @ApiProperty()
-  readonly city_id: string;
+  readonly city_id: number;
 
   @ApiProperty()
-  readonly nomination_id: string;
+  readonly nomination_id: number;
 
   @ApiProperty()
   readonly count_z: number;
@@ -62,6 +67,21 @@ export class UserDto {
   @ApiProperty()
   readonly img: string;
 
+  @ApiProperty()
+  readonly position: PositionDto;
+
+  @ApiProperty()
+  readonly section: SectionDto;
+
+  @ApiProperty()
+  readonly state: StateDto;
+
+  @ApiProperty()
+  readonly city: CityDto;
+
+  @ApiProperty()
+  readonly nomination: NominationDto;
+
   constructor(user: User) {
     this.id = user.id;
     this.email = user.email;
@@ -77,9 +97,15 @@ export class UserDto {
     this.state_id = user.state_id;
     this.city_id = user.city_id;
     this.nomination_id = user.nomination_id;
+    this.count_z = user.count_z;
     this.description_ru = user.description_ru;
     this.description_en = user.description_en;
     this.role = user.role;
     this.img = user.img;
+    this.position = user.position;
+    this.section = user.section;
+    this.state = user.state;
+    this.city = user.city;
+    this.nomination = user.nomination;
   }
 }

@@ -18,9 +18,9 @@ export class CityService {
     return cities.map(city => new CityDto(city));
   }
 
-  async getCityByCode(code: string) {
+  async getCity(id: number) {
     const city = await this.cityRepository.findOne<City>({
-      where: { code },
+      where: { id },
     });
     if (!city) {
       throw new HttpException(
@@ -35,25 +35,14 @@ export class CityService {
     try {
       const city = new City();
 
-      city.state_id = createCityDto.state_id;
       city.value_ru = createCityDto.value_ru.trim().toLowerCase();
       city.value_en = createCityDto.value_en.trim().toLowerCase();
-      city.code = createCityDto.code;
 
       const cityData = await city.save();
 
       // return new UserLoginResponseDto(userData, token);
       return new CityDto(cityData);
     } catch (err) {
-      if (
-        err.name === 'SequelizeUniqueConstraintError' &&
-        err.original.constraint === 'cities_code_key'
-      ) {
-        throw new HttpException(
-          `'${createCityDto.code}' already exists`,
-          HttpStatus.CONFLICT,
-        );
-      }
 
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -65,10 +54,8 @@ export class CityService {
       throw new HttpException('City not found.', HttpStatus.NOT_FOUND);
     }
 
-    city.state_id = updateCityDto.state_id || city.state_id;
     city.value_ru = updateCityDto.value_ru || city.value_ru;
     city.value_en = updateCityDto.value_en || city.value_en;
-    city.code = updateCityDto.code || city.code;
 
     try {
       const data = await city.save();
