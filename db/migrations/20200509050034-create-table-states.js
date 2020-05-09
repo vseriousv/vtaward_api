@@ -3,7 +3,6 @@ const sql = `
         "id" serial, 
         "value_ru" varchar(255) NOT NULL, 
         "value_en" varchar(255) NOT NULL,
-        "code" varchar(255) unique NOT NULL,
         primary key ("id")
     );    
 `;

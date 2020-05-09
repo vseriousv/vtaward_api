@@ -9,6 +9,11 @@ import { JwtPayload } from './auth/jwt-payload.model';
 import { sign } from 'jsonwebtoken';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService } from './../shared/config/config.service'
+import { Position } from '../position/position.entity';
+import { Section } from '../section/section.entity';
+import { State } from '../state/state.entity';
+import { City } from '../city/city.entity';
+import { Nomination } from '../nomination/nomination.entity';
 // import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
@@ -26,6 +31,7 @@ export class UsersService {
 
   async findAll() {
     const users = await this.usersRepository.findAll<User>({
+      include: [Position, Section, State, City, Nomination],
       order: [['id', 'ASC']],
     });
     return users.map(user => new UserDto(user));

@@ -6,22 +6,14 @@ export class CityDto {
   id: number;
 
   @ApiProperty()
-  state_id: number;
-
-  @ApiProperty()
   readonly value_ru: string;
 
   @ApiProperty()
   readonly value_en: string;
 
-  @ApiProperty()
-  readonly code: string;
-
   constructor(city: City) {
     this.id = city.id;
-    this.state_id = city.state_id;
     this.value_ru = city.value_ru;
     this.value_en = city.value_en;
-    this.code = city.code;
   }
 }

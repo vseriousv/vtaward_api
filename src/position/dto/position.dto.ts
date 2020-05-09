@@ -11,13 +11,9 @@ export class PositionDto {
   @ApiProperty()
   readonly value_en: string;
 
-  @ApiProperty()
-  readonly code: string;
-
   constructor(position: Position) {
     this.id = position.id;
     this.value_ru = position.value_ru;
     this.value_en = position.value_en;
-    this.code = position.code;
   }
 }

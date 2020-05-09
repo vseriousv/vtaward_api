@@ -9,8 +9,4 @@ export class CreateSectionDto {
   @ApiProperty()
   @IsString()
   readonly value_en: string;
-
-  @ApiProperty()
-  @IsString()
-  readonly code: string;
 }

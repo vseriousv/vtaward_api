@@ -9,8 +9,4 @@ export class CreateStateDto {
   @ApiProperty()
   @IsString()
   readonly value_en: string;
-
-  @ApiProperty()
-  @IsString()
-  readonly code: string;
 }

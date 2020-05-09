@@ -18,9 +18,9 @@ export class SectionsService {
     return sections.map(section => new SectionDto(section));
   }
 
-  async getSectionByCode(code: string) {
+  async getSection(id: number) {
     const section = await this.sectionRepository.findOne<Section>({
-      where: { code },
+      where: { id },
     });
     if (!section) {
       throw new HttpException(
@@ -37,23 +37,12 @@ export class SectionsService {
 
       section.value_ru = createSectionDto.value_ru.trim().toLowerCase();
       section.value_en = createSectionDto.value_en.trim().toLowerCase();
-      section.code = createSectionDto.code;
 
       const sectionsData = await section.save();
 
       // return new UserLoginResponseDto(userData, token);
       return new SectionDto(sectionsData);
     } catch (err) {
-      if (
-        err.name === 'SequelizeUniqueConstraintError' &&
-        err.original.constraint === 'sections_code_key'
-      ) {
-        throw new HttpException(
-          `'${createSectionDto.code}' already exists`,
-          HttpStatus.CONFLICT,
-        );
-      }
-
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -65,7 +54,6 @@ export class SectionsService {
     }
     section.value_ru = updateSectionDto.value_ru || section.value_ru;
     section.value_en = updateSectionDto.value_en || section.value_en;
-    section.code = updateSectionDto.code || section.code;
 
     try {
       const data = await section.save();

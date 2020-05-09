@@ -37,12 +37,12 @@ export class SectionsController {
     return this.sectionService.findAll();
   }
 
-  @Get(':code')
+  @Get(':id')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: SectionDto })
-  async getUser(@Param('code') code): Promise<SectionDto> {
-    return this.sectionService.getSectionByCode(code);
+  async getUser(@Param('id') id): Promise<SectionDto> {
+    return this.sectionService.getSection(id);
   }
 
   @Put(':id')

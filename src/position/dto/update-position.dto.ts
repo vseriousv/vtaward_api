@@ -12,9 +12,4 @@ export class UpdatePositionDto {
   @IsOptional()
   @IsString()
   readonly value_en: string;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsString()
-  readonly code: string;
 }
