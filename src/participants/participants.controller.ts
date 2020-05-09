@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import {ParticipantsService} from './participants.service';
-import {CreateParticipantDto} from './dto/creat-participant.dto';
+import { ParticipantsService } from './participants.service';
+import { CreateParticipantDto } from './dto/creat-participant.dto';
 import { ParticipantDto } from './dto/participant.dto';
-import {UpdateParticipantDto} from './dto/update-participant.dto';
+import { UpdateParticipantDto } from './dto/update-participant.dto';
 
 @Controller('participants')
 @ApiTags('participants')
@@ -44,7 +44,6 @@ export class ParticipantsController {
   async getUser(@Param('id') id): Promise<ParticipantDto> {
     return this.participantService.getParticipant(id);
   }
-
 
   @Put(':id')
   @ApiBearerAuth()

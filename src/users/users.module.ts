@@ -6,9 +6,9 @@ import { UsersService } from './users.service';
 import { JwtStrategy } from './auth/jwt-strategy';
 
 @Module({
-    imports: [DatabaseModule],
-    controllers: [UsersController],
-    providers: [UsersService, ...usersProviders, JwtStrategy],
-    exports: [UsersService],
+  imports: [DatabaseModule],
+  controllers: [UsersController],
+  providers: [UsersService, ...usersProviders, JwtStrategy],
+  exports: [UsersService],
 })
 export class UsersModule {}

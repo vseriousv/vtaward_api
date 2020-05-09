@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import {VoteService} from './votes.service';
-import {CreateVoteDto} from './dto/creat-vote.dto';
+import { VoteService } from './votes.service';
+import { CreateVoteDto } from './dto/creat-vote.dto';
 import { VoteDto } from './dto/vote.dto';
-import {UpdateVoteDto} from './dto/update-vote.dto';
+import { UpdateVoteDto } from './dto/update-vote.dto';
 
 @Controller('votes')
 @ApiTags('votes')
@@ -23,9 +23,7 @@ export class VoteController {
   @Post('create')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
-  register(
-    @Body() createVoteDto: CreateVoteDto,
-  ): Promise<CreateVoteDto> {
+  register(@Body() createVoteDto: CreateVoteDto): Promise<CreateVoteDto> {
     return this.voteService.create(createVoteDto);
   }
 
@@ -44,7 +42,6 @@ export class VoteController {
   async getUser(@Param('id') id): Promise<VoteDto> {
     return this.voteService.getVote(id);
   }
-
 
   @Put(':id')
   @ApiBearerAuth()

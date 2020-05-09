@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import {WinnersService} from './winners.service';
-import {CreateWinnerDto} from './dto/creat-winner.dto';
+import { WinnersService } from './winners.service';
+import { CreateWinnerDto } from './dto/creat-winner.dto';
 import { WinnerDto } from './dto/winner.dto';
-import {UpdateWinnerDto} from './dto/update-winner.dto';
+import { UpdateWinnerDto } from './dto/update-winner.dto';
 
 @Controller('winners')
 @ApiTags('winners')
@@ -23,9 +23,7 @@ export class WinnersController {
   @Post('create')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
-  register(
-    @Body() createWinnerDto: CreateWinnerDto,
-  ): Promise<CreateWinnerDto> {
+  register(@Body() createWinnerDto: CreateWinnerDto): Promise<CreateWinnerDto> {
     return this.winnerService.create(createWinnerDto);
   }
 
@@ -44,7 +42,6 @@ export class WinnersController {
   async getUser(@Param('id') id): Promise<WinnerDto> {
     return this.winnerService.getWinner(id);
   }
-
 
   @Put(':id')
   @ApiBearerAuth()

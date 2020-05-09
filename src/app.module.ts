@@ -8,8 +8,12 @@ import { StatesModule } from './state/states.module';
 import { CityModule } from './city/city.module';
 import { NominationsModule } from './nomination/nominations.module';
 import { ParticipantsModule } from './participants/participants.module';
-import { VotesModule} from './votes/votes.module';
+import { VotesModule } from './votes/votes.module';
 import { WinnersModule } from './winners/winners.module';
+import { ConfigService } from './shared/config/config.service';
+// import { MailerModule } from '@nestjs-modules/mailer';
+
+// const config = new ConfigService();
 
 @Module({
   imports: [
@@ -23,10 +27,10 @@ import { WinnersModule } from './winners/winners.module';
     ParticipantsModule,
     VotesModule,
     WinnersModule,
-    ConfigModule.forRoot()
+    ConfigModule.forRoot(),
+    // MailerModule.forRoot({ ...config.transportConfig }),
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {
-}
+export class AppModule {}

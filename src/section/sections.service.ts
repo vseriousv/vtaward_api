@@ -1,29 +1,30 @@
-
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { Section } from './section.entity';
 import { SectionDto } from './dto/section.dto';
 import { CreateSectionDto } from './dto/creat-section.dto';
-import {UpdateSectionDto} from './dto/update-section.dto';
-import { ConfigService } from './../shared/config/config.service';
+import { UpdateSectionDto } from './dto/update-section.dto';
 
 @Injectable()
 export class SectionsService {
-
   constructor(
     @Inject('SectionRepository')
     private readonly sectionRepository: typeof Section,
   ) {}
 
   async findAll() {
-    const sections = await this.sectionRepository.findAll<Section>();
+    const sections = await this.sectionRepository.findAll<Section>({
+      order: [['id', 'ASC']],
+    });
     return sections.map(section => new SectionDto(section));
   }
 
-  async getSection(id: string) {
-    const section = await this.sectionRepository.findByPk<Section>(id);
+  async getSectionByCode(code: string) {
+    const section = await this.sectionRepository.findOne<Section>({
+      where: { code },
+    });
     if (!section) {
       throw new HttpException(
-        'Section with given id not found',
+        'Section with given code not found',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -36,6 +37,7 @@ export class SectionsService {
 
       section.value_ru = createSectionDto.value_ru.trim().toLowerCase();
       section.value_en = createSectionDto.value_en.trim().toLowerCase();
+      section.code = createSectionDto.code;
 
       const sectionsData = await section.save();
 
@@ -43,13 +45,11 @@ export class SectionsService {
       return new SectionDto(sectionsData);
     } catch (err) {
       if (
-        ( err.name === 'SequelizeUniqueConstraintError' &&
-        err.original.constraint === 'sections_value_ru_key') ||
-        ( err.name === 'SequelizeUniqueConstraintError' &&
-          err.original.constraint === 'sections_value_en_key')
+        err.name === 'SequelizeUniqueConstraintError' &&
+        err.original.constraint === 'sections_code_key'
       ) {
         throw new HttpException(
-          `'${createSectionDto.value_ru}' or '${createSectionDto.value_ru}' already exists`,
+          `'${createSectionDto.code}' already exists`,
           HttpStatus.CONFLICT,
         );
       }
@@ -58,7 +58,6 @@ export class SectionsService {
     }
   }
 
-
   async update(id: string, updateSectionDto: UpdateSectionDto) {
     const section = await this.sectionRepository.findByPk<Section>(id);
     if (!section) {
@@ -66,7 +65,7 @@ export class SectionsService {
     }
     section.value_ru = updateSectionDto.value_ru || section.value_ru;
     section.value_en = updateSectionDto.value_en || section.value_en;
-
+    section.code = updateSectionDto.code || section.code;
 
     try {
       const data = await section.save();
@@ -81,5 +80,4 @@ export class SectionsService {
     await section.destroy();
     return new SectionDto(section);
   }
-
 }

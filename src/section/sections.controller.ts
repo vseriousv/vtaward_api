@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import {SectionsService} from './sections.service';
-import {CreateSectionDto} from './dto/creat-section.dto';
+import { SectionsService } from './sections.service';
+import { CreateSectionDto } from './dto/creat-section.dto';
 import { SectionDto } from './dto/section.dto';
-import {UpdateSectionDto} from './dto/update-section.dto';
+import { UpdateSectionDto } from './dto/update-section.dto';
 
 @Controller('sections')
 @ApiTags('sections')
@@ -37,14 +37,13 @@ export class SectionsController {
     return this.sectionService.findAll();
   }
 
-  @Get(':id')
+  @Get(':code')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: SectionDto })
-  async getUser(@Param('id') id): Promise<SectionDto> {
-    return this.sectionService.getSection(id);
+  async getUser(@Param('code') code): Promise<SectionDto> {
+    return this.sectionService.getSectionByCode(code);
   }
-
 
   @Put(':id')
   @ApiBearerAuth()

@@ -6,15 +6,15 @@ import { UpdateWinnerDto } from './dto/update-winner.dto';
 
 @Injectable()
 export class WinnersService {
-
   constructor(
     @Inject('WinnerRepository')
     private readonly winnerRepository: typeof Winner,
-  ) {
-  }
+  ) {}
 
   async findAll() {
-    const winners = await this.winnerRepository.findAll<Winner>();
+    const winners = await this.winnerRepository.findAll<Winner>({
+      order: [['id', 'ASC']],
+    });
     return winners.map(winner => new WinnerDto(winner));
   }
 
@@ -47,16 +47,12 @@ export class WinnersService {
         (err.name === 'SequelizeUniqueConstraintError' &&
           err.original.constraint === 'winners_value_en_key')
       ) {
-        throw new HttpException(
-          `'already exists`,
-          HttpStatus.CONFLICT,
-        );
+        throw new HttpException(`'already exists`, HttpStatus.CONFLICT);
       }
 
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
 
   async update(id: string, updateWinnerDto: UpdateWinnerDto) {
     const winner = await this.winnerRepository.findByPk<Winner>(id);
@@ -80,5 +76,4 @@ export class WinnersService {
     await winner.destroy();
     return new WinnerDto(winner);
   }
-
 }

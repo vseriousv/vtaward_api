@@ -1,3 +1,5 @@
-import { Nomination} from './nomination.entity';
+import { Nomination } from './nomination.entity';
 
-export const nominationProviders = [{ provide: 'NominationRepository', useValue: Nomination }];
+export const nominationProviders = [
+  { provide: 'NominationRepository', useValue: Nomination },
+];

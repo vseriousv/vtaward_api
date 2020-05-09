@@ -16,9 +16,9 @@ const sql = `
         "city_id",
         "count_z",
         "role",
-        'created_at',
-        'updated_at',
-        'deleted_at'
+        "created_at",
+        "updated_at",
+        "deleted_at"
     ) values (
         'test@test.com', 
         '$2b$10$t1XU3KNTPakVWMYqiS./7OJOKRSV9laxqJlQNy1qNjhesxJD6e422', 
@@ -29,10 +29,10 @@ const sql = `
         'Mikhaylov', 
         'Отчество',
         'Patronymic',
-        '1',
-        '2',
-        '3',
-        '4',
+        'a',
+        'b',
+        'c',
+        'd',
         'nsk',
         '0',
         'user',

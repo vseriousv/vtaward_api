@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, IsEnum, IsInt } from 'class-validator';
 
 export class UpdateWinnerDto {
-
   @ApiProperty()
   @IsOptional()
   @IsInt()
@@ -17,5 +16,4 @@ export class UpdateWinnerDto {
   @IsOptional()
   @IsString()
   readonly type_voting: string;
-
 }

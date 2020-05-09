@@ -1,7 +1,6 @@
 import { Winner } from '../winner.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
-
 export class WinnerDto {
   @ApiProperty()
   id: number;
