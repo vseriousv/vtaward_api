@@ -6,15 +6,15 @@ import { UpdateVoteDto } from './dto/update-vote.dto';
 
 @Injectable()
 export class VoteService {
-
   constructor(
     @Inject('VoteRepository')
     private readonly voteRepository: typeof Vote,
-  ) {
-  }
+  ) {}
 
   async findAll() {
-    const votes = await this.voteRepository.findAll<Vote>();
+    const votes = await this.voteRepository.findAll<Vote>({
+      order: [['id', 'ASC']],
+    });
     return votes.map(vote => new VoteDto(vote));
   }
 
@@ -28,6 +28,27 @@ export class VoteService {
     }
     return new VoteDto(vote);
   }
+
+  // async getVoteFromId(from: string) {
+  //   const votes = await this.voteRepository.findAll<Vote>({
+  //     where:{
+  //       'user_from_id': from,
+  //     },
+  //     order: [['id', 'ASC']],
+  //   });
+  //   return votes.map(vote => new VoteDto(vote));
+  // }
+  //
+  // async getVoteToId(id: string) {
+  //   const vote = await this.voteRepository.findByPk<Vote>(id);
+  //   if (!vote) {
+  //     throw new HttpException(
+  //       'Vote with given id not found',
+  //       HttpStatus.NOT_FOUND,
+  //     );
+  //   }
+  //   return new VoteDto(vote);
+  // }
 
   async create(createVoteDto: CreateVoteDto) {
     try {
@@ -48,16 +69,12 @@ export class VoteService {
         (err.name === 'SequelizeUniqueConstraintError' &&
           err.original.constraint === 'votes_value_en_key')
       ) {
-        throw new HttpException(
-          `'already exists`,
-          HttpStatus.CONFLICT,
-        );
+        throw new HttpException(`'already exists`, HttpStatus.CONFLICT);
       }
 
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
 
   async update(id: string, updateVoteDto: UpdateVoteDto) {
     const vote = await this.voteRepository.findByPk<Vote>(id);
@@ -82,5 +99,4 @@ export class VoteService {
     await vote.destroy();
     return new VoteDto(vote);
   }
-
 }

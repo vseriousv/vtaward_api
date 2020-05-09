@@ -1,11 +1,7 @@
-import {
-  IsString,
-  IsInt
-} from 'class-validator';
+import { IsString, IsInt } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateWinnerDto {
-
   @ApiProperty()
   @IsInt()
   readonly user_id: number;
@@ -17,5 +13,4 @@ export class CreateWinnerDto {
   @ApiProperty()
   @IsString()
   readonly type_voting: string;
-
 }

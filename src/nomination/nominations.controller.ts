@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import {NominationsService} from './nominations.service';
-import {CreateNominationDto} from './dto/creat-nomination.dto';
+import { NominationsService } from './nominations.service';
+import { CreateNominationDto } from './dto/creat-nomination.dto';
 import { NominationDto } from './dto/nomination.dto';
-import {UpdateNominationDto} from './dto/update-nomination.dto';
+import { UpdateNominationDto } from './dto/update-nomination.dto';
 
 @Controller('nominations')
 @ApiTags('nominations')
@@ -37,14 +37,13 @@ export class NominationsController {
     return this.nominationService.findAll();
   }
 
-  @Get(':id')
+  @Get(':code')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: NominationDto })
-  async getUser(@Param('id') id): Promise<NominationDto> {
-    return this.nominationService.getNomination(id);
+  async getUser(@Param('code') code): Promise<NominationDto> {
+    return this.nominationService.getNominationByCode(code);
   }
-
 
   @Put(':id')
   @ApiBearerAuth()

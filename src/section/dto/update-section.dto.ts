@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, IsEnum, IsInt } from 'class-validator';
 
 export class UpdateSectionDto {
-
   @ApiProperty()
   @IsOptional()
   @IsString()
@@ -13,4 +12,8 @@ export class UpdateSectionDto {
   @IsString()
   readonly value_en: string;
 
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  readonly code: string;
 }

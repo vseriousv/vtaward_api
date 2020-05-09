@@ -1,10 +1,7 @@
-import {
-  IsString,
-} from 'class-validator';
+import { IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateNominationDto {
-
   @ApiProperty()
   @IsString()
   readonly value_ru: string;
@@ -13,4 +10,7 @@ export class CreateNominationDto {
   @IsString()
   readonly value_en: string;
 
+  @ApiProperty()
+  @IsString()
+  readonly code: string;
 }

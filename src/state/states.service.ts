@@ -1,29 +1,30 @@
-
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { State } from './state.entity';
 import { StateDto } from './dto/state.dto';
 import { CreateStateDto } from './dto/creat-state.dto';
-import {UpdateStateDto} from './dto/update-state.dto';
-import { ConfigService } from './../shared/config/config.service';
+import { UpdateStateDto } from './dto/update-state.dto';
 
 @Injectable()
 export class StatesService {
-
   constructor(
     @Inject('StateRepository')
     private readonly stateRepository: typeof State,
   ) {}
 
   async findAll() {
-    const states = await this.stateRepository.findAll<State>();
+    const states = await this.stateRepository.findAll<State>({
+      order: [['id', 'ASC']],
+    });
     return states.map(state => new StateDto(state));
   }
 
-  async getState(id: string) {
-    const state = await this.stateRepository.findByPk<State>(id);
+  async getStateByCode(code: string) {
+    const state = await this.stateRepository.findOne<State>({
+      where: { code },
+    });
     if (!state) {
       throw new HttpException(
-        'State with given id not found',
+        'State with given code not found',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -36,19 +37,18 @@ export class StatesService {
 
       state.value_ru = createStateDto.value_ru.trim().toLowerCase();
       state.value_en = createStateDto.value_en.trim().toLowerCase();
+      state.code = createStateDto.code;
 
       const stateData = await state.save();
 
       return new StateDto(stateData);
     } catch (err) {
       if (
-        ( err.name === 'SequelizeUniqueConstraintError' &&
-        err.original.constraint === 'state_value_ru_key') ||
-        ( err.name === 'SequelizeUniqueConstraintError' &&
-          err.original.constraint === 'state_value_en_key')
+        err.name === 'SequelizeUniqueConstraintError' &&
+        err.original.constraint === 'states_code_key'
       ) {
         throw new HttpException(
-          `'${createStateDto.value_ru}' or '${createStateDto.value_ru}' already exists`,
+          `'${createStateDto.code}' already exists`,
           HttpStatus.CONFLICT,
         );
       }
@@ -57,7 +57,6 @@ export class StatesService {
     }
   }
 
-
   async update(id: string, updateStateDto: UpdateStateDto) {
     const state = await this.stateRepository.findByPk<State>(id);
     if (!state) {
@@ -65,7 +64,7 @@ export class StatesService {
     }
     state.value_ru = updateStateDto.value_ru || state.value_ru;
     state.value_en = updateStateDto.value_en || state.value_en;
-
+    state.code = updateStateDto.code || state.code;
 
     try {
       const data = await state.save();
@@ -80,5 +79,4 @@ export class StatesService {
     await state.destroy();
     return new StateDto(state);
   }
-
 }

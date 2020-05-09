@@ -1,11 +1,7 @@
-import {
-  IsInt,
-  IsString,
-} from 'class-validator';
+import { IsInt, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCityDto {
-
   @ApiProperty()
   @IsInt()
   state_id: number;
@@ -18,4 +14,7 @@ export class CreateCityDto {
   @IsString()
   readonly value_en: string;
 
+  @ApiProperty()
+  @IsString()
+  readonly code: string;
 }

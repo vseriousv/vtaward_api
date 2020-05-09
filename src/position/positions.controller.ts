@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import {PositionsService} from './positions.service';
-import {CreatePositionDto} from './dto/creat-position.dto';
+import { PositionsService } from './positions.service';
+import { CreatePositionDto } from './dto/creat-position.dto';
 import { PositionDto } from './dto/position.dto';
-import {UpdatePositionDto} from './dto/update-position.dto';
+import { UpdatePositionDto } from './dto/update-position.dto';
 
 @Controller('positions')
 @ApiTags('positions')
@@ -37,14 +37,13 @@ export class PositionsController {
     return this.positionService.findAll();
   }
 
-  @Get(':id')
+  @Get(':code')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: PositionDto })
-  async getUser(@Param('id') id): Promise<PositionDto> {
-    return this.positionService.getPosition(id);
+  async getUser(@Param('code') code): Promise<PositionDto> {
+    return this.positionService.getPositionByCode(code);
   }
-
 
   @Put(':id')
   @ApiBearerAuth()

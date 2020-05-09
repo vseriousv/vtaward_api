@@ -1,7 +1,6 @@
 import { Participant } from '../participant.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
-
 export class ParticipantDto {
   @ApiProperty()
   id: number;

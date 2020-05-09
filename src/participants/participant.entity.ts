@@ -1,8 +1,4 @@
-import {
-  Table,
-  Column,
-  Model, DataType,
-} from 'sequelize-typescript';
+import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
 @Table({
   tableName: 'participants',
@@ -22,5 +18,4 @@ export class Participant extends Model<Participant> {
 
   @Column
   type_voting: string;
-
 }

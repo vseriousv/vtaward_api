@@ -1,4 +1,4 @@
 export interface JwtPayload {
-    tab_number: string;
-    iat?: Date;
+  tab_number: string;
+  iat?: Date;
 }

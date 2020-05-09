@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import {SectionsController} from './sections.controller';
-import { sectionProviders} from './sections.provider';
+import { SectionsController } from './sections.controller';
+import { sectionProviders } from './sections.provider';
 import { DatabaseModule } from './../database/database.module';
-import {SectionsService} from './sections.service';
+import { SectionsService } from './sections.service';
 // import {JwtStrategy} from '../users/auth/jwt-strategy';
 
 @Module({

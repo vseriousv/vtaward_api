@@ -3,7 +3,6 @@ import { IsOptional, IsString, IsEnum, IsInt } from 'class-validator';
 // import { Role } from '../../shared/enum/role';
 
 export class UpdateStateDto {
-
   @ApiProperty()
   @IsOptional()
   @IsString()
@@ -14,4 +13,8 @@ export class UpdateStateDto {
   @IsString()
   readonly value_en: string;
 
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  readonly code: string;
 }

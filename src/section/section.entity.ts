@@ -1,8 +1,4 @@
-import {
-  Table,
-  Column,
-  Model,
-} from 'sequelize-typescript';
+import { Table, Column, Model, Unique } from 'sequelize-typescript';
 
 @Table({
   tableName: 'sections',
@@ -20,4 +16,7 @@ export class Section extends Model<Section> {
   @Column
   value_en: string;
 
+  @Unique
+  @Column
+  code: string;
 }

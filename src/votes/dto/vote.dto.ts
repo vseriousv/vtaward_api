@@ -1,7 +1,6 @@
 import { Vote } from '../vote.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
-
 export class VoteDto {
   @ApiProperty()
   id: number;

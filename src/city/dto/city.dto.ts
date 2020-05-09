@@ -1,7 +1,6 @@
 import { City } from '../city.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
-
 export class CityDto {
   @ApiProperty()
   id: number;
@@ -15,10 +14,14 @@ export class CityDto {
   @ApiProperty()
   readonly value_en: string;
 
+  @ApiProperty()
+  readonly code: string;
+
   constructor(city: City) {
     this.id = city.id;
-    this.state_id = city.state_id
+    this.state_id = city.state_id;
     this.value_ru = city.value_ru;
     this.value_en = city.value_en;
+    this.code = city.code;
   }
 }
