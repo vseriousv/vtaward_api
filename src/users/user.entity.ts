@@ -31,7 +31,7 @@ export class User extends Model<User> {
     password: string;
 
     @Column ({field: 'tab_number'})
-    tab_number: number;
+    tab_number: string;
 
     @Column({ field: 'name_ru' })
     name_ru: string;

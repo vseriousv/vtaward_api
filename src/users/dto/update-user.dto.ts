@@ -6,8 +6,8 @@ export class UpdateUserDto {
 
     @ApiProperty()
     @IsOptional()
-    @IsInt()
-    readonly tab_number: number;
+    @IsString()
+    readonly tab_number: string;
 
     @ApiProperty()
     @IsOptional()

@@ -23,7 +23,7 @@ const sql = `
         "id" serial, 
         "email" varchar(255) unique NOT NULL, 
         "password" varchar(255) NOT NULL, 
-        "tab_number" integer,
+        "tab_number" varchar(40) NOT NULL,
         "name_ru" varchar(40) NOT NULL,
         "name_en" varchar(40) NOT NULL,
         "position_id" integer NOT NULL,

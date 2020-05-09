@@ -20,8 +20,8 @@ export class CreateUserDto {
 
     @ApiProperty()
     @IsOptional()
-    @IsInt()
-    readonly tab_number: number;
+    @IsString()
+    readonly tab_number: string;
 
     @ApiProperty()
     @IsString()

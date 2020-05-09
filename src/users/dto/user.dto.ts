@@ -11,7 +11,7 @@ export class UserDto {
   readonly email: string;
 
   @ApiProperty()
-  readonly tab_number: number;
+  readonly tab_number: string;
 
   @ApiProperty()
   readonly name_ru: string;
