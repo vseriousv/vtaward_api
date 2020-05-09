@@ -16,6 +16,7 @@ const sql = `
         "city_id",
         "count_z",
         "role",
+        "img",
         "created_at",
         "updated_at",
         "deleted_at"
@@ -36,6 +37,7 @@ const sql = `
         'nsk',
         '0',
         'user',
+        '/asdasd/asdads/asdasd.jpg',
         'now()',
         'now()',
         null

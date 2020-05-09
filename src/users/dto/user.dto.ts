@@ -59,6 +59,9 @@ export class UserDto {
   @ApiProperty()
   readonly role: Role;
 
+  @ApiProperty()
+  readonly img: string;
+
   constructor(user: User) {
     this.id = user.id;
     this.email = user.email;
@@ -77,5 +80,6 @@ export class UserDto {
     this.description_ru = user.description_ru;
     this.description_en = user.description_en;
     this.role = user.role;
+    this.img = user.img;
   }
 }
