@@ -66,7 +66,7 @@ export class CityService {
     }
 
     city.state_id = updateCityDto.state_id || city.state_id;
-    city.value_en = updateCityDto.value_en || city.value_en;
+    city.value_ru = updateCityDto.value_ru || city.value_ru;
     city.value_en = updateCityDto.value_en || city.value_en;
 
 

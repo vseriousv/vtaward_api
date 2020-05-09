@@ -1,4 +1,3 @@
-
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from './user.entity';
 // import { Mail } from './mail.entity';
@@ -41,9 +40,9 @@ export class UsersService {
     return new UserDto(user);
   }
 
-  async getUserByEmail(email: string) {
+  async getUserByTab(tab_number: string) {
     return await this.usersRepository.findOne<User>({
-      where: { email },
+      where: { tab_number },
     });
   }
 
@@ -53,8 +52,12 @@ export class UsersService {
 
       user.email = createUserDto.email.trim().toLowerCase();
       user.tab_number = createUserDto.tab_number;
-      user.name_ru = createUserDto.name_ru;
-      user.name_en = createUserDto.name_en;
+      user.firstname_ru = createUserDto.firstanme_ru;
+      user.firstname_en = createUserDto.firstanme_en;
+      user.lastname_ru = createUserDto.lastname_ru;
+      user.lastname_en = createUserDto.lastname_en;
+      user.patronymic_ru = createUserDto.patronymic_ru;
+      user.patronymic_en = createUserDto.patronymic_en;
       user.position_id = createUserDto.position_id;
       user.section_id = createUserDto.section_id;
       user.state_id = createUserDto.state_id;
@@ -74,10 +77,10 @@ export class UsersService {
     } catch (err) {
       if (
         err.name === 'SequelizeUniqueConstraintError' &&
-        err.original.constraint === 'user_email_key'
+        err.original.constraint === 'user_tab_number_key'
       ) {
         throw new HttpException(
-          `User with email '${createUserDto.email}' already exists`,
+          `User with email '${createUserDto.tab_number}' already exists`,
           HttpStatus.CONFLICT,
         );
       }
@@ -87,10 +90,10 @@ export class UsersService {
   }
 
   async login(userLoginRequestDto: UserLoginRequestDto) {
-    const email = userLoginRequestDto.email;
+    const tab_number = userLoginRequestDto.tab_number;
     const password = userLoginRequestDto.password;
 
-    const user = await this.getUserByEmail(email);
+    const user = await this.getUserByTab(tab_number);
     if (!user) {
       throw new HttpException(
         'Invalid email or password.',
@@ -116,14 +119,19 @@ export class UsersService {
       throw new HttpException('User not found.', HttpStatus.NOT_FOUND);
     }
 
-    user.tab_number = updateUserDto.tab_number || user.tab_number;
-    user.name_ru = updateUserDto.name_ru || user.name_ru;
-    user.name_en = updateUserDto.name_en || user.name_en;
+    user.email = updateUserDto.email || user.email;
+    user.firstname_ru = updateUserDto.firstname_ru || user.firstname_ru;
+    user.firstname_en = updateUserDto.firstname_en || user.firstname_en;
+    user.lastname_ru = updateUserDto.lastname_ru || user.lastname_ru;
+    user.lastname_en = updateUserDto.lastname_en || user.lastname_en;
+    user.patronymic_ru = updateUserDto.patronymic_ru || user.patronymic_ru;
+    user.patronymic_en = updateUserDto.patronymic_en || user.patronymic_en;
     user.position_id = updateUserDto.position_id || user.position_id;
     user.section_id = updateUserDto.section_id || user.section_id;
     user.state_id = updateUserDto.state_id || user.state_id;
     user.city_id = updateUserDto.city_id || user.city_id;
     user.nomination_id = updateUserDto.nomination_id || user.nomination_id;
+    user.count_z = updateUserDto.count_z || user.count_z;
     user.description_ru = updateUserDto.description_ru || user.description_ru;
     user.description_en = updateUserDto.description_en || user.description_en;
     user.role = updateUserDto.role || user.role;
@@ -144,7 +152,7 @@ export class UsersService {
 
   async signToken(user: User) {
     const payload: JwtPayload = {
-      email: user.email,
+      tab_number: user.tab_number,
     };
 
     return sign(payload, this.jwtPrivateKey, {});

@@ -64,7 +64,7 @@ export class SectionsService {
     if (!section) {
       throw new HttpException('Section not found.', HttpStatus.NOT_FOUND);
     }
-    section.value_en = updateSectionDto.value_en || section.value_en;
+    section.value_ru = updateSectionDto.value_ru || section.value_ru;
     section.value_en = updateSectionDto.value_en || section.value_en;
 
 

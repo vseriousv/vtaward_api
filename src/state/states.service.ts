@@ -63,7 +63,7 @@ export class StatesService {
     if (!state) {
       throw new HttpException('State not found.', HttpStatus.NOT_FOUND);
     }
-    state.value_en = updateStateDto.value_en || state.value_en;
+    state.value_ru = updateStateDto.value_ru || state.value_ru;
     state.value_en = updateStateDto.value_en || state.value_en;
 
 

@@ -19,17 +19,32 @@ export class CreateUserDto {
     readonly password: string;
 
     @ApiProperty()
-    @IsOptional()
     @IsString()
     readonly tab_number: string;
 
     @ApiProperty()
     @IsString()
-    readonly name_ru: string;
+    readonly firstanme_ru: string;
 
     @ApiProperty()
     @IsString()
-    readonly name_en: string;
+    readonly firstanme_en: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly lastname_ru: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly lastname_en: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly patronymic_ru: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly patronymic_en: string;
 
     @ApiProperty()
     @IsInt()
@@ -71,5 +86,4 @@ export class CreateUserDto {
     @IsOptional()
     @IsEnum(Role)
     readonly role: Role;
-
 }

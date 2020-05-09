@@ -22,7 +22,6 @@ export class User extends Model<User> {
     })
     id: number;
 
-    @Unique
     @IsEmail
     @Column
     email: string;
@@ -30,14 +29,26 @@ export class User extends Model<User> {
     @Column
     password: string;
 
+    @Unique
     @Column ({field: 'tab_number'})
     tab_number: string;
 
-    @Column({ field: 'name_ru' })
-    name_ru: string;
+    @Column({ field: 'firstname_ru' })
+    firstname_ru: string;
 
-    @Column({ field: 'name_en' })
-    name_en: string;
+    @Column({ field: 'firstname_en' })
+    firstname_en: string;
+
+    @Column({ field: 'lastname_ru' })
+    lastname_ru: string
+    @Column({ field: 'lastname_en' })
+    lastname_en: string;
+
+    @Column({ field: 'patronymic_ru' })
+    patronymic_ru: string;
+
+    @Column({ field: 'patronymic_en' })
+    patronymic_en: string;
 
     @Column({ field: 'position_id' })
     position_id: number;

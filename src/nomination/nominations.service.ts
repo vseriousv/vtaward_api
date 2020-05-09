@@ -75,7 +75,7 @@ export class NominationsService {
     if (!nomination) {
       throw new HttpException('Nomination not found.', HttpStatus.NOT_FOUND);
     }
-    nomination.value_en = updateNominationDto.value_en || nomination.value_en;
+    nomination.value_ru = updateNominationDto.value_ru || nomination.value_ru;
     nomination.value_en = updateNominationDto.value_en || nomination.value_en;
 
 

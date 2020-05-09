@@ -62,7 +62,7 @@ export class PositionsService {
     if (!position) {
       throw new HttpException('Position not found.', HttpStatus.NOT_FOUND);
     }
-    position.value_en = updatePositionDto.value_en || position.value_en;
+    position.value_ru = updatePositionDto.value_ru || position.value_ru;
     position.value_en = updatePositionDto.value_en || position.value_en;
 
 

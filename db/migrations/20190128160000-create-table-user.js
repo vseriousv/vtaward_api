@@ -11,21 +11,25 @@ const sql = `
                 pg_catalog.pg_namespace n on n.oid = t.typnamespace 
             where  
                 n.nspname = 'public' and 
-                t.typname='enum_user_role' 
+                t.typname='enum_users_role' 
             group by 1
         ) then
-            create type "public"."enum_user_role" as enum('admin', 'comittee', 'user');
+            create type "public"."enum_users_role" as enum('admin', 'comittee', 'user');
         end if;
     end
     $$;
 
     create table "users" (
         "id" serial, 
-        "email" varchar(255) unique NOT NULL, 
-        "password" varchar(255) NOT NULL, 
-        "tab_number" varchar(40) NOT NULL,
-        "name_ru" varchar(40) NOT NULL,
-        "name_en" varchar(40) NOT NULL,
+        "email" varchar(255)  NOT NULL, 
+        "password" varchar(255)  NOT NULL, 
+        "tab_number" varchar(40) unique NOT NULL,
+        "firstname_ru" varchar(40) NOT NULL,
+        "firstname_en" varchar(40) NOT NULL,
+        "lastname_ru" varchar(40) NOT NULL,
+        "lastname_en" varchar(40) NOT NULL,
+        "patronymic_ru" varchar(40) NOT NULL,
+        "patronymic_en" varchar(40) NOT NULL,
         "position_id" integer NOT NULL,
         "section_id" integer NOT NULL,
         "state_id" integer NOT NULL,
@@ -39,85 +43,15 @@ const sql = `
         "updated_at" timestamp with time zone, 
         "deleted_at" timestamp with time zone,
         primary key ("id")
-    );
-    
-     create table "sections" (
-        "id" serial, 
-        "value_ru" varchar(255) NOT NULL, 
-        "value_en" varchar(255) NOT NULL,
-        primary key ("id")
-    );
-    
-     create table "positions" (
-        "id" serial, 
-        "value_ru" varchar(255) NOT NULL, 
-        "value_en" varchar(255) NOT NULL,
-        primary key ("id")
-    );
-    
-     create table "states" (
-        "id" serial, 
-        "value_ru" varchar(255) NOT NULL, 
-        "value_en" varchar(255) NOT NULL,
-        primary key ("id")
-    );
-    
-     create table "cities" (
-        "id" serial, 
-        "state_id" integer NOT NULL,
-        "value_ru" varchar(255) NOT NULL, 
-        "value_en" varchar(255) NOT NULL,
-        primary key ("id")
-    );
-    
-     create table "nominations" (
-        "id" serial, 
-        "value_ru" varchar(255) NOT NULL, 
-        "value_en" varchar(255) NOT NULL,
-        primary key ("id")
-    );
-    
-     create table "participants" (
-        "id" serial, 
-        "user_id" integer NOT NULL, 
-        "year_voting" integer NOT NULL, 
-        "type_voting" varchar(40) NOT NULL,
-        primary key ("id")
-    );
-   
-      create table "votes" (
-        "id" serial, 
-        "user_form_id" integer NOT NULL,
-        "user_to_id" integer NOT NULL,
-        "type_voting" varchar(40) NOT NULL,
-        "count_vote" integer NOT NULL,
-        primary key ("id")
-    );
-    
-     create table "winners" (
-        "id" serial, 
-        "user_id" integer NOT NULL, 
-        "year_voting" integer NOT NULL, 
-        "type_voting" varchar(40) NOT NULL,
-        primary key ("id")
-    );
-    
+    );  
 `;
 
 module.exports = {
   up: queryInterface => queryInterface.sequelize.query(sql),
   down: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.query(`
-      DROP TABLE "user";
-      DROP TABLE "sections";
-      DROP TABLE "positions";
-      DROP TABLE "states";
-      DROP TABLE "cities";
-      DROP TABLE "votes";
-      DROP TABLE "nominations";
-      DROP TABLE "participants";
-      DROP TABLE "winners";
-      DROP type "public"."enum_user_role";
+      DROP TABLE "users";
+      DROP type "public"."enum_users_role";
     `);
   }
 };
