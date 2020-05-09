@@ -67,6 +67,7 @@ export class UsersService {
       user.nomination_id = createUserDto.nomination_id;
       user.description_ru = createUserDto.description_ru;
       user.description_en = createUserDto.description_en;
+      user.img = createUserDto.img;
 
       const salt = await genSalt(10);
       user.password = await hash(createUserDto.password, salt);
@@ -145,6 +146,7 @@ export class UsersService {
     user.description_ru = updateUserDto.description_ru || user.description_ru;
     user.description_en = updateUserDto.description_en || user.description_en;
     user.role = updateUserDto.role || user.role;
+    user.img = updateUserDto.img || user.img;
 
     try {
       const data = await user.save();

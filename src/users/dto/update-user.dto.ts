@@ -82,4 +82,9 @@ export class UpdateUserDto {
   @IsOptional()
   @IsEnum(Role)
   readonly role: Role;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  readonly img: string;
 }
