@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import {StatesService} from './states.service';
-import {CreateStateDto} from './dto/creat-state.dto';
+import { StatesService } from './states.service';
+import { CreateStateDto } from './dto/creat-state.dto';
 import { StateDto } from './dto/state.dto';
-import {UpdateStateDto} from './dto/update-state.dto';
+import { UpdateStateDto } from './dto/update-state.dto';
 
 @Controller('states')
 @ApiTags('states')
@@ -23,9 +23,7 @@ export class StatesController {
   @Post('create')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
-  register(
-    @Body() createStateDto: CreateStateDto,
-  ): Promise<CreateStateDto> {
+  register(@Body() createStateDto: CreateStateDto): Promise<CreateStateDto> {
     return this.stateService.create(createStateDto);
   }
 
@@ -37,14 +35,13 @@ export class StatesController {
     return this.stateService.findAll();
   }
 
-  @Get(':id')
+  @Get(':code')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: StateDto })
-  async getUser(@Param('id') id): Promise<StateDto> {
-    return this.stateService.getState(id);
+  async getUser(@Param('code') code): Promise<StateDto> {
+    return this.stateService.getStateByCode(code);
   }
-
 
   @Put(':id')
   @ApiBearerAuth()

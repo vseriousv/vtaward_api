@@ -3,11 +3,15 @@ import config from '../../../config';
 
 @Injectable()
 export class ConfigService {
-    get sequelizeOrmConfig() {
-        return config.database;
-    }
+  get sequelizeOrmConfig() {
+    return config.database;
+  }
 
-    get jwtConfig() {
-        return { privateKey: config.jwtPrivateKey };
-    }
+  get jwtConfig() {
+    return { privateKey: config.jwtPrivateKey };
+  }
+
+  get transportConfig() {
+    return { transport: config.transport, defaults: config.defaults }
+  }
 }

@@ -1,6 +1,5 @@
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from './user.entity';
-// import { Mail } from './mail.entity';
 import { genSalt, hash, compare } from 'bcrypt';
 import { UserDto } from './dto/user.dto';
 import { UserLoginRequestDto } from './dto/user-login-request.dto';
@@ -9,8 +8,8 @@ import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { JwtPayload } from './auth/jwt-payload.model';
 import { sign } from 'jsonwebtoken';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ConfigService } from './../shared/config/config.service';
-// import randomstring from 'randomstring';
+import { ConfigService } from './../shared/config/config.service'
+// import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class UsersService {
@@ -20,12 +19,15 @@ export class UsersService {
     @Inject('UsersRepository')
     private readonly usersRepository: typeof User,
     private readonly configService: ConfigService,
+    // private readonly mailerService: MailerService,
   ) {
     this.jwtPrivateKey = this.configService.jwtConfig.privateKey;
   }
 
   async findAll() {
-    const users = await this.usersRepository.findAll<User>();
+    const users = await this.usersRepository.findAll<User>({
+      order: [['id', 'ASC']],
+    });
     return users.map(user => new UserDto(user));
   }
 
@@ -52,8 +54,8 @@ export class UsersService {
 
       user.email = createUserDto.email.trim().toLowerCase();
       user.tab_number = createUserDto.tab_number;
-      user.firstname_ru = createUserDto.firstanme_ru;
-      user.firstname_en = createUserDto.firstanme_en;
+      user.firstname_ru = createUserDto.firstname_ru;
+      user.firstname_en = createUserDto.firstname_en;
       user.lastname_ru = createUserDto.lastname_ru;
       user.lastname_en = createUserDto.lastname_en;
       user.patronymic_ru = createUserDto.patronymic_ru;
@@ -70,7 +72,15 @@ export class UsersService {
       user.password = await hash(createUserDto.password, salt);
 
       const userData = await user.save();
-
+      // await this.mailerService.sendMail({
+      //       to: 'zombotv82@gmail.com', // list of receivers
+      //       from: 'noreply@nestjs.com', // sender address
+      //       subject: 'Testing Nest MailerModule ✔', // Subject line
+      //       text: 'welcome', // plaintext body
+      //       html: '<b>welcome</b>', // HTML body content
+      //     })
+      //     .then(() => {})
+      //     .catch(() => {});
       // when registering then log user in automatically by returning a token
       const token = await this.signToken(userData);
       return new UserLoginResponseDto(userData, token);
@@ -96,7 +106,7 @@ export class UsersService {
     const user = await this.getUserByTab(tab_number);
     if (!user) {
       throw new HttpException(
-        'Invalid email or password.',
+        'Invalid tab number or password.',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -157,5 +167,4 @@ export class UsersService {
 
     return sign(payload, this.jwtPrivateKey, {});
   }
-
 }

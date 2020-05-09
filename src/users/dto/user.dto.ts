@@ -33,19 +33,19 @@ export class UserDto {
   readonly patronymic_en: string;
 
   @ApiProperty()
-  readonly position_id: number;
+  readonly position_id: string;
 
   @ApiProperty()
-  readonly section_id: number;
+  readonly section_id: string;
 
   @ApiProperty()
-  readonly state_id: number;
+  readonly state_id: string;
 
   @ApiProperty()
-  readonly city_id: number;
+  readonly city_id: string;
 
   @ApiProperty()
-  readonly nomination_id: number;
+  readonly nomination_id: string;
 
   @ApiProperty()
   readonly count_z: number;

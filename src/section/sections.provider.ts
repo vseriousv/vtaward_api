@@ -1,3 +1,5 @@
-import { Section} from './section.entity';
+import { Section } from './section.entity';
 
-export const sectionProviders = [{ provide: 'SectionRepository', useValue: Section }];
+export const sectionProviders = [
+  { provide: 'SectionRepository', useValue: Section },
+];

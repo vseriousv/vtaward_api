@@ -1,7 +1,6 @@
 import { Nomination } from '../nomination.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
-
 export class NominationDto {
   @ApiProperty()
   id: number;
@@ -12,9 +11,13 @@ export class NominationDto {
   @ApiProperty()
   readonly value_en: string;
 
+  @ApiProperty()
+  readonly code: string;
+
   constructor(nomination: Nomination) {
     this.id = nomination.id;
     this.value_ru = nomination.value_ru;
     this.value_en = nomination.value_en;
+    this.code = nomination.code;
   }
 }

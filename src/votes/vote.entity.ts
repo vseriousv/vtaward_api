@@ -1,8 +1,4 @@
-import {
-  Table,
-  Column,
-  Model, DataType,
-} from 'sequelize-typescript';
+import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
 @Table({
   tableName: 'votes',
@@ -25,5 +21,4 @@ export class Vote extends Model<Vote> {
 
   @Column
   count_vote: number;
-
 }
