@@ -163,6 +163,7 @@ export class UsersService {
   async signToken(user: User) {
     const payload: JwtPayload = {
       tab_number: user.tab_number,
+      role: user.role,
     };
 
     return sign(payload, this.jwtPrivateKey, {});
