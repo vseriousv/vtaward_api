@@ -12,9 +12,4 @@ export class UpdateStateDto {
   @IsOptional()
   @IsString()
   readonly value_en: string;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsString()
-  readonly code: string;
 }

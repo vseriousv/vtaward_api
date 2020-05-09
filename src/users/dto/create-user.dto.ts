@@ -44,27 +44,27 @@ export class CreateUserDto {
 
   @ApiProperty()
   @IsOptional()
-  @IsString()
-  readonly position_id: string;
+  @IsInt()
+  readonly position_id: number;
 
   @ApiProperty()
   @IsOptional()
-  @IsString()
-  readonly section_id: string;
+  @IsInt()
+  readonly section_id: number;
 
   @ApiProperty()
-  @IsString()
-  readonly state_id: string;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsString()
-  readonly city_id: string;
+  @IsInt()
+  readonly state_id: number;
 
   @ApiProperty()
   @IsOptional()
-  @IsString()
-  readonly nomination_id: string;
+  @IsInt()
+  readonly city_id: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  readonly nomination_id: number;
 
   @ApiProperty()
   @IsOptional()

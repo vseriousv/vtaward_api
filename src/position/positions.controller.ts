@@ -37,12 +37,12 @@ export class PositionsController {
     return this.positionService.findAll();
   }
 
-  @Get(':code')
+  @Get(':id')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: PositionDto })
-  async getUser(@Param('code') code): Promise<PositionDto> {
-    return this.positionService.getPositionByCode(code);
+  async getUser(@Param('id') id): Promise<PositionDto> {
+    return this.positionService.getPosition(id);
   }
 
   @Put(':id')

@@ -1,4 +1,5 @@
-import { Table, Column, Model, Unique } from 'sequelize-typescript';
+import { Table, Column, Model, Unique, HasMany } from 'sequelize-typescript';
+import { User } from '../users/user.entity';
 
 @Table({
   tableName: 'states',
@@ -16,7 +17,6 @@ export class State extends Model<State> {
   @Column
   value_en: string;
 
-  @Unique
-  @Column
-  code: string;
+  @HasMany(() => User )
+  users: User[];
 }

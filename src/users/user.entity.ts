@@ -7,10 +7,15 @@ import {
   DataType,
   CreatedAt,
   UpdatedAt,
-  DeletedAt,
+  DeletedAt, HasOne, BelongsTo, ForeignKey, HasMany,
 } from 'sequelize-typescript';
-// import { Gender } from './../shared/enum/gender';
 import { Role } from './../shared/enum/role';
+import { Position } from '../position/position.entity';
+import { Section } from '../section/section.entity';
+import { State } from '../state/state.entity';
+import { City } from '../city/city.entity';
+import { Nomination } from '../nomination/nomination.entity';
+import { Participant } from '../participants/participant.entity';
 
 @Table({
   tableName: 'users',
@@ -50,20 +55,25 @@ export class User extends Model<User> {
   @Column({ field: 'patronymic_en' })
   patronymic_en: string;
 
+  @ForeignKey(() => Position)
   @Column({ field: 'position_id' })
-  position_id: string;
+  position_id: number;
 
+  @ForeignKey(() => Section)
   @Column({ field: 'section_id' })
-  section_id: string;
+  section_id: number;
 
+  @ForeignKey(() => State)
   @Column({ field: 'state_id' })
-  state_id: string;
+  state_id: number;
 
+  @ForeignKey(() => City)
   @Column({ field: 'city_id' })
-  city_id: string;
+  city_id: number;
 
+  @ForeignKey(() => Nomination)
   @Column({ field: 'nomination_id' })
-  nomination_id: string;
+  nomination_id: number;
 
   @Column({ field: 'count_z', defaultValue: 0 })
   count_z: number;
@@ -94,4 +104,22 @@ export class User extends Model<User> {
   @DeletedAt
   @Column({ field: 'deleted_at' })
   deletedAt: Date;
+
+  @BelongsTo(() => Position)
+  position: Position;
+
+  @BelongsTo(() => Section)
+  section: Section;
+
+  @BelongsTo(() => State)
+  state: State;
+
+  @BelongsTo(() => City)
+  city: City;
+
+  @BelongsTo(() => Nomination)
+  nomination: Nomination;
+
+  @HasMany(() => Participant)
+  participant: Participant[];
 }

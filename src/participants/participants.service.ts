@@ -3,6 +3,7 @@ import { Participant } from './participant.entity';
 import { ParticipantDto } from './dto/participant.dto';
 import { CreateParticipantDto } from './dto/creat-participant.dto';
 import { UpdateParticipantDto } from './dto/update-participant.dto';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class ParticipantsService {
@@ -13,6 +14,7 @@ export class ParticipantsService {
 
   async findAll() {
     const participants = await this.participantRepository.findAll<Participant>({
+      include: [User],
       order: [['id', 'ASC']],
     });
     return participants.map(participant => new ParticipantDto(participant));
