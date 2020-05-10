@@ -16,6 +16,7 @@ import { State } from '../state/state.entity';
 import { City } from '../city/city.entity';
 import { Nomination } from '../nomination/nomination.entity';
 import { Participant } from '../participants/participant.entity';
+import { Vote } from '../votes/vote.entity';
 
 @Table({
   tableName: 'users',
@@ -121,5 +122,9 @@ export class User extends Model<User> {
   nomination: Nomination;
 
   @HasMany(() => Participant)
-  participant: Participant[];
+  participants: Participant[];
+
+  @HasMany(() => Vote)
+  votes: Vote[];
+
 }
