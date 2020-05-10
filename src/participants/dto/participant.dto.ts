@@ -1,6 +1,7 @@
 import { Participant } from '../participant.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../../users/user.entity';
+import { UserDto } from '../../users/dto/user.dto';
 
 export class ParticipantDto {
   @ApiProperty()
@@ -16,7 +17,7 @@ export class ParticipantDto {
   type_voting: string;
 
   @ApiProperty()
-  user: User;
+  user: UserDto;
 
   constructor(participant: Participant) {
     this.id = participant.id;

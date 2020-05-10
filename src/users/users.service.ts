@@ -50,6 +50,7 @@ export class UsersService {
 
   async getUserByTab(tab_number: string) {
     return await this.usersRepository.findOne<User>({
+      include: [Position, Section, State, City, Nomination],
       where: { tab_number },
     });
   }
@@ -113,7 +114,7 @@ export class UsersService {
     const user = await this.getUserByTab(tab_number);
     if (!user) {
       throw new HttpException(
-        'Invalid tab number or password.',
+        'No user with this tab number',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -121,7 +122,7 @@ export class UsersService {
     const isMatch = await compare(password, user.password);
     if (!isMatch) {
       throw new HttpException(
-        'Invalid email or password.',
+        'Invalid password.',
         HttpStatus.BAD_REQUEST,
       );
     }

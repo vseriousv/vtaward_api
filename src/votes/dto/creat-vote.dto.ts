@@ -13,9 +13,13 @@ export class CreateVoteDto {
 
   @ApiProperty()
   @IsString()
-  readonly type_voting: string;
+  readonly type_vote: string;
 
   @ApiProperty()
   @IsInt()
   count_vote: number;
+
+  @ApiProperty()
+  @IsInt()
+  voting_id: number;
 }
