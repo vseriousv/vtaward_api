@@ -3,6 +3,7 @@ import { Vote } from './vote.entity';
 import { VoteDto } from './dto/vote.dto';
 import { CreateVoteDto } from './dto/creat-vote.dto';
 import { UpdateVoteDto } from './dto/update-vote.dto';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class VoteService {
@@ -13,6 +14,7 @@ export class VoteService {
 
   async findAll() {
     const votes = await this.voteRepository.findAll<Vote>({
+      include: [User],
       order: [['id', 'ASC']],
     });
     return votes.map(vote => new VoteDto(vote));
@@ -56,8 +58,9 @@ export class VoteService {
 
       vote.user_from_id = createVoteDto.user_from_id;
       vote.user_to_id = createVoteDto.user_to_id;
-      vote.type_voting = createVoteDto.type_voting;
+      vote.type_vote = createVoteDto.type_vote;
       vote.count_vote = createVoteDto.count_vote;
+      vote.voting_id = createVoteDto.voting_id;
 
       const votesData = await vote.save();
 
@@ -83,8 +86,9 @@ export class VoteService {
     }
     vote.user_from_id = updateVoteDto.user_from_id || vote.user_from_id;
     vote.user_to_id = updateVoteDto.user_to_id || vote.user_to_id;
-    vote.type_voting = updateVoteDto.type_voting || vote.type_voting;
+    vote.type_vote = updateVoteDto.type_vote || vote.type_vote;
     vote.count_vote = updateVoteDto.count_vote || vote.count_vote;
+    vote.voting_id = updateVoteDto.voting_id || vote.voting_id;
 
     try {
       const data = await vote.save();

@@ -4,6 +4,7 @@ import { ParticipantDto } from './dto/participant.dto';
 import { CreateParticipantDto } from './dto/creat-participant.dto';
 import { UpdateParticipantDto } from './dto/update-participant.dto';
 import { User } from '../users/user.entity';
+import { Voting } from '../voting/voting.entity';
 
 @Injectable()
 export class ParticipantsService {
@@ -14,7 +15,7 @@ export class ParticipantsService {
 
   async findAll() {
     const participants = await this.participantRepository.findAll<Participant>({
-      include: [User],
+      include: [User, Voting],
       order: [['id', 'ASC']],
     });
     return participants.map(participant => new ParticipantDto(participant));
@@ -38,8 +39,7 @@ export class ParticipantsService {
       const participant = new Participant();
 
       participant.user_id = createParticipantDto.user_id;
-      participant.year_voting = createParticipantDto.year_voting;
-      participant.type_voting = createParticipantDto.type_voting;
+      participant.voting_id = createParticipantDto.voting_id;
 
       const participantsData = await participant.save();
 
@@ -66,10 +66,7 @@ export class ParticipantsService {
       throw new HttpException('Participant not found.', HttpStatus.NOT_FOUND);
     }
     participant.user_id = updateParticipantDto.user_id || participant.user_id;
-    participant.year_voting =
-      updateParticipantDto.year_voting || participant.year_voting;
-    participant.type_voting =
-      updateParticipantDto.type_voting || participant.type_voting;
+    participant.voting_id = updateParticipantDto.voting_id || participant.voting_id;
 
     try {
       const data = await participant.save();

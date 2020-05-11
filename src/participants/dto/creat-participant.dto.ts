@@ -8,9 +8,5 @@ export class CreateParticipantDto {
 
   @ApiProperty()
   @IsInt()
-  readonly year_voting: number;
-
-  @ApiProperty()
-  @IsString()
-  readonly type_voting: string;
+  readonly voting_id: number;
 }

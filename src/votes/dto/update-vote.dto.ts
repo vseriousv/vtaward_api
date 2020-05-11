@@ -15,10 +15,15 @@ export class UpdateVoteDto {
   @ApiProperty()
   @IsOptional()
   @IsString()
-  readonly type_voting: string;
+  readonly type_vote: string;
 
   @ApiProperty()
   @IsOptional()
   @IsInt()
   count_vote: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  voting_id: number;
 }
