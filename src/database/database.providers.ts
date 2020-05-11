@@ -9,6 +9,7 @@ import { ConfigService } from './../shared/config/config.service';
 import { Participant } from '../participants/participant.entity';
 import { Vote } from '../votes/vote.entity';
 import { Winner } from '../winners/winner.entity';
+import { Voting } from '../voting/voting.entity'
 
 export const databaseProviders = [
   {
@@ -26,6 +27,7 @@ export const databaseProviders = [
         Participant,
         Vote,
         Winner,
+        Voting
       ]);
       await sequelize.sync();
       return sequelize;

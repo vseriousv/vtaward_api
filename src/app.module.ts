@@ -10,6 +10,7 @@ import { NominationsModule } from './nomination/nominations.module';
 import { ParticipantsModule } from './participants/participants.module';
 import { VotesModule } from './votes/votes.module';
 import { WinnersModule } from './winners/winners.module';
+import { VotingsModule } from './voting/votings.module'
 import { ConfigService } from './shared/config/config.service';
 // import { MailerModule } from '@nestjs-modules/mailer';
 
@@ -27,6 +28,7 @@ import { ConfigService } from './shared/config/config.service';
     ParticipantsModule,
     VotesModule,
     WinnersModule,
+    VotingsModule,
     ConfigModule.forRoot(),
     // MailerModule.forRoot({ ...config.transportConfig }),
   ],

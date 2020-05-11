@@ -2,6 +2,7 @@ import { Vote } from '../vote.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../../users/user.entity';
 import { UserDto } from '../../users/dto/user.dto';
+import { VotingDto } from '../../voting/dto/voting.dto';
 
 export class VoteDto {
   @ApiProperty()
@@ -28,6 +29,9 @@ export class VoteDto {
   @ApiProperty()
   readonly userTo: UserDto;
 
+  @ApiProperty()
+  readonly voting: VotingDto;
+
   constructor(vote: Vote) {
     this.id = vote.id;
     this.user_from_id = vote.user_from_id;
@@ -37,5 +41,6 @@ export class VoteDto {
     // this.userFrom = vote.userFrom;
     this.voting_id = vote.voting_id;
     this.userTo = vote.userTo;
+    this.voting = vote.voting;
   }
 }

@@ -1,5 +1,6 @@
 import { Table, Column, Model, DataType, BelongsTo, ForeignKey } from 'sequelize-typescript';
 import { User } from '../users/user.entity';
+import { Voting } from '../voting/voting.entity';
 
 @Table({
   tableName: 'votes',
@@ -25,6 +26,7 @@ export class Vote extends Model<Vote> {
   @Column
   count_vote: number;
 
+  @ForeignKey(() => Voting)
   @Column
   voting_id: number;
 
@@ -33,4 +35,7 @@ export class Vote extends Model<Vote> {
 
   @BelongsTo(() => User)
   userTo: User;
+
+  @BelongsTo(() => Voting)
+  voting: Voting
 }
