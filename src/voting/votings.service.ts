@@ -52,9 +52,10 @@ export class VotingsService {
     if (!voting) {
       throw new HttpException('Voting not found.', HttpStatus.NOT_FOUND);
     }
+
     voting.year = updateVotingDto.year || voting.year;
     voting.type_voting = updateVotingDto.type_voting || voting.type_voting;
-    voting.is_active = updateVotingDto.is_active || voting.is_active;
+    voting.is_active = updateVotingDto.is_active != null ? updateVotingDto.is_active : voting.is_active;
 
     try {
       const data = await voting.save();

@@ -46,6 +46,7 @@ export class VotingsController {
     return this.votingService.getVoting(id);
   }
 
+  @ApiParam({ name: 'id', description: 'id', type: String })
   @Put(':id')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
