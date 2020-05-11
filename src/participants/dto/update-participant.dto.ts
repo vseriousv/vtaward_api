@@ -11,10 +11,5 @@ export class UpdateParticipantDto {
   @ApiProperty()
   @IsOptional()
   @IsInt()
-  readonly year_voting: number;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsString()
-  readonly type_voting: string;
+  readonly voting_id: number;
 }
