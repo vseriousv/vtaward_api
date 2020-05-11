@@ -8,7 +8,7 @@ import {
   Put,
   Param,
 } from '@nestjs/common';
-import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOkResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ParticipantsService } from './participants.service';
 import { CreateParticipantDto } from './dto/creat-participant.dto';
@@ -37,6 +37,15 @@ export class ParticipantsController {
     return this.participantService.findAll();
   }
 
+  @Get('/isactive')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOkResponse({ type: [ParticipantDto] })
+  findIsActive(): Promise<ParticipantDto[]> {
+    return this.participantService.findIsActive();
+  }
+
+  @ApiParam({ name: 'id', description: 'id', type: Number })
   @Get(':id')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))

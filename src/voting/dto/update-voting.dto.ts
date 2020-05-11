@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, IsEnum, IsInt, IsNumber } from 'class-validator';
+import { IsOptional, IsString, IsEnum, IsInt, IsNumber, IsBoolean } from 'class-validator';
 // import { Role } from '../../shared/enum/role';
 
 export class UpdateVotingDto {
@@ -15,6 +15,6 @@ export class UpdateVotingDto {
 
   @ApiProperty()
   @IsOptional()
-  @IsString()
+  @IsBoolean()
   readonly is_active: boolean;
 }

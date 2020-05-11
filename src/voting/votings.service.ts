@@ -37,6 +37,7 @@ export class VotingsService {
 
       voting.year = createVotingDto.year;
       voting.type_voting = createVotingDto.type_voting.trim().toLowerCase();
+      voting.is_active = createVotingDto.is_active || voting.is_active;
 
       const votingsData = await voting.save();
 
@@ -53,6 +54,7 @@ export class VotingsService {
     }
     voting.year = updateVotingDto.year || voting.year;
     voting.type_voting = updateVotingDto.type_voting || voting.type_voting;
+    voting.is_active = updateVotingDto.is_active || voting.is_active;
 
     try {
       const data = await voting.save();

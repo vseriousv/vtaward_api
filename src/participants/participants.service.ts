@@ -21,6 +21,19 @@ export class ParticipantsService {
     return participants.map(participant => new ParticipantDto(participant));
   }
 
+  async findIsActive() {
+    const participants = await this.participantRepository.findAll<Participant>({
+      include: [User, {
+        model: Voting,
+        where: { is_active: true }
+      }],
+      order: [['id', 'ASC']],
+
+    });
+
+    return participants.map(participant => new ParticipantDto(participant));
+  }
+
   async getParticipant(id: string) {
     const participant = await this.participantRepository.findByPk<Participant>(
       id,
