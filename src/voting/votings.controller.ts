@@ -8,7 +8,7 @@ import {
   Put,
   Param,
 } from '@nestjs/common';
-import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOkResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { VotingsService } from './votings.service';
 import { CreateVotingDto } from './dto/creat-voting.dto';
@@ -37,6 +37,7 @@ export class VotingsController {
     return this.votingService.getVotingAll();
   }
 
+  @ApiParam({ name: 'id', description: 'id', type: String })
   @Get(':id')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
