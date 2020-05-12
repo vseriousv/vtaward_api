@@ -38,7 +38,10 @@ export class UsersService {
   }
 
   async getUser(id: string) {
-    const user = await this.usersRepository.findByPk<User>(id);
+    const user = await this.usersRepository.findByPk<User>(id,{
+      include: [Position, Section, State, City, Nomination],
+      order: [['id', 'ASC']],
+    });
     if (!user) {
       throw new HttpException(
         'User with given id not found',
@@ -138,6 +141,7 @@ export class UsersService {
     }
 
     user.email = updateUserDto.email || user.email;
+    user.tab_number = updateUserDto.tab_number || user.tab_number;
     user.firstname_ru = updateUserDto.firstname_ru || user.firstname_ru;
     user.firstname_en = updateUserDto.firstname_en || user.firstname_en;
     user.lastname_ru = updateUserDto.lastname_ru || user.lastname_ru;
@@ -154,6 +158,22 @@ export class UsersService {
     user.description_en = updateUserDto.description_en || user.description_en;
     user.role = updateUserDto.role || user.role;
     user.img = updateUserDto.img || user.img;
+
+    try {
+      const data = await user.save();
+      return new UserDto(data);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async updateAvatar(id: number, fileImage: string) {
+    console.log(fileImage);
+    const user = await this.usersRepository.findByPk<User>(id);
+    if (!user) {
+      throw new HttpException('User not found.', HttpStatus.NOT_FOUND);
+    }
+    user.img = fileImage;
 
     try {
       const data = await user.save();

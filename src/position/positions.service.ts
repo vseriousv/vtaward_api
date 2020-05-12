@@ -35,8 +35,8 @@ export class PositionsService {
     try {
       const position = new Position();
 
-      position.value_ru = createPositionDto.value_ru.trim().toLowerCase();
-      position.value_en = createPositionDto.value_en.trim().toLowerCase();
+      position.value_ru = createPositionDto.value_ru;
+      position.value_en = createPositionDto.value_en;
 
       const positionsData = await position.save();
 

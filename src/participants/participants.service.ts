@@ -6,6 +6,12 @@ import { UpdateParticipantDto } from './dto/update-participant.dto';
 import { User } from '../users/user.entity';
 import { Voting } from '../voting/voting.entity';
 
+import { Position } from '../position/position.entity';
+import { Section } from '../section/section.entity';
+import { State } from '../state/state.entity';
+import { City } from '../city/city.entity';
+import { Nomination } from '../nomination/nomination.entity';
+
 @Injectable()
 export class ParticipantsService {
   constructor(
@@ -23,12 +29,17 @@ export class ParticipantsService {
 
   async findIsActive() {
     const participants = await this.participantRepository.findAll<Participant>({
-      include: [User, {
-        model: Voting,
-        where: { is_active: true }
-      }],
+      include: [
+        {
+          model: User,
+          include: [Position, Section, State, City, Nomination]
+        },
+        {
+          model: Voting,
+          where: { is_active: true }
+        }
+      ],
       order: [['id', 'ASC']],
-
     });
 
     return participants.map(participant => new ParticipantDto(participant));
