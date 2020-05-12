@@ -35,8 +35,8 @@ export class CityService {
     try {
       const city = new City();
 
-      city.value_ru = createCityDto.value_ru.trim().toLowerCase();
-      city.value_en = createCityDto.value_en.trim().toLowerCase();
+      city.value_ru = createCityDto.value_ru.trim();
+      city.value_en = createCityDto.value_en.trim();
 
       const cityData = await city.save();
 

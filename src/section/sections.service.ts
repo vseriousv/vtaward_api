@@ -35,8 +35,8 @@ export class SectionsService {
     try {
       const section = new Section();
 
-      section.value_ru = createSectionDto.value_ru.trim().toLowerCase();
-      section.value_en = createSectionDto.value_en.trim().toLowerCase();
+      section.value_ru = createSectionDto.value_ru;
+      section.value_en = createSectionDto.value_en;
 
       const sectionsData = await section.save();
 

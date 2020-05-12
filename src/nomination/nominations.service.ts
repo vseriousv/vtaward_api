@@ -35,8 +35,8 @@ export class NominationsService {
     try {
       const nomination = new Nomination();
 
-      nomination.value_ru = createNominationDto.value_ru.trim().toLowerCase();
-      nomination.value_en = createNominationDto.value_en.trim().toLowerCase();
+      nomination.value_ru = createNominationDto.value_ru;
+      nomination.value_en = createNominationDto.value_en;
 
       const nominationsData = await nomination.save();
 

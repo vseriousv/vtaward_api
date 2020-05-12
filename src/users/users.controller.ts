@@ -9,7 +9,7 @@ import {
   Req,
   UseGuards,
   Put,
-  Param,
+  Param, UseInterceptors, HttpException, HttpStatus, UploadedFile,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
@@ -18,6 +18,9 @@ import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from  'multer';
+import { extname } from 'path';
 
 @Controller('users')
 @ApiTags('users')
@@ -54,6 +57,44 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   async check(): Promise<Object> {
     return { result: true };
+  }
+
+  @Post('avatar')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: '../files/avatars',
+        filename: (req, file, cb) => {
+          const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
+          return cb(null, `${randomName}${extname(file.originalname)}`)
+        }
+      }),
+      fileFilter: (req, file, cb) => {
+        const allow = ['image/jpeg', 'image/pjpeg', 'image/png'];
+
+        if (!allow.includes(file.mimetype)) {
+          return cb(
+            new HttpException(
+              {
+                status: 'error',
+                message: 'Incorrect type of file',
+              },
+              HttpStatus.BAD_REQUEST,
+            ),
+            null,
+          );
+        }
+        cb(null, true);
+      },
+    }),
+  )
+  uploadFile(
+    @Body() id: number,
+    @UploadedFile() file
+  ): Promise<UserDto> {
+    return this.usersService.updateAvatar(JSON.parse(JSON.stringify(id)).id, file.filename);
   }
 
   @Get(':id')

@@ -11,6 +11,11 @@ export class UpdateUserDto {
   @ApiProperty()
   @IsOptional()
   @IsString()
+  readonly tab_number: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
   readonly firstname_ru: string;
 
   @ApiProperty()
