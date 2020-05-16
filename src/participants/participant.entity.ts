@@ -1,7 +1,6 @@
 import { Table, Column, Model, DataType, HasMany, BelongsTo, ForeignKey } from 'sequelize-typescript';
 import { User } from '../users/user.entity';
 import { Voting } from '../voting/voting.entity';
-import { Nomination } from '../nomination/nomination.entity';
 
 @Table({
   tableName: 'participants',

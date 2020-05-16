@@ -8,9 +8,6 @@ export class CreateWinnerDto {
 
   @ApiProperty()
   @IsInt()
-  readonly year_voting: number;
+  readonly voting_id: number;
 
-  @ApiProperty()
-  @IsString()
-  readonly type_voting: string;
 }

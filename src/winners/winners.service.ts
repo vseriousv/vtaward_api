@@ -3,6 +3,13 @@ import { Winner } from './winner.entity';
 import { WinnerDto } from './dto/winner.dto';
 import { CreateWinnerDto } from './dto/creat-winner.dto';
 import { UpdateWinnerDto } from './dto/update-winner.dto';
+import { User } from '../users/user.entity';
+import { Voting } from '../voting/voting.entity';
+import { Position } from '../position/position.entity';
+import { Section } from '../section/section.entity';
+import { State } from '../state/state.entity';
+import { City } from '../city/city.entity';
+import { Nomination } from '../nomination/nomination.entity';
 
 @Injectable()
 export class WinnersService {
@@ -13,6 +20,30 @@ export class WinnersService {
 
   async findAll() {
     const winners = await this.winnerRepository.findAll<Winner>({
+      include: [
+        {
+          model: User,
+          include: [Position, Section, State, City, Nomination]
+        },
+        {
+          model: Voting
+        }],
+      order: [['id', 'ASC']],
+    });
+    return winners.map(winner => new WinnerDto(winner));
+  }
+
+  async findWinners(votingID: number) {
+    const winners = await this.winnerRepository.findAll<Winner>({
+      include: [
+        {
+          model: User,
+          include: [Position, Section, State, City, Nomination]
+        },
+        {
+          model: Voting,
+          where: { id: votingID }
+        }],
       order: [['id', 'ASC']],
     });
     return winners.map(winner => new WinnerDto(winner));
@@ -34,8 +65,7 @@ export class WinnersService {
       const winner = new Winner();
 
       winner.user_id = createWinnerDto.user_id;
-      winner.year_voting = createWinnerDto.year_voting;
-      winner.type_voting = createWinnerDto.type_voting;
+      winner.voting_id = createWinnerDto.voting_id;
 
       const winnersData = await winner.save();
 
@@ -60,8 +90,7 @@ export class WinnersService {
       throw new HttpException('Winner not found.', HttpStatus.NOT_FOUND);
     }
     winner.user_id = updateWinnerDto.user_id || winner.user_id;
-    winner.year_voting = updateWinnerDto.year_voting || winner.year_voting;
-    winner.type_voting = updateWinnerDto.type_voting || winner.type_voting;
+    winner.voting_id = updateWinnerDto.voting_id || winner.voting_id;
 
     try {
       const data = await winner.save();
