@@ -35,6 +35,14 @@ export class WinnersController {
     return this.winnerService.findAll();
   }
 
+  @Get('voting/:id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOkResponse({ type: WinnerDto })
+  getWinners(@Param('id') id): Promise<WinnerDto[]> {
+    return this.winnerService.findWinners(id);
+  }
+
   @Get(':id')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))

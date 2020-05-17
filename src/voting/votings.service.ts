@@ -18,6 +18,16 @@ export class VotingsService {
     return votings.map(voting => new VotingDto(voting));
   }
 
+  async getIsActive() {
+    const votings = await this.votingRepository.findAll<Voting>({
+      order: [['id', 'ASC']],
+      where: {
+        is_active: true
+      }
+    });
+    return votings.map(voting => new VotingDto(voting));
+  }
+
   async getVoting(id: number) {
     const voting = await this.votingRepository.findOne<Voting>({
       where: { id },

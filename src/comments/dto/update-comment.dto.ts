@@ -1,14 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, IsEnum, IsInt } from 'class-validator';
 
-export class UpdateWinnerDto {
+export class UpdateCommentDto {
   @ApiProperty()
   @IsOptional()
   @IsInt()
-  readonly user_id: number;
+  readonly user_from_id: number;
 
   @ApiProperty()
   @IsOptional()
   @IsInt()
-  readonly voting_id: number;
+  readonly user_to_id: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  readonly comment: string;
 }

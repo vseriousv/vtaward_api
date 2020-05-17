@@ -21,6 +21,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from  'multer';
 import { extname } from 'path';
+import { ForgotPasswordRequestDto } from './dto/forgot-password-request.dto';
+import { UserCodeResponseDto } from './dto/user-code-response.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -52,11 +54,26 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('committee')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOkResponse({ type: [UserDto] })
+  findAllCommittee(): Promise<UserDto[]> {
+    return this.usersService.findAllCommittee();
+  }
+
   @Get('check')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   async check(): Promise<Object> {
     return { result: true };
+  }
+
+  @Post('admin_forgot_password')
+  @ApiOkResponse({ type: UserDto })
+  adminForgotPassword(@Body() forgotPasswordRequestDto: ForgotPasswordRequestDto,
+  ):Promise<UserCodeResponseDto> {
+    return this.usersService.forgotPasswordForAdmin(forgotPasswordRequestDto);
   }
 
   @Post('avatar')

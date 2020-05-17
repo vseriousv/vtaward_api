@@ -14,6 +14,7 @@ import { ParticipantsService } from './participants.service';
 import { CreateParticipantDto } from './dto/creat-participant.dto';
 import { ParticipantDto } from './dto/participant.dto';
 import { UpdateParticipantDto } from './dto/update-participant.dto';
+import { ParticipantWithVotesDto } from './dto/participantWithVotes.dto';
 
 @Controller('participants')
 @ApiTags('participants')
@@ -40,8 +41,8 @@ export class ParticipantsController {
   @Get('/isactive')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
-  @ApiOkResponse({ type: [ParticipantDto] })
-  findIsActive(): Promise<ParticipantDto[]> {
+  @ApiOkResponse({ type: [ParticipantWithVotesDto] })
+  findIsActive(): Promise<ParticipantWithVotesDto[]> {
     return this.participantService.findIsActive();
   }
 

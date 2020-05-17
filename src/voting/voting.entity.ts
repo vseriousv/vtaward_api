@@ -1,6 +1,7 @@
 import { Table, Column, Model, Unique, HasOne, BelongsTo, ForeignKey, HasMany } from 'sequelize-typescript';
 import { Vote } from '../votes/vote.entity';
 import { Participant } from '../participants/participant.entity';
+import { Winner } from '../winners/winner.entity';
 
 @Table({
   tableName: 'votings',
@@ -26,4 +27,7 @@ export class Voting extends Model<Voting> {
 
   @HasMany(() => Vote )
   votes: Vote[];
+
+  @HasMany(() => Winner )
+  winners: Winner[];
 }

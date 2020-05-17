@@ -3,9 +3,9 @@ import { User } from '../users/user.entity';
 import { Voting } from '../voting/voting.entity';
 
 @Table({
-  tableName: 'winners',
+  tableName: 'comments',
 })
-export class Winner extends Model<Winner> {
+export class Comment extends Model<Comment> {
   @Column({
     autoIncrement: true,
     primaryKey: true,
@@ -14,15 +14,14 @@ export class Winner extends Model<Winner> {
 
   @ForeignKey(() => User)
   @Column
-  user_id: number;
+  user_from_id: number;
 
-  @ForeignKey(() => Voting)
   @Column
-  voting_id: number;
+  user_to_id: number;
+
+  @Column
+  comment: string;
 
   @BelongsTo(() => User)
-  user: User;
-
-  @BelongsTo(() => Voting)
-  voting: Voting
+  userFrom: User;
 }

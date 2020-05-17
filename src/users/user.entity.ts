@@ -17,6 +17,7 @@ import { City } from '../city/city.entity';
 import { Nomination } from '../nomination/nomination.entity';
 import { Participant } from '../participants/participant.entity';
 import { Vote } from '../votes/vote.entity';
+import { Winner } from '../winners/winner.entity';
 
 @Table({
   tableName: 'users',
@@ -126,5 +127,8 @@ export class User extends Model<User> {
 
   @HasMany(() => Vote)
   votes: Vote[];
+
+  @HasMany(() => Winner)
+  winners: Winner[];
 
 }

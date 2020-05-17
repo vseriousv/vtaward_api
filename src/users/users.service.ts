@@ -14,7 +14,11 @@ import { Section } from '../section/section.entity';
 import { State } from '../state/state.entity';
 import { City } from '../city/city.entity';
 import { Nomination } from '../nomination/nomination.entity';
-// import { MailerService } from '@nestjs-modules/mailer';
+import { MailerService } from '@nestjs-modules/mailer';
+import randomstring from 'randomstring';
+import { ForgotPasswordRequestDto } from './dto/forgot-password-request.dto';
+import { UserCodeResponseDto } from './dto/user-code-response.dto';
+
 
 @Injectable()
 export class UsersService {
@@ -24,7 +28,7 @@ export class UsersService {
     @Inject('UsersRepository')
     private readonly usersRepository: typeof User,
     private readonly configService: ConfigService,
-    // private readonly mailerService: MailerService,
+    private readonly mailerService: MailerService,
   ) {
     this.jwtPrivateKey = this.configService.jwtConfig.privateKey;
   }
@@ -37,7 +41,16 @@ export class UsersService {
     return users.map(user => new UserDto(user));
   }
 
-  async getUser(id: string) {
+  async findAllCommittee() {
+    const users = await this.usersRepository.findAll<User>({
+      include: [Position, Section, State, City, Nomination],
+      where: { role: 'comittee' },
+      order: [['id', 'ASC']],
+    });
+    return users.map(user => new UserDto(user));
+  }
+
+  async getUser(id: number) {
     const user = await this.usersRepository.findByPk<User>(id,{
       include: [Position, Section, State, City, Nomination],
       order: [['id', 'ASC']],
@@ -94,6 +107,14 @@ export class UsersService {
       //     .catch(() => {});
       // when registering then log user in automatically by returning a token
       const token = await this.signToken(userData);
+      await this.sendAfterRegistartion(
+        createUserDto.email.trim().toLowerCase(),
+        createUserDto.tab_number,
+        createUserDto.password,
+        createUserDto.firstname_ru,
+        createUserDto.lastname_ru,
+        createUserDto.patronymic_ru,
+      )
       return new UserLoginResponseDto(userData, token);
     } catch (err) {
       if (
@@ -189,8 +210,68 @@ export class UsersService {
     return new UserDto(user);
   }
 
+  async forgotPasswordForAdmin(forgotPasswordRequestDto:ForgotPasswordRequestDto){
+    const user = await this.usersRepository.findByPk<User>(forgotPasswordRequestDto.id);
+    if (!user) {
+      throw new HttpException('User not found.', HttpStatus.NOT_FOUND);
+    }
+
+    const salt = await genSalt(10);
+    const password  = await randomstring.generate();
+    user.password = await hash(password, salt);
+    await user.save();
+
+    await this.sendFromAdminForgotPassword(user.email, password,  user.tab_number)
+    return new  UserCodeResponseDto('Your password has been send to your email', 200);
+  }
+
+  sendFromAdminForgotPassword( email:string, password: string, tab: string){
+    this
+      .mailerService
+      .sendMail({
+        to: email, // list of receivers
+        from: process.env.SMTP_USER, // sender address
+        subject: 'New user data', // Subject line
+        text: `
+        Your tab: ${tab}
+        Your password: ${password}
+        `,
+      })
+      .then((success) => {
+        return success
+      })
+      .catch((err) => {
+        throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+      });
+  }
+
+  sendAfterRegistartion( email:string, tab: string, password: string, firstname:string, lastname: string, patronimic: string){
+    this
+      .mailerService
+      .sendMail({
+        to: email, // list of receivers
+        from: process.env.SMTP_USER, // sender address
+        subject: 'New user data', // Subject line
+        text: `
+        Thanks for registration, dear,
+        ${firstname} ${patronimic} ${lastname}
+        Your tab is: ${tab}
+        Your password is: ${password}
+        `,
+      })
+      .then((success) => {
+        return success
+      })
+      .catch((err) => {
+        throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+      });
+  }
+
+
   async signToken(user: User) {
     const payload: JwtPayload = {
+      id: user.id,
+      state_id: user.state_id,
       tab_number: user.tab_number,
       role: user.role,
     };

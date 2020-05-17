@@ -11,12 +11,16 @@ import { Section } from '../section/section.entity';
 import { State } from '../state/state.entity';
 import { City } from '../city/city.entity';
 import { Nomination } from '../nomination/nomination.entity';
+import { VoteService } from '../votes/votes.service';
+import { Role } from '../shared/enum/role';
+import { ParticipantWithVotesDto } from './dto/participantWithVotes.dto';
 
 @Injectable()
 export class ParticipantsService {
   constructor(
     @Inject('ParticipantRepository')
     private readonly participantRepository: typeof Participant,
+    private readonly voteService: VoteService,
   ) {}
 
   async findAll() {
@@ -41,8 +45,39 @@ export class ParticipantsService {
       ],
       order: [['id', 'ASC']],
     });
-
-    return participants.map(participant => new ParticipantDto(participant));
+    const userData = {users:[], votings:[]}
+    participants.map(participant => {
+        userData.users.push(participant.user_id);
+        userData.votings.push(participant.voting_id);
+    });
+    const data = await this.voteService.findByUserIdTo(userData.users, userData.votings);
+    const result =  userData.users.map(id => {
+      return {
+        user_id: id,
+        committee_rating: 0,
+        committee_votes: 0,
+        committee_avg: 0,
+        votes: 0,
+        sum: 0,
+      };
+    });
+    userData.users.forEach(element => {
+      const index = userData.users.indexOf(element);
+      for (const item in data) {
+        if (element === data[item].user_to_id ) {
+          if (data[item].userTo.role === Role.comittee) {
+            result[index].committee_rating += 1;
+            result[index].committee_votes += data[item].count_vote;
+          } else {
+            result[index].votes += 1;
+          }
+        }
+      }
+    });
+    // console.log('result ==> ', result);
+    return participants.map((participant,id) => {
+      return new ParticipantWithVotesDto(participant, result[id])
+    });
   }
 
   async getParticipant(id: string) {

@@ -35,6 +35,17 @@ export class VoteController {
     return this.voteService.findAll();
   }
 
+  @Get('from/:user_id/voting/:voting_id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOkResponse({ type: [VoteDto] })
+  findFromAll(
+    @Param('user_id') userId,
+    @Param('voting_id') votingId,
+  ): Promise<VoteDto[]> {
+    return this.voteService.findFromAll(userId, votingId);
+  }
+
   @Get(':id')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
