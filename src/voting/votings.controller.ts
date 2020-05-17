@@ -37,6 +37,14 @@ export class VotingsController {
     return this.votingService.getVotingAll();
   }
 
+  @Get('/isactive')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOkResponse({ type: [VotingDto] })
+  isActive(): Promise<VotingDto[]> {
+    return this.votingService.getIsActive();
+  }
+
   @ApiParam({ name: 'id', description: 'id', type: String })
   @Get(':id')
   @ApiBearerAuth()

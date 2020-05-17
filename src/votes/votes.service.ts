@@ -20,6 +20,18 @@ export class VoteService {
     return votes.map(vote => new VoteDto(vote));
   }
 
+  async findFromAll(userId, votingId) {
+    const votes = await this.voteRepository.findAll<Vote>({
+      include: [User],
+      where: {
+        user_form_id: userId,
+        voting_id: votingId,
+      },
+      order: [['id', 'ASC']],
+    });
+    return votes.map(vote => new VoteDto(vote));
+  }
+
   async getVote(id: string) {
     const vote = await this.voteRepository.findByPk<Vote>(id);
     if (!vote) {
