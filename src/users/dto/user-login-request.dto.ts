@@ -9,4 +9,5 @@ export class UserLoginRequestDto {
   @ApiProperty()
   @IsString()
   readonly password: string;
+
 }

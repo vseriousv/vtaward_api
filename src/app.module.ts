@@ -13,9 +13,11 @@ import { WinnersModule } from './winners/winners.module';
 import { VotingsModule } from './voting/votings.module'
 import { ConfigService } from './shared/config/config.service';
 import { FilesModule } from './files/files.module';
-// import { MailerModule } from '@nestjs-modules/mailer';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { CommentsModule } from './comments/comments.module';
 
-// const config = new ConfigService();
+const config = new ConfigService();
+console.log(config.transportConfig );
 
 @Module({
   imports: [
@@ -31,8 +33,9 @@ import { FilesModule } from './files/files.module';
     WinnersModule,
     VotingsModule,
     FilesModule,
+    CommentsModule,
     ConfigModule.forRoot(),
-    // MailerModule.forRoot({ ...config.transportConfig }),
+    MailerModule.forRoot({ ...config.transportConfig }),
   ],
   controllers: [],
   providers: [],
