@@ -191,6 +191,7 @@ export class UsersService {
 
   async signToken(user: User) {
     const payload: JwtPayload = {
+      id: user.id,
       tab_number: user.tab_number,
       role: user.role,
     };
