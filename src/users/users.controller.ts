@@ -52,6 +52,14 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('committee')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOkResponse({ type: [UserDto] })
+  findAllCommittee(): Promise<UserDto[]> {
+    return this.usersService.findAllCommittee();
+  }
+
   @Get('check')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))

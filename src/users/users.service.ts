@@ -37,6 +37,15 @@ export class UsersService {
     return users.map(user => new UserDto(user));
   }
 
+  async findAllCommittee() {
+    const users = await this.usersRepository.findAll<User>({
+      include: [Position, Section, State, City, Nomination],
+      where: { role: 'comittee' },
+      order: [['id', 'ASC']],
+    });
+    return users.map(user => new UserDto(user));
+  }
+
   async getUser(id: string) {
     const user = await this.usersRepository.findByPk<User>(id,{
       include: [Position, Section, State, City, Nomination],
@@ -192,6 +201,7 @@ export class UsersService {
   async signToken(user: User) {
     const payload: JwtPayload = {
       id: user.id,
+      state_id: user.state_id,
       tab_number: user.tab_number,
       role: user.role,
     };
