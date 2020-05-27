@@ -15,9 +15,9 @@ import { ConfigService } from './shared/config/config.service';
 import { FilesModule } from './files/files.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { CommentsModule } from './comments/comments.module';
+import { FeedbackFormModule } from './feedbackForm/feedbackForm.module';
 
 const config = new ConfigService();
-console.log(config.transportConfig );
 
 @Module({
   imports: [
@@ -34,6 +34,7 @@ console.log(config.transportConfig );
     VotingsModule,
     FilesModule,
     CommentsModule,
+    FeedbackFormModule,
     ConfigModule.forRoot(),
     MailerModule.forRoot({ ...config.transportConfig }),
   ],

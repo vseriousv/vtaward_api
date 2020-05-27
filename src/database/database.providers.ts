@@ -11,6 +11,7 @@ import { Vote } from '../votes/vote.entity';
 import { Winner } from '../winners/winner.entity';
 import { Voting } from '../voting/voting.entity'
 import { Comment } from '../comments/comment.entity';
+import { FeedbackForm } from '../feedbackForm/feedbackForm.entity';
 
 export const databaseProviders = [
   {
@@ -30,6 +31,7 @@ export const databaseProviders = [
         Winner,
         Voting,
         Comment,
+        FeedbackForm,
       ]);
       await sequelize.sync();
       return sequelize;
