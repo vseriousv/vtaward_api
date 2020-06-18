@@ -16,6 +16,7 @@ import { FilesModule } from './files/files.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { CommentsModule } from './comments/comments.module';
 import { FeedbackFormModule } from './feedbackForm/feedbackForm.module';
+import { ContentMainModule } from './ContentMain/contentMain.module';
 
 const config = new ConfigService();
 
@@ -35,6 +36,7 @@ const config = new ConfigService();
     FilesModule,
     CommentsModule,
     FeedbackFormModule,
+    ContentMainModule,
     ConfigModule.forRoot(),
     MailerModule.forRoot({ ...config.transportConfig }),
   ],
