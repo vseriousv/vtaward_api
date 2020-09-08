@@ -13,6 +13,8 @@ import { Voting } from '../voting/voting.entity'
 import { Comment } from '../comments/comment.entity';
 import { FeedbackForm } from '../feedbackForm/feedbackForm.entity';
 import { ContentMain } from '../ContentMain/contentMain.entity';
+import { NominationOrderEntity } from '../nomination-order/nomination-order.entity';
+import { NominationOrderFilesEntity } from '../nomination-order/nomination-order-files.entity';
 
 export const databaseProviders = [
   {
@@ -34,6 +36,8 @@ export const databaseProviders = [
         Comment,
         FeedbackForm,
         ContentMain,
+        NominationOrderEntity,
+        NominationOrderFilesEntity,
       ]);
       await sequelize.sync();
       return sequelize;

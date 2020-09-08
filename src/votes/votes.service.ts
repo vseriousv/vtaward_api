@@ -62,7 +62,7 @@ export class VoteService {
   //     },
   //     order: [['id', 'ASC']],
   //   });
-  //   return votes.map(vote => new VoteDto(vote));
+  //   return votes.map(vote => new NominationOrderDto(vote));
   // }
   //
   // async getVoteToId(id: string) {
@@ -73,7 +73,7 @@ export class VoteService {
   //       HttpStatus.NOT_FOUND,
   //     );
   //   }
-  //   return new VoteDto(vote);
+  //   return new NominationOrderDto(vote);
   // }
 
   async create(createVoteDto: CreateVoteDto) {

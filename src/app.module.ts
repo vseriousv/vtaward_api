@@ -17,6 +17,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { CommentsModule } from './comments/comments.module';
 import { FeedbackFormModule } from './feedbackForm/feedbackForm.module';
 import { ContentMainModule } from './ContentMain/contentMain.module';
+import { NominationOrderModule } from './nomination-order/nomination-order.module';
 
 const config = new ConfigService();
 
@@ -39,6 +40,7 @@ const config = new ConfigService();
     ContentMainModule,
     ConfigModule.forRoot(),
     MailerModule.forRoot({ ...config.transportConfig }),
+    NominationOrderModule,
   ],
   controllers: [],
   providers: [],

@@ -189,7 +189,6 @@ export class UsersService {
   }
 
   async updateAvatar(id: number, fileImage: string) {
-    console.log(fileImage);
     const user = await this.usersRepository.findByPk<User>(id);
     if (!user) {
       throw new HttpException('User not found.', HttpStatus.NOT_FOUND);
