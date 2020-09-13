@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { SharedModule } from './shared/shared.module';
 import { ConfigModule } from '@nestjs/config';
@@ -18,6 +18,9 @@ import { CommentsModule } from './comments/comments.module';
 import { FeedbackFormModule } from './feedbackForm/feedbackForm.module';
 import { ContentMainModule } from './ContentMain/contentMain.module';
 import { NominationOrderModule } from './nomination-order/nomination-order.module';
+import { FilesMiddleware } from './shared/middlewares/files-middleware';
+
+import { NominationOrderController } from './nomination-order/nomination-order.controller';
 
 const config = new ConfigService();
 
@@ -45,4 +48,10 @@ const config = new ConfigService();
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule{
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(FilesMiddleware)
+      .forRoutes(NominationOrderController);
+  }
+}

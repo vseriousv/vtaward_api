@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { NominationOrderService } from './nomination-order.service';
 import { NominationOrderDto } from './dto/nomination-order.dto';
@@ -9,6 +9,12 @@ import { CreateNominationOrderDto } from './dto/create-nomination-order.dto';
 import { NominationOrderEntity } from './nomination-order.entity';
 import { orderFileFilter } from '../shared/utils/order-file-filter';
 import { generateFilename } from '../shared/utils/generation-file-name';
+
+
+interface CreateParams {
+  bodyData: any;
+  req: any;
+}
 
 @Controller('nomination-order')
 @ApiTags('nomination-order')
@@ -37,24 +43,21 @@ export class NominationOrderController {
     summary: 'Create nomination order for user',
   })
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(
-    FilesInterceptor('files',10, {
-      storage: diskStorage({
-        destination: '../files/nomination-orders',
-        filename: generateFilename,
-      }),
-      fileFilter: orderFileFilter,
-    }),
-  )
-  createOrder(
-    @Body() bodyData,
-    @UploadedFiles() files,
-  ): Promise<NominationOrderEntity> {
+  // @UseInterceptors(
+  //   FilesInterceptor('files',10, {
+  //     storage: diskStorage({
+  //       destination: '../files/nomination-orders',
+  //       filename: generateFilename,
+  //     }),
+  //     fileFilter: orderFileFilter,
+  //   }),
+  // )
+  create(@Req() { files, body }): Promise<NominationOrderEntity> {
     const createNominationOrder: CreateNominationOrderDto = {
-      userId: Number(bodyData.userId),
-      nominationId: Number(bodyData.nominationId),
-      textRu: bodyData.textRu,
-      textEn: bodyData.textEn,
+      userId: Number(body.userId),
+      nominationId: Number(body.nominationId),
+      textRu: body.textRu,
+      textEn: body.textEn,
     }
     return this.service.create(files, createNominationOrder);
   }
