@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { NominationOrderService } from './nomination-order.service';
 import { NominationOrderDto } from './dto/nomination-order.dto';
@@ -9,6 +9,8 @@ import { CreateNominationOrderDto } from './dto/create-nomination-order.dto';
 import { NominationOrderEntity } from './nomination-order.entity';
 import { orderFileFilter } from '../shared/utils/order-file-filter';
 import { generateFilename } from '../shared/utils/generation-file-name';
+import { UpdateNominationOrderDto } from './dto/update-nomination-order.dto';
+import { TNominationOrder } from './interfaces/TNominationOrder';
 
 
 interface CreateParams {
@@ -25,8 +27,8 @@ export class NominationOrderController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @ApiOperation({
-    description: 'Get all nomination order',
-    summary: 'Get all nomination order',
+    description: 'Получить все заявки на номинантов',
+    summary: 'Получить все заявки на номинантов',
   })
   @ApiOkResponse({type:[NominationOrderDto]})
   findAll(): Promise<{ rows: NominationOrderDto[]; count: number }> {
@@ -39,25 +41,18 @@ export class NominationOrderController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @ApiOperation({
-    description: 'Create nomination order for user. For file: type must be: jpg, png, doc, xml, pdf',
-    summary: 'Create nomination order for user',
+    description: 'Создать заявку на номинанта. Разрешенные файлы: type must be: jpg, png, doc, xml, pdf',
+    summary: 'Создать заявку на номинанта для пользователя',
   })
   @ApiConsumes('multipart/form-data')
-  // @UseInterceptors(
-  //   FilesInterceptor('files',10, {
-  //     storage: diskStorage({
-  //       destination: '../files/nomination-orders',
-  //       filename: generateFilename,
-  //     }),
-  //     fileFilter: orderFileFilter,
-  //   }),
-  // )
-  create(@Req() { files, body }): Promise<NominationOrderEntity> {
-    const createNominationOrder: CreateNominationOrderDto = {
+  create(@Req() { files, body, user }): Promise<NominationOrderEntity> {
+    const createNominationOrder: TNominationOrder = {
       userId: Number(body.userId),
+      userFromId: Number(user.id),
       nominationId: Number(body.nominationId),
       textRu: body.textRu,
       textEn: body.textEn,
+      public: false,
     }
     return this.service.create(files, createNominationOrder);
   }
@@ -69,12 +64,33 @@ export class NominationOrderController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @ApiOperation({
-    description: 'Get one nomination order by id',
-    summary: 'Get one nomination order by id',
+    description: 'Получить одну заявку на номинанта по ID',
+    summary: 'Получить одну заявку на номинанта по ID',
   })
   @ApiOkResponse({type:NominationOrderDto})
   findById(@Param('id') id): Promise<NominationOrderEntity> {
     return this.service.findById(id);
+  }
+
+  @ApiParam({ name: 'id', description: 'Nomination id' })
+  @Patch(':id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({
+    description: 'Исправить значения полей для одной заявки на номинацию по её ID, кроме файлов',
+    summary: 'Исправить значения полей для одной заявки на номинацию по её ID, кроме файлов',
+  })
+  @ApiOkResponse({type:NominationOrderDto})
+  changeFieldsById(@Req() { body, user }, @Param('id') id): Promise<NominationOrderEntity> {
+    const updateNominationOrder: TNominationOrder = {
+      userId: Number(body.userId) || null,
+      userFromId: Number(user.id) || null,
+      nominationId: Number(body.nominationId) || null,
+      textRu: body.textRu || null,
+      textEn: body.textEn || null,
+      public: body.public || null,
+    }
+    return this.service.changeFieldsById(id, updateNominationOrder);
   }
 
 }

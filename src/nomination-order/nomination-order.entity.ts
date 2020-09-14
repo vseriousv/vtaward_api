@@ -17,6 +17,10 @@ export class NominationOrderEntity extends Model<NominationOrderEntity> {
   @Column({ field: 'user_id' })
   userId: number;
 
+  @ForeignKey(() => User)
+  @Column({ field: 'user_from' })
+  userFromId: number;
+
   @ForeignKey(() => Nomination)
   @Column({ field: 'nomination_id' })
   nominationId: number;
@@ -27,8 +31,14 @@ export class NominationOrderEntity extends Model<NominationOrderEntity> {
   @Column({ field: 'text_en' })
   textEn: string;
 
+  @Column({ field: 'public' })
+  public: boolean;
+
   @BelongsTo(() => User)
   user: User;
+
+  @BelongsTo(() => User)
+  userFrom: User;
 
   @BelongsTo(() => Nomination)
   nomination: Nomination

@@ -8,3 +8,8 @@ export type TFormData = {
   path: string,
   size: number,
 }
+
+export type TFormFileData = {
+  nominationOrderId: number,
+  filePath: string
+}

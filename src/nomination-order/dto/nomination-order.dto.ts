@@ -14,6 +14,9 @@ export class NominationOrderDto {
   readonly userId: number;
 
   @ApiProperty()
+  readonly userFromId: number;
+
+  @ApiProperty()
   readonly nominationId: number;
 
   @ApiProperty()
@@ -23,7 +26,13 @@ export class NominationOrderDto {
   readonly textEn: string;
 
   @ApiProperty()
+  readonly public: boolean;
+
+  @ApiProperty()
   readonly user: UserDto;
+
+  @ApiProperty()
+  readonly userFrom: UserDto;
 
   @ApiProperty()
   readonly nomination: NominationDto;
@@ -35,10 +44,12 @@ export class NominationOrderDto {
   constructor( nominationOrderEntity: NominationOrderEntity ) {
     this.id = nominationOrderEntity.id;
     this.userId = nominationOrderEntity.userId;
+    this.userFromId = nominationOrderEntity.userFromId;
     this.nominationId = nominationOrderEntity.nominationId;
     this.textRu = nominationOrderEntity.textRu;
     this.textEn = nominationOrderEntity.textEn;
     this.user = nominationOrderEntity.user;
+    this.userFrom = nominationOrderEntity.userFrom;
     this.nomination = nominationOrderEntity.nomination;
     if (nominationOrderEntity.files) {
       this.files = nominationOrderEntity.files.map(

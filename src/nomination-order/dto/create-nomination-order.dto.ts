@@ -2,9 +2,14 @@ import { IsString, IsInt } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateNominationOrderDto {
+
   @ApiProperty()
   @IsInt()
   readonly userId: number;
+
+  @ApiProperty()
+  @IsInt()
+  readonly userFromId: number;
 
   @ApiProperty()
   @IsInt()
@@ -17,4 +22,8 @@ export class CreateNominationOrderDto {
   @ApiProperty()
   @IsString()
   readonly textEn: string;
+
+  @ApiProperty()
+  @IsString()
+  readonly public: boolean;
 }
