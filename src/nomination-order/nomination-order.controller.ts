@@ -10,7 +10,7 @@ import { NominationOrderEntity } from './nomination-order.entity';
 import { orderFileFilter } from '../shared/utils/order-file-filter';
 import { generateFilename } from '../shared/utils/generation-file-name';
 import { UpdateNominationOrderDto } from './dto/update-nomination-order.dto';
-import { TNominationOrder } from './interfaces/TNominationOrder';
+import { TNominationOrder, TNominationOrderBody } from './interfaces/TNominationOrder';
 
 
 interface CreateParams {
@@ -81,14 +81,17 @@ export class NominationOrderController {
     summary: 'Исправить значения полей для одной заявки на номинацию по её ID, кроме файлов',
   })
   @ApiOkResponse({type:NominationOrderDto})
-  changeFieldsById(@Req() { body, user }, @Param('id') id): Promise<NominationOrderEntity> {
+  changeFieldsById(
+    @Body() body: TNominationOrderBody,
+    @Req() { user },
+    @Param('id') id): Promise<NominationOrderEntity> {
     const updateNominationOrder: TNominationOrder = {
-      userId: Number(body.userId) || null,
-      userFromId: Number(user.id) || null,
-      nominationId: Number(body.nominationId) || null,
-      textRu: body.textRu || null,
-      textEn: body.textEn || null,
-      public: body.public || null,
+      userId: body.hasOwnProperty('userId')  ? Number(body.userId) : null,
+      userFromId: Number(user.id),
+      nominationId: body.hasOwnProperty('nominationId') ? Number(body.nominationId) : null,
+      textRu: body.hasOwnProperty('textRu') ? body.textRu : null,
+      textEn: body.hasOwnProperty('textEn') ? body.textEn : null,
+      public: body.hasOwnProperty('public') ? Boolean(body.public) : null,
     }
     return this.service.changeFieldsById(id, updateNominationOrder);
   }

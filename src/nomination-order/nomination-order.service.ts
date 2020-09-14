@@ -105,13 +105,15 @@ export class NominationOrderService {
         throw new HttpException('Nomination order not found.', HttpStatus.NOT_FOUND);
       }
 
+
+
       updateNominationOrderDto = {
         userId: updateNominationOrderDto.userId || nominationOrderOld.userId,
         userFromId: updateNominationOrderDto.userFromId || nominationOrderOld.userFromId,
         nominationId: updateNominationOrderDto.nominationId || nominationOrderOld.nominationId,
         textRu: updateNominationOrderDto.textRu || nominationOrderOld.textRu,
         textEn: updateNominationOrderDto.textEn || nominationOrderOld.textEn,
-        public: updateNominationOrderDto.public || nominationOrderOld.public,
+        public: updateNominationOrderDto.public !== null ? updateNominationOrderDto.public : nominationOrderOld.public,
       }
 
       await NominationOrderEntity.update(updateNominationOrderDto, { where: {id}});
