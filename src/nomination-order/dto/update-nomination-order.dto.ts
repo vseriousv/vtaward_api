@@ -12,7 +12,7 @@ export class UpdateNominationOrderDto {
   readonly userId: number;
 
   @ApiProperty()
-  readonly userFromId: number;
+  readonly userFrom: number;
 
   @ApiProperty()
   readonly nominationId: number;

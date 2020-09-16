@@ -9,7 +9,7 @@ export class CreateNominationOrderDto {
 
   @ApiProperty()
   @IsInt()
-  readonly userFromId: number;
+  readonly userFrom: number;
 
   @ApiProperty()
   @IsInt()

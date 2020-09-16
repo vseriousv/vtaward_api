@@ -19,7 +19,7 @@ export class NominationOrderEntity extends Model<NominationOrderEntity> {
 
   @ForeignKey(() => User)
   @Column({ field: 'user_from' })
-  userFromId: number;
+  userFrom: number;
 
   @ForeignKey(() => Nomination)
   @Column({ field: 'nomination_id' })
@@ -38,7 +38,7 @@ export class NominationOrderEntity extends Model<NominationOrderEntity> {
   user: User;
 
   @BelongsTo(() => User)
-  userFrom: User;
+  userOrder: User;
 
   @BelongsTo(() => Nomination)
   nomination: Nomination

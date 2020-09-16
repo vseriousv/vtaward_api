@@ -7,7 +7,10 @@ import { NominationOrderDto } from './dto/nomination-order.dto';
 import { CreateNominationOrderDto } from './dto/create-nomination-order.dto';
 import { TFormData, TFormFileData } from '../shared/interfases/TFormData';
 import { UpdateNominationOrderDto } from './dto/update-nomination-order.dto';
-import { TNominationOrder } from './interfaces/TNominationOrder';
+import { State } from '../state/state.entity';
+import { City } from '../city/city.entity';
+import { Section } from '../section/section.entity';
+import { Position } from '../position/position.entity';
 
 @Injectable()
 export class NominationOrderService {
@@ -29,7 +32,30 @@ export class NominationOrderService {
     try {
       const { count, rows } = await this.repository.findAndCountAll<NominationOrderEntity>({
         include: [
-          { model: User, as: 'user', },
+          {
+            model: User,
+            as: 'user',
+            identifier: 'userId',
+            include: [
+              { model: State, as: 'state',},
+              { model: Nomination, as: 'nomination',},
+              { model: City, as: 'city',},
+              { model: Section, as: 'section',},
+              { model: Position, as: 'position',}
+            ],
+          },
+          {
+            model: User,
+            as: 'userOrder',
+            identifier: 'userFrom',
+            include: [
+              { model: State, as: 'state',},
+              { model: Nomination, as: 'nomination',},
+              { model: City, as: 'city',},
+              { model: Section, as: 'section',},
+              { model: Position, as: 'position',}
+            ],
+          },
           { model: Nomination, as: 'nomination', },
           { model: NominationOrderFilesEntity, as: 'files', }
         ],
@@ -56,7 +82,7 @@ export class NominationOrderService {
       const nominationOrder = new NominationOrderEntity();
 
       nominationOrder.userId = createNominationOrderDto.userId;
-      nominationOrder.userFromId = createNominationOrderDto.userFromId;
+      nominationOrder.userFrom = createNominationOrderDto.userFrom;
       nominationOrder.nominationId = createNominationOrderDto.nominationId;
       nominationOrder.textRu = createNominationOrderDto.textRu;
       nominationOrder.textEn = createNominationOrderDto.textEn;
@@ -79,7 +105,32 @@ export class NominationOrderService {
         id,
         {
           include: [
-            { model: User,  as: 'user', },
+            {
+              model: User,
+              as: 'user',
+              foreignKey: 'nomination_order_userId_fkey',
+              identifier: 'userId',
+              include: [
+                { model: State, as: 'state',},
+                { model: Nomination, as: 'nomination',},
+                { model: City, as: 'city',},
+                { model: Section, as: 'section',},
+                { model: Position, as: 'position',}
+              ],
+            },
+            {
+              model: User,
+              as: 'userOrder',
+              foreignKey: 'nomination_order_user_from_fkey',
+              identifier: 'userFrom',
+              include: [
+                { model: State, as: 'state',},
+                { model: Nomination, as: 'nomination',},
+                { model: City, as: 'city',},
+                { model: Section, as: 'section',},
+                { model: Position, as: 'position',}
+              ],
+            },
             { model: Nomination, as: 'nomination', },
             { model: NominationOrderFilesEntity, as: 'files', }
           ],
@@ -109,7 +160,7 @@ export class NominationOrderService {
 
       updateNominationOrderDto = {
         userId: updateNominationOrderDto.userId || nominationOrderOld.userId,
-        userFromId: updateNominationOrderDto.userFromId || nominationOrderOld.userFromId,
+        userFrom: updateNominationOrderDto.userFrom || nominationOrderOld.userFrom,
         nominationId: updateNominationOrderDto.nominationId || nominationOrderOld.nominationId,
         textRu: updateNominationOrderDto.textRu || nominationOrderOld.textRu,
         textEn: updateNominationOrderDto.textEn || nominationOrderOld.textEn,

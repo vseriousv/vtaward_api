@@ -1,6 +1,6 @@
 export interface TNominationOrder {
   userId: number,
-  userFromId: number,
+  userFrom: number,
   nominationId: number,
   textRu: string,
   textEn: string,
@@ -9,7 +9,7 @@ export interface TNominationOrder {
 
 export interface TNominationOrderBody {
   userId?: number,
-  userFromId?: number,
+  userFrom?: number,
   nominationId?: number,
   textRu?: string,
   textEn?: string,

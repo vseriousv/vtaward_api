@@ -46,14 +46,16 @@ export class NominationOrderController {
   })
   @ApiConsumes('multipart/form-data')
   create(@Req() { files, body, user }): Promise<NominationOrderEntity> {
+
     const createNominationOrder: TNominationOrder = {
       userId: Number(body.userId),
-      userFromId: Number(user.id),
+      userFrom: Number(user.id),
       nominationId: Number(body.nominationId),
       textRu: body.textRu,
       textEn: body.textEn,
       public: false,
     }
+
     return this.service.create(files, createNominationOrder);
   }
 
@@ -87,7 +89,7 @@ export class NominationOrderController {
     @Param('id') id): Promise<NominationOrderEntity> {
     const updateNominationOrder: TNominationOrder = {
       userId: body.hasOwnProperty('userId')  ? Number(body.userId) : null,
-      userFromId: Number(user.id),
+      userFrom: Number(user.id),
       nominationId: body.hasOwnProperty('nominationId') ? Number(body.nominationId) : null,
       textRu: body.hasOwnProperty('textRu') ? body.textRu : null,
       textEn: body.hasOwnProperty('textEn') ? body.textEn : null,
