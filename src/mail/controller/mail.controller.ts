@@ -13,7 +13,7 @@ export class MailController {
   @Post('send')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
-  send(@Body() mailDto: MailDto): Promise<boolean> {
+  send(@Body() mailDto: MailDto): Promise<any> {
     const sendObject: ISendMail = {
       userTo: mailDto.userToId,
       userFrom: 'vtaward@vost-tech.ru',
