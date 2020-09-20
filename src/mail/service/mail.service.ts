@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ISendMail } from '../interface/ISendMail';
-import MailerService from 'nodemailer';
+import mailerService from 'nodemailer';
 
 @Injectable()
 export class MailService {
-  constructor(private readonly mailerService: MailerService) {}
-
 
   async sendMailSMTP(data: ISendMail): Promise<any> {
     // tslint:disable-next-line:no-console
@@ -14,10 +12,10 @@ export class MailService {
     const htmlMes = 'Тестируем \n ';
 
     try{
-      const transporter = this.mailerService.createTransport({
+      const transporter = mailerService.createTransport({
         host: 'mailsecurity.vost-tech.ru',
-        port: 25,
-        secure: false, // true for 465, false for other ports
+        port: 465,
+        secure: true, // true for 465, false for other ports
         auth: {
           user: 'vtaward@vost-tech.ru', // generated ethereal user
           pass: 'dfjk3WDS', // generated ethereal password
