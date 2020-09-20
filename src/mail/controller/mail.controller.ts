@@ -19,7 +19,7 @@ export class MailController {
       userFrom: 'vtaward@vost-tech.ru',
       text: mailDto.text,
     }
-    return this.service.sendMailSMTP(sendObject);
+    return this.service.sendEWS(sendObject);
   }
 
 }
