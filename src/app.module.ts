@@ -21,6 +21,7 @@ import { NominationOrderModule } from './nomination-order/nomination-order.modul
 import { FilesMiddleware } from './shared/middlewares/files-middleware';
 
 import { NominationOrderController } from './nomination-order/nomination-order.controller';
+import { MailModule } from './mail/mail.module';
 
 const config = new ConfigService();
 
@@ -44,6 +45,7 @@ const config = new ConfigService();
     ConfigModule.forRoot(),
     MailerModule.forRoot({ ...config.transportConfig }),
     NominationOrderModule,
+    MailModule,
   ],
   controllers: [],
   providers: [],
