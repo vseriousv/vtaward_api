@@ -8,9 +8,6 @@ import { CreateNominationOrderDto } from './dto/create-nomination-order.dto';
 import { TFormData, TFormFileData } from '../shared/interfases/TFormData';
 import { UpdateNominationOrderDto } from './dto/update-nomination-order.dto';
 import { State } from '../state/state.entity';
-import { City } from '../city/city.entity';
-import { Section } from '../section/section.entity';
-import { Position } from '../position/position.entity';
 
 @Injectable()
 export class NominationOrderService {
@@ -38,10 +35,6 @@ export class NominationOrderService {
             identifier: 'userId',
             include: [
               { model: State, as: 'state',},
-              { model: Nomination, as: 'nomination',},
-              { model: City, as: 'city',},
-              { model: Section, as: 'section',},
-              { model: Position, as: 'position',}
             ],
           },
           {
@@ -50,10 +43,6 @@ export class NominationOrderService {
             identifier: 'userFrom',
             include: [
               { model: State, as: 'state',},
-              { model: Nomination, as: 'nomination',},
-              { model: City, as: 'city',},
-              { model: Section, as: 'section',},
-              { model: Position, as: 'position',}
             ],
           },
           { model: Nomination, as: 'nomination', },
@@ -112,10 +101,6 @@ export class NominationOrderService {
               identifier: 'userId',
               include: [
                 { model: State, as: 'state',},
-                { model: Nomination, as: 'nomination',},
-                { model: City, as: 'city',},
-                { model: Section, as: 'section',},
-                { model: Position, as: 'position',}
               ],
             },
             {
@@ -125,10 +110,6 @@ export class NominationOrderService {
               identifier: 'userFrom',
               include: [
                 { model: State, as: 'state',},
-                { model: Nomination, as: 'nomination',},
-                { model: City, as: 'city',},
-                { model: Section, as: 'section',},
-                { model: Position, as: 'position',}
               ],
             },
             { model: Nomination, as: 'nomination', },
