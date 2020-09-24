@@ -1,4 +1,17 @@
-import { Column, CreatedAt, DataType, DeletedAt, ForeignKey, IsEmail, Model, Table, Unique, UpdatedAt } from 'sequelize-typescript';
+import {
+  BelongsTo,
+  Column,
+  CreatedAt,
+  DataType,
+  DeletedAt,
+  ForeignKey,
+  HasOne,
+  IsEmail,
+  Model,
+  Table,
+  Unique,
+  UpdatedAt,
+} from 'sequelize-typescript';
 import { Role } from '../shared/enum/role';
 import { State } from '../state/state.entity';
 
@@ -75,6 +88,18 @@ export class User extends Model<User> {
   @Column({field: 'section_name'})
   sectionName: string;
 
+  @Column({field: 'position_name_eng'})
+  positionNameEng: string;
+
+  @Column({field: 'city_name_eng'})
+  cityNameEng: string;
+
+  @Column({field: 'section_name_eng'})
+  sectionNameEng: string;
+
   @Column({field: 'password_text'})
   passwordText: string;
+
+  @BelongsTo(() => State)
+  state: State
 }

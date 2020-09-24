@@ -18,7 +18,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { UserDto } from './dto/user.dto';
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiParam, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -118,6 +118,7 @@ export class UsersController {
     return this.usersService.updateAvatar(JSON.parse(JSON.stringify(id)).id, file.filename);
   }
 
+  @ApiParam({ name: 'id', description: 'user id' })
   @Get(':id')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))

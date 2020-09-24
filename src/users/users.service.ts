@@ -27,7 +27,10 @@ export class UsersService {
 
   async findAll() {
     const users = await this.usersRepository.findAll<User>({
-      include: [State],
+      include: [{
+        model: State,
+        as: 'state'
+      }],
       order: [['id', 'ASC']],
     });
     return users.map(user => new UserDto(user));
@@ -44,7 +47,10 @@ export class UsersService {
 
   async getUser(id: number) {
     const user = await this.usersRepository.findByPk<User>(id,{
-      include: [State],
+      include: [{
+        model: State,
+        as: 'state'
+      }],
       order: [['id', 'ASC']],
     });
     if (!user) {
@@ -57,12 +63,19 @@ export class UsersService {
   }
 
   async getUserByTab(tabNumber: string) {
-    console.log('[tabNumbertabNumber]', tabNumber)
-    const resp = await this.usersRepository.findOne<User>({
-      include: [State],
-      where: { tabNumber },
-    });
-    return resp;
+    try {
+      const resp = await this.usersRepository.findOne<User>({
+        include: [{
+          model: State,
+          as: 'state'
+        }],
+        where: { tabNumber },
+      });
+      return resp;
+    } catch (e) {
+      console.log('[ERROR-getuserByTab]', e)
+      throw new BadRequestException(e);
+    }
   }
 
 
@@ -115,11 +128,19 @@ export class UsersService {
     if (tabNumber) {
       try {
         const user = await this.getUserByTab(tabNumber);
-        console.log('[USER]:',user)
+        const HTMLText = `
+Ваш логин для входа: ${tabNumber}
+Ваш пароль для входа: ${user.passwordText}
+------------------------------------------
+Your login tab number: ${tabNumber}
+Your login password: ${user.passwordText}
+
+Regards, administration www.vtaward.ru
+        `;
         await this.mailService.sendEWS({
           userTo: user.email,
           userFrom: 'vtaward@vost-tech.ru',
-          text: 'Ваш пароль: ' + user.passwordText
+          text: HTMLText
         });
         return true;
       } catch (e) {

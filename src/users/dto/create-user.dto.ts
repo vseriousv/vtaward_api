@@ -1,6 +1,7 @@
 import { IsEmail, IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
 import { Role } from '../../shared/enum/role';
 import { ApiProperty } from '@nestjs/swagger';
+import { Column } from 'sequelize-typescript';
 
 export class CreateUserDto {
   @ApiProperty()
@@ -69,6 +70,21 @@ export class CreateUserDto {
   @IsOptional()
   @IsString()
   readonly sectionName: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  readonly positionNameEng: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  readonly cityNameEng: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  readonly sectionNameEng: string;
 
   @ApiProperty()
   @IsOptional()

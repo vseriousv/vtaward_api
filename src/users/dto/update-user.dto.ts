@@ -76,5 +76,20 @@ export class UpdateUserDto {
   @ApiProperty()
   @IsOptional()
   @IsString()
+  readonly positionNameEng: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  readonly cityNameEng: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  readonly sectionNameEng: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
   readonly passwordText: string;
 }
