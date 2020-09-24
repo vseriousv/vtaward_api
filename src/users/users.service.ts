@@ -1,6 +1,6 @@
-import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { User } from './user.entity';
-import { genSalt, hash, compare } from 'bcrypt';
+import { compare, genSalt, hash } from 'bcrypt';
 import { UserDto } from './dto/user.dto';
 import { UserLoginRequestDto } from './dto/user-login-request.dto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -8,17 +8,9 @@ import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { JwtPayload } from './auth/jwt-payload.model';
 import { sign } from 'jsonwebtoken';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ConfigService } from './../shared/config/config.service'
-import { Position } from '../position/position.entity';
-import { Section } from '../section/section.entity';
+import { ConfigService } from '../shared/config/config.service';
 import { State } from '../state/state.entity';
-import { City } from '../city/city.entity';
-import { Nomination } from '../nomination/nomination.entity';
-import { MailerService } from '@nestjs-modules/mailer';
-import randomstring from 'randomstring';
-import { ForgotPasswordRequestDto } from './dto/forgot-password-request.dto';
-import { UserCodeResponseDto } from './dto/user-code-response.dto';
-
+import { MailService } from '../mail/service/mail.service';
 
 @Injectable()
 export class UsersService {
@@ -28,14 +20,14 @@ export class UsersService {
     @Inject('UsersRepository')
     private readonly usersRepository: typeof User,
     private readonly configService: ConfigService,
-    private readonly mailerService: MailerService,
+    private readonly mailService: MailService,
   ) {
     this.jwtPrivateKey = this.configService.jwtConfig.privateKey;
   }
 
   async findAll() {
     const users = await this.usersRepository.findAll<User>({
-      include: [Position, Section, State, City, Nomination],
+      include: [State],
       order: [['id', 'ASC']],
     });
     return users.map(user => new UserDto(user));
@@ -43,7 +35,7 @@ export class UsersService {
 
   async findAllCommittee() {
     const users = await this.usersRepository.findAll<User>({
-      include: [Position, Section, State, City, Nomination],
+      include: [State],
       where: { role: 'comittee' },
       order: [['id', 'ASC']],
     });
@@ -52,7 +44,7 @@ export class UsersService {
 
   async getUser(id: number) {
     const user = await this.usersRepository.findByPk<User>(id,{
-      include: [Position, Section, State, City, Nomination],
+      include: [State],
       order: [['id', 'ASC']],
     });
     if (!user) {
@@ -64,57 +56,43 @@ export class UsersService {
     return new UserDto(user);
   }
 
-  async getUserByTab(tab_number: string) {
-    return await this.usersRepository.findOne<User>({
-      include: [Position, Section, State, City, Nomination],
-      where: { tab_number },
+  async getUserByTab(tabNumber: string) {
+    console.log('[tabNumbertabNumber]', tabNumber)
+    const resp = await this.usersRepository.findOne<User>({
+      include: [State],
+      where: { tabNumber },
     });
+    return resp;
   }
+
+
 
   async create(createUserDto: CreateUserDto) {
     try {
       const user = new User();
 
       user.email = createUserDto.email.trim().toLowerCase();
-      user.tab_number = createUserDto.tab_number;
-      user.firstname_ru = createUserDto.firstname_ru;
-      user.firstname_en = createUserDto.firstname_en;
-      user.lastname_ru = createUserDto.lastname_ru;
-      user.lastname_en = createUserDto.lastname_en;
-      user.patronymic_ru = createUserDto.patronymic_ru;
-      user.patronymic_en = createUserDto.patronymic_en;
-      user.position_id = createUserDto.position_id;
-      user.section_id = createUserDto.section_id;
-      user.state_id = createUserDto.state_id;
-      user.city_id = createUserDto.city_id;
-      user.nomination_id = createUserDto.nomination_id;
-      user.description_ru = createUserDto.description_ru;
-      user.description_en = createUserDto.description_en;
+      user.tabNumber = createUserDto.tabNumber;
+      user.firstnameRu = createUserDto.firstnameRu;
+      user.firstnameEn = createUserDto.firstnameEn;
+      user.lastnameRu = createUserDto.lastnameRu;
+      user.lastnameEn = createUserDto.lastnameEn;
+      user.patronymicRu = createUserDto.patronymicRu;
+      user.patronymicEn = createUserDto.patronymicEn;
+      user.stateId = createUserDto.stateId;
       user.img = createUserDto.img;
+      user.cityName = createUserDto.cityName;
+      user.positionName = createUserDto.positionName;
+      user.sectionName = createUserDto.sectionName;
+      user.passwordText = createUserDto.password;
 
       const salt = await genSalt(10);
       user.password = await hash(createUserDto.password, salt);
 
       const userData = await user.save();
-      // await this.mailerService.sendMail({
-      //       to: 'zombotv82@gmail.com', // list of receivers
-      //       from: 'noreply@nestjs.com', // sender address
-      //       subject: 'Testing Nest MailerModule ✔', // Subject line
-      //       text: 'welcome', // plaintext body
-      //       html: '<b>welcome</b>', // HTML body content
-      //     })
-      //     .then(() => {})
-      //     .catch(() => {});
-      // when registering then log user in automatically by returning a token
+
       const token = await this.signToken(userData);
-      await this.sendAfterRegistartion(
-        createUserDto.email.trim().toLowerCase(),
-        createUserDto.tab_number,
-        createUserDto.password,
-        createUserDto.firstname_ru,
-        createUserDto.lastname_ru,
-        createUserDto.patronymic_ru,
-      )
+
       return new UserLoginResponseDto(userData, token);
     } catch (err) {
       if (
@@ -122,7 +100,7 @@ export class UsersService {
         err.original.constraint === 'user_tab_number_key'
       ) {
         throw new HttpException(
-          `User with email '${createUserDto.tab_number}' already exists`,
+          `User with email '${createUserDto.tabNumber}' already exists`,
           HttpStatus.CONFLICT,
         );
       }
@@ -131,11 +109,34 @@ export class UsersService {
     }
   }
 
+
+
+  async responsePassword(tabNumber): Promise<boolean>{
+    if (tabNumber) {
+      try {
+        const user = await this.getUserByTab(tabNumber);
+        console.log('[USER]:',user)
+        await this.mailService.sendEWS({
+          userTo: user.email,
+          userFrom: 'vtaward@vost-tech.ru',
+          text: 'Ваш пароль: ' + user.passwordText
+        });
+        return true;
+      } catch (e) {
+        throw new BadRequestException(e)
+      }
+    }
+  }
+
+
+
+
+
   async login(userLoginRequestDto: UserLoginRequestDto) {
-    const tab_number = userLoginRequestDto.tab_number;
+    const tabNumber = userLoginRequestDto.tabNumber;
     const password = userLoginRequestDto.password;
 
-    const user = await this.getUserByTab(tab_number);
+    const user = await this.getUserByTab(tabNumber);
     if (!user) {
       throw new HttpException(
         'No user with this tab number',
@@ -162,21 +163,14 @@ export class UsersService {
     }
 
     user.email = updateUserDto.email || user.email;
-    user.tab_number = updateUserDto.tab_number || user.tab_number;
-    user.firstname_ru = updateUserDto.firstname_ru || user.firstname_ru;
-    user.firstname_en = updateUserDto.firstname_en || user.firstname_en;
-    user.lastname_ru = updateUserDto.lastname_ru || user.lastname_ru;
-    user.lastname_en = updateUserDto.lastname_en || user.lastname_en;
-    user.patronymic_ru = updateUserDto.patronymic_ru || user.patronymic_ru;
-    user.patronymic_en = updateUserDto.patronymic_en || user.patronymic_en;
-    user.position_id = updateUserDto.position_id || user.position_id;
-    user.section_id = updateUserDto.section_id || user.section_id;
-    user.state_id = updateUserDto.state_id || user.state_id;
-    user.city_id = updateUserDto.city_id || user.city_id;
-    user.nomination_id = updateUserDto.nomination_id || user.nomination_id;
-    user.count_z = updateUserDto.count_z || user.count_z;
-    user.description_ru = updateUserDto.description_ru || user.description_ru;
-    user.description_en = updateUserDto.description_en || user.description_en;
+    user.tabNumber = updateUserDto.tabNumber || user.tabNumber;
+    user.firstnameRu = updateUserDto.firstnameRu || user.firstnameRu;
+    user.firstnameEn = updateUserDto.firstnameEn || user.firstnameEn;
+    user.lastnameRu = updateUserDto.lastnameRu || user.lastnameRu;
+    user.lastnameEn = updateUserDto.lastnameEn || user.lastnameEn;
+    user.patronymicRu = updateUserDto.patronymicRu || user.patronymicRu;
+    user.patronymicEn = updateUserDto.patronymicEn || user.patronymicEn;
+    user.stateId = updateUserDto.stateId || user.stateId;
     user.role = updateUserDto.role || user.role;
     user.img = updateUserDto.img || user.img;
 
@@ -209,69 +203,12 @@ export class UsersService {
     return new UserDto(user);
   }
 
-  async forgotPasswordForAdmin(forgotPasswordRequestDto:ForgotPasswordRequestDto){
-    const user = await this.usersRepository.findByPk<User>(forgotPasswordRequestDto.id);
-    if (!user) {
-      throw new HttpException('User not found.', HttpStatus.NOT_FOUND);
-    }
-
-    const salt = await genSalt(10);
-    const password  = await randomstring.generate();
-    user.password = await hash(password, salt);
-    await user.save();
-
-    await this.sendFromAdminForgotPassword(user.email, password,  user.tab_number)
-    return new  UserCodeResponseDto('Your password has been send to your email', 200);
-  }
-
-  sendFromAdminForgotPassword( email:string, password: string, tab: string){
-    this
-      .mailerService
-      .sendMail({
-        to: email, // list of receivers
-        from: process.env.SMTP_USER, // sender address
-        subject: 'New user data', // Subject line
-        text: `
-        Your tab: ${tab}
-        Your password: ${password}
-        `,
-      })
-      .then((success) => {
-        return success
-      })
-      .catch((err) => {
-        throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
-      });
-  }
-
-  sendAfterRegistartion( email:string, tab: string, password: string, firstname:string, lastname: string, patronimic: string){
-    this
-      .mailerService
-      .sendMail({
-        to: email, // list of receivers
-        from: process.env.SMTP_USER, // sender address
-        subject: 'New user data', // Subject line
-        text: `
-        Thanks for registration, dear,
-        ${firstname} ${patronimic} ${lastname}
-        Your tab is: ${tab}
-        Your password is: ${password}
-        `,
-      })
-      .then((success) => {
-        return success
-      })
-      .catch((err) => {
-        throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
-      });
-  }
-
 
   async signToken(user: User) {
     const payload: JwtPayload = {
       id: user.id,
-      state_id: user.state_id,
-      tab_number: user.tab_number,
+      state_id: user.stateId,
+      tab_number: user.tabNumber,
       role: user.role,
     };
 

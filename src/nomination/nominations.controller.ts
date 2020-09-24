@@ -11,7 +11,7 @@ import {
 import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { NominationsService } from './nominations.service';
-import { CreateNominationDto } from './dto/creat-nomination.dto';
+import { CreateNominationDto } from './dto/create-nomination.dto';
 import { NominationDto } from './dto/nomination.dto';
 import { UpdateNominationDto } from './dto/update-nomination.dto';
 

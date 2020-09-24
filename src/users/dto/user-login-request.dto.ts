@@ -4,7 +4,7 @@ import { IsString } from 'class-validator';
 export class UserLoginRequestDto {
   @ApiProperty()
   @IsString()
-  readonly tab_number: string;
+  readonly tabNumber: string;
 
   @ApiProperty()
   @IsString()

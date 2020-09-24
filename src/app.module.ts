@@ -29,10 +29,10 @@ const config = new ConfigService();
   imports: [
     UsersModule,
     SharedModule,
-    SectionsModule,
-    PositionsModule,
+    // SectionsModule,
+    // PositionsModule,
     StatesModule,
-    CityModule,
+    // CityModule,
     NominationsModule,
     ParticipantsModule,
     VotesModule,

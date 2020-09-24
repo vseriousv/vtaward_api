@@ -1,10 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ISendMail } from '../interface/ISendMail';
-import { stringify } from 'querystring';
-// import mailerService from 'nodemailer';
-// tslint:disable-next-line:no-var-requires
-const EWS = require('node-ews');
-
+import EWS from 'node-ews';
 
 
 @Injectable()
@@ -39,11 +35,11 @@ export class MailService {
             'attributes': {
               'BodyType' : 'Text'
             },
-            '$value': 'This is a test email'
+            '$value': data.text
           },
           'ToRecipients' : {
             'Mailbox' : {
-              'EmailAddress':'vtawordtest@vost-tech.ru'
+              'EmailAddress': data.userTo
             }
           },
           'IsRead': 'false'
@@ -64,38 +60,4 @@ export class MailService {
         return {response: '[ERROR]', err}
       });
   }
-
-
-  // async sendMailSMTP(data: ISendMail): Promise<any> {
-  //   // tslint:disable-next-line:no-console
-  //   console.log('params', data)
-  //
-  //   const htmlMes = 'Тестируем \n ';
-  //
-  //   try{
-  //     const transporter = mailerService.createTransport({
-  //       host: 'mail.vost-tech.ru',
-  //       port: 25,
-  //       // secure: false, // true for 465, false for other ports
-  //       auth: {
-  //         user: 'vtaward@vost-tech.ru', // generated ethereal user
-  //         pass: 'dfjk3WDS', // generated ethereal password
-  //       },
-  //     });
-  //
-  //     const result = await transporter.sendMail({
-  //       from: '"Сообщение с сайта" <vtaward@vost-tech.ru>',
-  //       to: 'vtawordtest@vost-tech.ru',
-  //       subject: 'Message from site vtaward.com',
-  //       text: htmlMes
-  //     });
-  //     // tslint:disable-next-line:no-console
-  //     console.log('Отправил: ', htmlMes);
-  //
-  //     return { response: 'Send', result};
-  //   } catch(e) {
-  //     return { response: 'Error', error: e }
-  //   }
-  // }
-
 }

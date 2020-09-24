@@ -11,12 +11,9 @@ export class Nomination extends Model<Nomination> {
   })
   id: number;
 
-  @Column
-  value_ru: string;
+  @Column({field: 'value_ru'})
+  valueRu: string;
 
-  @Column
-  value_en: string;
-
-  @HasMany(() => User )
-  users: User[];
+  @Column({field: 'value_en'})
+  valueEn: string;
 }

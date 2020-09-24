@@ -1,7 +1,6 @@
-import { IsString, IsEmail, IsInt, IsEnum, IsOptional } from 'class-validator';
+import { IsEmail, IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
 import { Role } from '../../shared/enum/role';
 import { ApiProperty } from '@nestjs/swagger';
-import { Column } from 'sequelize-typescript';
 
 export class CreateUserDto {
   @ApiProperty()
@@ -14,72 +13,37 @@ export class CreateUserDto {
 
   @ApiProperty()
   @IsString()
-  readonly tab_number: string;
+  readonly tabNumber: string;
 
   @ApiProperty()
   @IsString()
-  readonly firstname_ru: string;
+  readonly firstnameRu: string;
 
   @ApiProperty()
   @IsString()
-  readonly firstname_en: string;
+  readonly firstnameEn: string;
 
   @ApiProperty()
   @IsString()
-  readonly lastname_ru: string;
+  readonly lastnameRu: string;
 
   @ApiProperty()
   @IsString()
-  readonly lastname_en: string;
+  readonly lastnameEn: string;
 
   @ApiProperty()
   @IsOptional()
   @IsString()
-  readonly patronymic_ru: string;
+  readonly patronymicRu: string;
 
   @ApiProperty()
   @IsOptional()
   @IsString()
-  readonly patronymic_en: string;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsInt()
-  readonly position_id: number;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsInt()
-  readonly section_id: number;
+  readonly patronymicEn: string;
 
   @ApiProperty()
   @IsInt()
-  readonly state_id: number;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsInt()
-  readonly city_id: number;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsInt()
-  readonly nomination_id: number;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsInt()
-  readonly count_z: number;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsString()
-  readonly description_ru: string;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsString()
-  readonly description_en: string;
+  readonly stateId: number;
 
   @ApiProperty()
   @IsOptional()
@@ -90,4 +54,24 @@ export class CreateUserDto {
   @IsOptional()
   @IsString()
   readonly img: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  readonly positionName: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  readonly cityName: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  readonly sectionName: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  readonly passwordText: string;
 }

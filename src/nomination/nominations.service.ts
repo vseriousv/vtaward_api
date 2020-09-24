@@ -1,7 +1,7 @@
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { Nomination } from './nomination.entity';
 import { NominationDto } from './dto/nomination.dto';
-import { CreateNominationDto } from './dto/creat-nomination.dto';
+import { CreateNominationDto } from './dto/create-nomination.dto';
 import { UpdateNominationDto } from './dto/update-nomination.dto';
 
 @Injectable()
@@ -35,8 +35,8 @@ export class NominationsService {
     try {
       const nomination = new Nomination();
 
-      nomination.value_ru = createNominationDto.value_ru;
-      nomination.value_en = createNominationDto.value_en;
+      nomination.valueRu = createNominationDto.valueRu;
+      nomination.valueEn = createNominationDto.valueEn;
 
       const nominationsData = await nomination.save();
 
@@ -52,8 +52,8 @@ export class NominationsService {
     if (!nomination) {
       throw new HttpException('Nomination not found.', HttpStatus.NOT_FOUND);
     }
-    nomination.value_ru = updateNominationDto.value_ru || nomination.value_ru;
-    nomination.value_en = updateNominationDto.value_en || nomination.value_en;
+    nomination.valueRu = updateNominationDto.valueRu || nomination.valueRu;
+    nomination.valueEn = updateNominationDto.valueEn || nomination.valueEn;
 
     try {
       const data = await nomination.save();

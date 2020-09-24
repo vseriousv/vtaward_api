@@ -11,77 +11,42 @@ export class UpdateUserDto {
   @ApiProperty()
   @IsOptional()
   @IsString()
-  readonly tab_number: string;
+  readonly tabNumber: string;
 
   @ApiProperty()
   @IsOptional()
   @IsString()
-  readonly firstname_ru: string;
+  readonly firstnameRu: string;
 
   @ApiProperty()
   @IsOptional()
   @IsString()
-  readonly firstname_en: string;
+  readonly firstnameEn: string;
 
   @ApiProperty()
   @IsOptional()
   @IsString()
-  readonly lastname_ru: string;
+  readonly lastnameRu: string;
 
   @ApiProperty()
   @IsOptional()
   @IsString()
-  readonly lastname_en: string;
+  readonly lastnameEn: string;
 
   @ApiProperty()
   @IsOptional()
   @IsString()
-  readonly patronymic_ru: string;
+  readonly patronymicRu: string;
 
   @ApiProperty()
   @IsOptional()
   @IsString()
-  readonly patronymic_en: string;
+  readonly patronymicEn: string;
 
   @ApiProperty()
   @IsOptional()
   @IsInt()
-  readonly position_id: number;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsInt()
-  readonly section_id: number;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsInt()
-  readonly state_id: number;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsInt()
-  readonly city_id: number;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsInt()
-  readonly nomination_id: number;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsInt()
-  readonly count_z: number;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsString()
-  readonly description_ru: string;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsString()
-  readonly description_en: string;
+  readonly stateId: number;
 
   @ApiProperty()
   @IsOptional()
@@ -92,4 +57,24 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   readonly img: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  readonly positionName: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  readonly cityName: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  readonly sectionName: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  readonly passwordText: string;
 }

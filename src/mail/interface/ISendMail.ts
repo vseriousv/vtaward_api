@@ -1,5 +1,5 @@
 export interface ISendMail {
-  userTo: number,
+  userTo: string,
   userFrom: string,
   text: string,
 }

@@ -4,9 +4,9 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateNominationDto {
   @ApiProperty()
   @IsString()
-  readonly value_ru: string;
+  readonly valueRu: string;
 
   @ApiProperty()
   @IsString()
-  readonly value_en: string;
+  readonly valueEn: string;
 }

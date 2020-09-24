@@ -1,13 +1,6 @@
-import { User } from './../user.entity';
+import { User } from '../user.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
 import { Role } from '../../shared/enum/role';
-import { Column } from 'sequelize-typescript';
-import { PositionDto } from '../../position/dto/position.dto';
-import { SectionDto } from '../../section/dto/section.dto';
-import { StateDto } from '../../state/dto/state.dto';
-import { CityDto } from '../../city/dto/city.dto';
-import { NominationDto } from '../../nomination/dto/nomination.dto';
 
 export class UserDto {
   @ApiProperty()
@@ -17,49 +10,28 @@ export class UserDto {
   readonly email: string;
 
   @ApiProperty()
-  readonly tab_number: string;
+  readonly tabNumber: string;
 
   @ApiProperty()
-  readonly firstname_ru: string;
+  readonly firstnameRu: string;
 
   @ApiProperty()
-  readonly firstname_en: string;
+  readonly firstnameEn: string;
 
   @ApiProperty()
-  readonly lastname_ru: string;
+  readonly lastnameRu: string;
 
   @ApiProperty()
-  readonly lastname_en: string;
+  readonly lastnameEn: string;
 
   @ApiProperty()
-  readonly patronymic_ru: string;
+  readonly patronymicRu: string;
 
   @ApiProperty()
-  readonly patronymic_en: string;
+  readonly patronymicEn: string;
 
   @ApiProperty()
-  readonly position_id: number;
-
-  @ApiProperty()
-  readonly section_id: number;
-
-  @ApiProperty()
-  readonly state_id: number;
-
-  @ApiProperty()
-  readonly city_id: number;
-
-  @ApiProperty()
-  readonly nomination_id: number;
-
-  @ApiProperty()
-  readonly count_z: number;
-
-  @ApiProperty()
-  readonly description_ru: string;
-
-  @ApiProperty()
-  readonly description_en: string;
+  readonly stateId: number;
 
   @ApiProperty()
   readonly role: Role;
@@ -68,44 +40,33 @@ export class UserDto {
   readonly img: string;
 
   @ApiProperty()
-  readonly position: PositionDto;
+  readonly positionName: string;
 
   @ApiProperty()
-  readonly section: SectionDto;
+  readonly cityName: string;
 
   @ApiProperty()
-  readonly state: StateDto;
+  readonly sectionName: string;
 
   @ApiProperty()
-  readonly city: CityDto;
-
-  @ApiProperty()
-  readonly nomination: NominationDto;
+  readonly passwordText: string;
 
   constructor(user: User) {
     this.id = user.id;
     this.email = user.email;
-    this.tab_number = user.tab_number;
-    this.firstname_ru = user.firstname_ru;
-    this.firstname_en = user.firstname_en;
-    this.lastname_ru = user.lastname_ru;
-    this.lastname_en = user.lastname_en;
-    this.patronymic_ru = user.patronymic_ru;
-    this.patronymic_en = user.patronymic_en;
-    this.position_id = user.position_id;
-    this.section_id = user.section_id;
-    this.state_id = user.state_id;
-    this.city_id = user.city_id;
-    this.nomination_id = user.nomination_id;
-    this.count_z = user.count_z;
-    this.description_ru = user.description_ru;
-    this.description_en = user.description_en;
+    this.tabNumber = user.tabNumber;
+    this.firstnameRu = user.firstnameRu;
+    this.firstnameEn = user.firstnameEn;
+    this.lastnameRu = user.lastnameRu;
+    this.lastnameEn = user.lastnameEn;
+    this.patronymicRu = user.patronymicRu;
+    this.patronymicEn = user.patronymicEn;
+    this.stateId = user.stateId;
     this.role = user.role;
     this.img = user.img;
-    this.position = user.position;
-    this.section = user.section;
-    this.state = user.state;
-    this.city = user.city;
-    this.nomination = user.nomination;
+    this.positionName = user.positionName;
+    this.cityName = user.cityName;
+    this.sectionName = user.sectionName;
+    this.passwordText = user.passwordText;
   }
 }

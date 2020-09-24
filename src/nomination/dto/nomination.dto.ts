@@ -6,14 +6,14 @@ export class NominationDto {
   id: number;
 
   @ApiProperty()
-  readonly value_ru: string;
+  readonly valueRu: string;
 
   @ApiProperty()
-  readonly value_en: string;
+  readonly valueEn: string;
 
   constructor(nomination: Nomination) {
     this.id = nomination.id;
-    this.value_ru = nomination.value_ru;
-    this.value_en = nomination.value_en;
+    this.valueRu = nomination.valueRu;
+    this.valueEn = nomination.valueEn;
   }
 }

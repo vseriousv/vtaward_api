@@ -4,11 +4,11 @@ import { IsOptional } from 'class-validator';
 export class MailDto {
   @ApiProperty()
   @IsOptional()
-  readonly userToId: number;
+  readonly userToEmail: string;
 
   @ApiProperty()
   @IsOptional()
-  readonly userFromId: number;
+  readonly userFromEmail: string;
 
   @ApiProperty()
   @IsOptional()

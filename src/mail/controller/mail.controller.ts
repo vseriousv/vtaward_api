@@ -6,7 +6,7 @@ import { MailDto } from '../dto/mail.dto';
 import { ISendMail } from '../interface/ISendMail';
 
 @Controller('mail')
-@ApiTags('Mail')
+@ApiTags('mail')
 export class MailController {
   constructor(private readonly service: MailService) {}
 
@@ -15,7 +15,7 @@ export class MailController {
   @UseGuards(AuthGuard('jwt'))
   send(@Body() mailDto: MailDto): Promise<any> {
     const sendObject: ISendMail = {
-      userTo: mailDto.userToId,
+      userTo: mailDto.userToEmail,
       userFrom: 'vtaward@vost-tech.ru',
       text: mailDto.text,
     }

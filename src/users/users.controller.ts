@@ -1,28 +1,31 @@
 import { UserLoginRequestDto } from './dto/user-login-request.dto';
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  HttpCode,
+  Controller,
   Delete,
-  Req,
-  UseGuards,
+  Get,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
   Put,
-  Param, UseInterceptors, HttpException, HttpStatus, UploadedFile,
+  Query,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { UserDto } from './dto/user.dto';
-import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from  'multer';
+import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { ForgotPasswordRequestDto } from './dto/forgot-password-request.dto';
-import { UserCodeResponseDto } from './dto/user-code-response.dto';
+import { TabNumberPassUserDto } from './dto/tab-number-pass-user.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -46,6 +49,13 @@ export class UsersController {
     return this.usersService.login(userLoginRequestDto);
   }
 
+  @Post('pass-email')
+  responsePassword(
+    @Body() tabNumberPassUserDto: TabNumberPassUserDto
+  ): Promise<boolean> {
+    return this.usersService.responsePassword(tabNumberPassUserDto.tabNumber)
+  }
+
   @Get()
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
@@ -65,16 +75,10 @@ export class UsersController {
   @Get('check')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
-  async check(): Promise<Object> {
+  async check(): Promise<Record<any, any>> {
     return { result: true };
   }
 
-  @Post('admin_forgot_password')
-  @ApiOkResponse({ type: UserDto })
-  adminForgotPassword(@Body() forgotPasswordRequestDto: ForgotPasswordRequestDto,
-  ):Promise<UserCodeResponseDto> {
-    return this.usersService.forgotPasswordForAdmin(forgotPasswordRequestDto);
-  }
 
   @Post('avatar')
   @ApiBearerAuth()

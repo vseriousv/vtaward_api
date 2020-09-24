@@ -6,10 +6,10 @@ export class UpdateNominationDto {
   @ApiProperty()
   @IsOptional()
   @IsString()
-  readonly value_ru: string;
+  readonly valueRu: string;
 
   @ApiProperty()
   @IsOptional()
   @IsString()
-  readonly value_en: string;
+  readonly valueEn: string;
 }

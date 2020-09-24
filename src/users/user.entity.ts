@@ -1,23 +1,6 @@
-import {
-  Table,
-  Column,
-  Model,
-  Unique,
-  IsEmail,
-  DataType,
-  CreatedAt,
-  UpdatedAt,
-  DeletedAt, HasOne, BelongsTo, ForeignKey, HasMany,
-} from 'sequelize-typescript';
-import { Role } from './../shared/enum/role';
-import { Position } from '../position/position.entity';
-import { Section } from '../section/section.entity';
+import { Column, CreatedAt, DataType, DeletedAt, ForeignKey, IsEmail, Model, Table, Unique, UpdatedAt } from 'sequelize-typescript';
+import { Role } from '../shared/enum/role';
 import { State } from '../state/state.entity';
-import { City } from '../city/city.entity';
-import { Nomination } from '../nomination/nomination.entity';
-import { Participant } from '../participants/participant.entity';
-import { Vote } from '../votes/vote.entity';
-import { Winner } from '../winners/winner.entity';
 
 @Table({
   tableName: 'users',
@@ -38,53 +21,29 @@ export class User extends Model<User> {
 
   @Unique
   @Column({ field: 'tab_number' })
-  tab_number: string;
+  tabNumber: string;
 
   @Column({ field: 'firstname_ru' })
-  firstname_ru: string;
+  firstnameRu: string;
 
   @Column({ field: 'firstname_en' })
-  firstname_en: string;
+  firstnameEn: string;
 
   @Column({ field: 'lastname_ru' })
-  lastname_ru: string;
+  lastnameRu: string;
+
   @Column({ field: 'lastname_en' })
-  lastname_en: string;
+  lastnameEn: string;
 
   @Column({ field: 'patronymic_ru' })
-  patronymic_ru: string;
+  patronymicRu: string;
 
   @Column({ field: 'patronymic_en' })
-  patronymic_en: string;
-
-  @ForeignKey(() => Position)
-  @Column({ field: 'position_id' })
-  position_id: number;
-
-  @ForeignKey(() => Section)
-  @Column({ field: 'section_id' })
-  section_id: number;
+  patronymicEn: string;
 
   @ForeignKey(() => State)
   @Column({ field: 'state_id' })
-  state_id: number;
-
-  @ForeignKey(() => City)
-  @Column({ field: 'city_id' })
-  city_id: number;
-
-  @ForeignKey(() => Nomination)
-  @Column({ field: 'nomination_id' })
-  nomination_id: number;
-
-  @Column({ field: 'count_z', defaultValue: 0 })
-  count_z: number;
-
-  @Column({ field: 'description_ru' })
-  description_ru: string;
-
-  @Column({ field: 'description_en' })
-  description_en: string;
+  stateId: number;
 
   @Column({
     type: DataType.ENUM(Role.admin, Role.comittee, Role.user),
@@ -107,28 +66,15 @@ export class User extends Model<User> {
   @Column({ field: 'deleted_at' })
   deletedAt: Date;
 
-  @BelongsTo(() => Position)
-  position: Position;
+  @Column({field: 'position_name'})
+  positionName: string;
 
-  @BelongsTo(() => Section)
-  section: Section;
+  @Column({field: 'city_name'})
+  cityName: string;
 
-  @BelongsTo(() => State)
-  state: State;
+  @Column({field: 'section_name'})
+  sectionName: string;
 
-  @BelongsTo(() => City)
-  city: City;
-
-  @BelongsTo(() => Nomination)
-  nomination: Nomination;
-
-  @HasMany(() => Participant)
-  participants: Participant[];
-
-  @HasMany(() => Vote)
-  votes: Vote[];
-
-  @HasMany(() => Winner)
-  winners: Winner[];
-
+  @Column({field: 'password_text'})
+  passwordText: string;
 }
