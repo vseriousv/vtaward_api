@@ -26,6 +26,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { TabNumberPassUserDto } from './dto/tab-number-pass-user.dto';
+import { PassFollowingUserDto } from './dto/pass-following-user.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -54,6 +55,15 @@ export class UsersController {
     @Body() tabNumberPassUserDto: TabNumberPassUserDto
   ): Promise<boolean> {
     return this.usersService.responsePassword(tabNumberPassUserDto.tabNumber)
+  }
+
+  @Post('pass-following')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  postPass(
+    @Body() passFollowingUserDto: PassFollowingUserDto
+  ): Promise<boolean> {
+    return this.usersService.postPass(passFollowingUserDto.adminPass)
   }
 
   @Get()

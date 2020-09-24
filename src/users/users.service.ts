@@ -150,6 +150,25 @@ Regards, administration www.vtaward.ru
   }
 
 
+  async postPass(adminPass: string): Promise<boolean> {
+    if (adminPass !== 'AdminPass') return false;
+
+    try {
+      const dataArr = await this.findAll();
+
+      dataArr.forEach(async (item) => {
+        const resp = await this.responsePassword(item.tabNumber);
+        console.log({
+          '[TABN]:': item.tabNumber,
+          '[SEND]:': resp
+        });
+      })
+      return true;
+    } catch (e) {
+      console.log(e);
+      throw new BadRequestException(e);
+    }
+  }
 
 
 
