@@ -49,10 +49,11 @@ export class NominationOrderService {
           { model: NominationOrderFilesEntity, as: 'files', }
         ],
         order: [
-          ['id', 'ASC'],
+          ['id', 'DESC'],
           [{model: NominationOrderFilesEntity, as: 'files'}, 'id', 'ASC'],
         ],
       });
+
       return {
         count: rows.length,
         rows: rows.map(item => new NominationOrderDto(item)),
@@ -146,6 +147,34 @@ export class NominationOrderService {
         textRu: updateNominationOrderDto.textRu || nominationOrderOld.textRu,
         textEn: updateNominationOrderDto.textEn || nominationOrderOld.textEn,
         public: updateNominationOrderDto.public !== null ? updateNominationOrderDto.public : nominationOrderOld.public,
+        isNew: nominationOrderOld.isNew,
+      }
+
+      await NominationOrderEntity.update(updateNominationOrderDto, { where: {id}});
+
+      return this.findById(id);
+    } catch (e) {
+      throw new BadRequestException(e);
+    }
+  }
+
+async changeIsNew(
+    id: number
+  ): Promise<NominationOrderEntity> {
+    try {
+      const nominationOrderOld = await this.findById(id);
+      if (!nominationOrderOld) {
+        throw new HttpException('Nomination order not found.', HttpStatus.NOT_FOUND);
+      }
+
+      const updateNominationOrderDto = {
+        userId: nominationOrderOld.userId,
+        userFrom: nominationOrderOld.userFrom,
+        nominationId: nominationOrderOld.nominationId,
+        textRu: nominationOrderOld.textRu,
+        textEn: nominationOrderOld.textEn,
+        public: nominationOrderOld.public,
+        isNew: true,
       }
 
       await NominationOrderEntity.update(updateNominationOrderDto, { where: {id}});

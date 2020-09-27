@@ -54,12 +54,27 @@ export class NominationOrderController {
       textRu: body.textRu,
       textEn: body.textEn,
       public: false,
+      isNew: false,
     }
 
     return this.service.create(files, createNominationOrder);
   }
 
-
+  @ApiParam({ name: 'id', description: 'Nomination id' })
+  @Post('/read/:id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({
+    description: 'Делает заявку прочитанной',
+    summary: 'Отправить ID заявки и она поменяет значение isNew на true',
+  })
+  @ApiOkResponse({type:NominationOrderDto})
+  changeIsNew(
+    @Body() body: TNominationOrderBody,
+    @Req() { user },
+    @Param('id') id): Promise<NominationOrderEntity> {
+    return this.service.changeIsNew(id);
+  }
 
   @ApiParam({ name: 'id', description: 'Nomination id' })
   @Get(':id')
@@ -94,8 +109,11 @@ export class NominationOrderController {
       textRu: body.hasOwnProperty('textRu') ? body.textRu : null,
       textEn: body.hasOwnProperty('textEn') ? body.textEn : null,
       public: body.hasOwnProperty('public') ? Boolean(body.public) : null,
+      isNew: false,
     }
     return this.service.changeFieldsById(id, updateNominationOrder);
   }
+
+
 
 }

@@ -1,4 +1,4 @@
-import { IsString, IsInt } from 'class-validator';
+import { IsString, IsInt, IsBoolean } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateNominationOrderDto {
@@ -24,6 +24,10 @@ export class CreateNominationOrderDto {
   readonly textEn: string;
 
   @ApiProperty()
-  @IsString()
+  @IsBoolean()
   readonly public: boolean;
+
+  @ApiProperty()
+  @IsBoolean()
+  readonly isNew: boolean;
 }
