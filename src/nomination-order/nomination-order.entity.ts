@@ -1,7 +1,7 @@
-import { Table, Column, Model, DataType, BelongsTo, ForeignKey, HasMany, CreatedAt, UpdatedAt, DeletedAt } from 'sequelize-typescript';
+import { BelongsTo, Column, CreatedAt, ForeignKey, HasMany, Model, Table, UpdatedAt } from 'sequelize-typescript';
 import { User } from '../users/user.entity';
 import { Nomination } from '../nomination/nomination.entity';
-import { NominationOrderFilesEntity } from '../nomination-order/nomination-order-files.entity';
+import { NominationOrderFilesEntity } from './nomination-order-files.entity';
 
 @Table({
   tableName: 'nomination_order',
@@ -44,10 +44,6 @@ export class NominationOrderEntity extends Model<NominationOrderEntity> {
   @UpdatedAt
   @Column({ field: 'updated_at' })
   updatedAt: Date;
-
-  @DeletedAt
-  @Column({ field: 'deleted_at' })
-  deletedAt: Date;
 
   @BelongsTo(() => User)
   user: User;

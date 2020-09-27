@@ -63,6 +63,37 @@ export class NominationOrderService {
     }
   }
 
+  async findAllPublic(): Promise<{count: number, rows: NominationOrderDto[]}> {
+    try {
+      const { count, rows } = await this.repository.findAndCountAll<NominationOrderEntity>({
+        where: { public: true },
+        include: [
+          {
+            model: User,
+            as: 'user',
+            identifier: 'userId',
+            include: [
+              { model: State, as: 'state',},
+            ],
+          },
+          { model: Nomination, as: 'nomination', },
+          { model: NominationOrderFilesEntity, as: 'files', }
+        ],
+        order: [
+          ['id', 'DESC'],
+          [{model: NominationOrderFilesEntity, as: 'files'}, 'id', 'ASC'],
+        ]
+      });
+
+      return {
+        count: rows.length,
+        rows: rows.map(item => new NominationOrderDto(item)),
+      }
+    } catch (e) {
+      throw new BadRequestException(e)
+    }
+  }
+
 
   async create(
     fileArray: [],
@@ -119,7 +150,7 @@ export class NominationOrderService {
           order: [
             ['id', 'ASC'],
             [{model: NominationOrderFilesEntity, as: 'files'}, 'id', 'ASC'],
-          ],
+          ]
         });
     } catch (e) {
       throw new BadRequestException(e)
