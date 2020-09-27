@@ -61,7 +61,7 @@ export class NominationOrderController {
   }
 
   @ApiParam({ name: 'id', description: 'Nomination id' })
-  @Post('/read/:id')
+  @Get('/read/:id')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @ApiOperation({
@@ -70,8 +70,6 @@ export class NominationOrderController {
   })
   @ApiOkResponse({type:NominationOrderDto})
   changeIsNew(
-    @Body() body: TNominationOrderBody,
-    @Req() { user },
     @Param('id') id): Promise<NominationOrderEntity> {
     return this.service.changeIsNew(id);
   }
