@@ -34,6 +34,9 @@ export class NominationOrderEntity extends Model<NominationOrderEntity> {
   @Column({ field: 'public' })
   public: boolean;
 
+  @Column({ field: 'is_selected' })
+  isSelected: boolean;
+
   @Column({ field: 'is_new' })
   isNew: boolean;
 

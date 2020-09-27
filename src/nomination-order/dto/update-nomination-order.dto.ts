@@ -27,5 +27,8 @@ export class UpdateNominationOrderDto {
   readonly public: boolean;
 
   @ApiProperty()
+  readonly isSelected: boolean;
+
+  @ApiProperty()
   readonly isNew: boolean;
 }

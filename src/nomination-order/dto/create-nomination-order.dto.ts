@@ -29,5 +29,9 @@ export class CreateNominationOrderDto {
 
   @ApiProperty()
   @IsBoolean()
+  readonly isSelected: boolean;
+
+  @ApiProperty()
+  @IsBoolean()
   readonly isNew: boolean;
 }

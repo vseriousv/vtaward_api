@@ -5,6 +5,7 @@ export interface TNominationOrder {
   textRu: string,
   textEn: string,
   public: boolean,
+  isSelected: boolean,
   isNew: boolean,
 }
 
@@ -15,5 +16,6 @@ export interface TNominationOrderBody {
   textRu?: string,
   textEn?: string,
   public?: boolean,
+  isSelected?: boolean,
   isNew?: boolean,
 }

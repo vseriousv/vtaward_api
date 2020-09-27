@@ -66,6 +66,7 @@ export class NominationOrderController {
       textRu: body.textRu,
       textEn: body.textEn,
       public: false,
+      isSelected: false,
       isNew: false,
     }
 
@@ -119,6 +120,7 @@ export class NominationOrderController {
       textRu: body.hasOwnProperty('textRu') ? body.textRu : null,
       textEn: body.hasOwnProperty('textEn') ? body.textEn : null,
       public: body.hasOwnProperty('public') ? Boolean(body.public) : null,
+      isSelected: body.hasOwnProperty('public') ? Boolean(body.isSelected) : null,
       isNew: false,
     }
     return this.service.changeFieldsById(id, updateNominationOrder);

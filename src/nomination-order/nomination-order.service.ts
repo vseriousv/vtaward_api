@@ -108,6 +108,8 @@ export class NominationOrderService {
       nominationOrder.textRu = createNominationOrderDto.textRu;
       nominationOrder.textEn = createNominationOrderDto.textEn;
       nominationOrder.public = createNominationOrderDto.public;
+      nominationOrder.isSelected = createNominationOrderDto.isSelected;
+      nominationOrder.isNew = createNominationOrderDto.isNew;
       const nominationOrderData = await nominationOrder.save();
 
       const fileData = this.fileParseData(fileArray, nominationOrderData.id)
@@ -178,6 +180,7 @@ export class NominationOrderService {
         textRu: updateNominationOrderDto.textRu || nominationOrderOld.textRu,
         textEn: updateNominationOrderDto.textEn || nominationOrderOld.textEn,
         public: updateNominationOrderDto.public !== null ? updateNominationOrderDto.public : nominationOrderOld.public,
+        isSelected: updateNominationOrderDto.isSelected !== null ? updateNominationOrderDto.isSelected : nominationOrderOld.isSelected,
         isNew: nominationOrderOld.isNew,
       }
 
@@ -189,7 +192,7 @@ export class NominationOrderService {
     }
   }
 
-async changeIsNew(
+  async changeIsNew(
     id: number
   ): Promise<NominationOrderEntity> {
     try {
@@ -205,6 +208,7 @@ async changeIsNew(
         textRu: nominationOrderOld.textRu,
         textEn: nominationOrderOld.textEn,
         public: nominationOrderOld.public,
+        isSelected: nominationOrderOld.isSelected,
         isNew: true,
       }
 
@@ -215,6 +219,5 @@ async changeIsNew(
       throw new BadRequestException(e);
     }
   }
-
 
 }
