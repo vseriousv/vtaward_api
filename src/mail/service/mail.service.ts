@@ -30,10 +30,10 @@ export class MailService {
       'Items' : {
         'Message' : {
           'ItemClass': 'IPM.Note',
-          'Subject' : 'Test EWS Email',
+          'Subject' : 'Сообщение с сайта  VTAWARD.RU',
           'Body' : {
             'attributes': {
-              'BodyType' : 'Text'
+              'BodyType' : 'HTML'
             },
             '$value': data.text
           },

@@ -7,7 +7,7 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
-  Param,
+  Param, Patch,
   Post,
   Put,
   Query,
@@ -134,7 +134,19 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: UserDto })
   async getUser(@Param('id') id): Promise<UserDto> {
-    return this.usersService.getUser(id);
+    return this.usersService.getUserById(id);
+  }
+
+  @Patch(':id')
+  @ApiParam({ name: 'id', description: 'User id' })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOkResponse({ type: UserDto })
+  changeUser(
+    @Body() updateUserDto: UpdateUserDto,
+    @Param('id') id,
+  ): Promise<UserDto> {
+    return this.usersService.changeFieldsById(id, updateUserDto);
   }
 
   @Put(':id')

@@ -11,6 +11,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService } from '../shared/config/config.service';
 import { State } from '../state/state.entity';
 import { MailService } from '../mail/service/mail.service';
+import { UpdateNominationOrderDto } from '../nomination-order/dto/update-nomination-order.dto';
+import { NominationOrderEntity } from '../nomination-order/nomination-order.entity';
+import { Nomination } from '../nomination/nomination.entity';
+import { NominationOrderFilesEntity } from '../nomination-order/nomination-order-files.entity';
 
 @Injectable()
 export class UsersService {
@@ -129,13 +133,37 @@ export class UsersService {
       try {
         const user = await this.getUserByTab(tabNumber);
         const HTMLText = `
-Ваш логин для входа: ${tabNumber}
-Ваш пароль для входа: ${user.passwordText}
-------------------------------------------
-Your login tab number: ${tabNumber}
-Your login password: ${user.passwordText}
-
-Regards, administration www.vtaward.ru
+<i>English text is below</i>
+<br /><br />
+Уважаемый коллега,
+<br /><br />
+Направляем Вам  персональный пароль для доступа на сайт www.vtaward.ru , на который вы сможете зайти в любое удобное для вас время с компьютера или смартфона, на работе или из дома.
+<br /><br />
+Логин (ваш табельный номер): ${tabNumber}<br />
+Пароль: ${user.passwordText}<br />
+<br />
+<div style="color: red">
+Прием заявок на участие в конкурсе «Лидер перемен ВТ - 2020» <br />
+<b>НАЧАЛО: 28 СЕНТЯБРЯ</b><br />
+<b>ЗАВЕРШЕНИЕ: 18 ОКТЯБРЯ</b> (до конца дня)<br />
+</div>
+<br />
+Ждем Вас на нашем сайте www.vtaward.ru !<br />
+<hr />
+Dear colleague,
+<br /><br />
+Below are the details how to get access the site www.vtaward.ru.<br />
+<br />
+Login (your Employee ID): ${tabNumber}<br />
+Password: ${user.passwordText}<br />
+<br /><br />
+<div style="color: red">
+Application process for VT Change Maker 2020 Contest:<br />
+<b>START: 28 SEPTEMBER,</b><br />
+<b>CLOSURE: 18 OCTOBER</b> (by the end on the day)<br />
+</div>
+<br />
+Welcome to our web site www.vtaward.ru !
         `;
         await this.mailService.sendEWS({
           userTo: user.email,
@@ -253,5 +281,65 @@ Regards, administration www.vtaward.ru
     };
 
     return sign(payload, this.jwtPrivateKey, {});
+  }
+
+
+  async changeFieldsById(
+    id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserDto> {
+    try {
+      const userOld = await this.getUserById(id);
+      if (!userOld) {
+        throw new HttpException('User is not found.', HttpStatus.NOT_FOUND);
+      }
+
+      updateUserDto = {
+        email: updateUserDto.email || userOld.email,
+        tabNumber: updateUserDto.tabNumber || userOld.tabNumber,
+        firstnameRu: updateUserDto.firstnameRu || userOld.firstnameRu,
+        firstnameEn: updateUserDto.firstnameEn || userOld.firstnameEn,
+        lastnameRu: updateUserDto.lastnameRu || userOld.lastnameRu,
+        lastnameEn: updateUserDto.lastnameEn || userOld.lastnameEn,
+        patronymicRu: updateUserDto.patronymicRu || userOld.patronymicRu,
+        patronymicEn: updateUserDto.patronymicEn || userOld.patronymicEn,
+        stateId: updateUserDto.stateId || userOld.stateId,
+        role: updateUserDto.role || userOld.role,
+        img: userOld.img,
+        positionName: updateUserDto.positionName || userOld.positionName,
+        cityName: updateUserDto.cityName || userOld.cityName,
+        sectionName: updateUserDto.sectionName || userOld.sectionName,
+        positionNameEng: updateUserDto.positionNameEng || userOld.positionNameEng,
+        cityNameEng: updateUserDto.cityNameEng || userOld.cityNameEng,
+        sectionNameEng: updateUserDto.sectionNameEng || userOld.sectionNameEng,
+        passwordText: userOld.passwordText
+      }
+
+      await User.update(updateUserDto, { where: {id}});
+
+      return await this.getUserById(id);
+    } catch (e) {
+      throw new BadRequestException(e);
+    }
+  }
+
+  async getUserById(id: number): Promise<User> {
+    try {
+      return this.usersRepository.findByPk<User>(
+        id,
+        {
+          include: [
+            {
+              model: State,
+              as: 'state',
+            },
+          ],
+          order: [
+            ['id', 'ASC'],
+          ],
+        });
+    } catch (e) {
+      throw new BadRequestException(e)
+    }
   }
 }
