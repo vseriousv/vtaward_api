@@ -94,6 +94,37 @@ export class NominationOrderService {
     }
   }
 
+  async findAllSelected(): Promise<{count: number, rows: NominationOrderDto[]}> {
+    try {
+      const { count, rows } = await this.repository.findAndCountAll<NominationOrderEntity>({
+        where: { is_selected: true },
+        include: [
+          {
+            model: User,
+            as: 'user',
+            identifier: 'userId',
+            include: [
+              { model: State, as: 'state',},
+            ],
+          },
+          { model: Nomination, as: 'nomination', },
+          { model: NominationOrderFilesEntity, as: 'files', }
+        ],
+        order: [
+          ['id', 'DESC'],
+          [{model: NominationOrderFilesEntity, as: 'files'}, 'id', 'ASC'],
+        ]
+      });
+
+      return {
+        count: rows.length,
+        rows: rows.map(item => new NominationOrderDto(item)),
+      }
+    } catch (e) {
+      throw new BadRequestException(e)
+    }
+  }
+
 
   async create(
     fileArray: [],

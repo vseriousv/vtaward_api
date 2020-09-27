@@ -47,6 +47,18 @@ export class NominationOrderController {
     return this.service.findAllPublic()
   }
 
+  @Get('/selected')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({
+    description: 'Получить все выбранные заявки на номинантов',
+    summary: 'Получить все выбранные заявки на номинантов',
+  })
+  @ApiOkResponse({type:[NominationOrderDto]})
+  findAllSelected(): Promise<{ rows: NominationOrderDto[]; count: number }> {
+    return this.service.findAllSelected()
+  }
+
 
 
   @Post('')
