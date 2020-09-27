@@ -11,7 +11,7 @@ export class FeedbackForm extends Model<FeedbackForm> {
   id: number;
 
   @Column
-  name: string;
+  userId: number;
 
   @Column
   text: string;

@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateFeedbackFormDto {
 
   @ApiProperty()
-  readonly name: string;
+  readonly userId: number;
 
   @ApiProperty()
   readonly text: string;

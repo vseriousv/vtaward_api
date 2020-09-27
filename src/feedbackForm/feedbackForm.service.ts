@@ -1,11 +1,7 @@
-import { HttpException, HttpStatus, Inject } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import { FeedbackForm } from './feedbackForm.entity';
 import { FeedbackFormDto } from './dto/feedbackForm.dto';
-import { UpdateFeedbackFormDto } from './dto/update-feedbackForm.dto';
-import { CityDto } from '../city/dto/city.dto';
-import { City } from '../city/city.entity';
-import { StatusResponseDto } from './dto/statusResponse.dto';
-import { CreateFeedbackFormDto } from './dto/create-feedbackForm.dto';
+import { NominationOrderEntity } from '../nomination-order/nomination-order.entity';
 
 export class FeedbackFormService {
   constructor(
@@ -41,24 +37,25 @@ export class FeedbackFormService {
     return new FeedbackFormDto(form);
   }
 
-  async update(id: number, param: UpdateFeedbackFormDto) {
-    const form = await this.feedbackRepository.findByPk<FeedbackForm>(id);
-    if (!form) {
-      throw new HttpException('FeedbackForm not found.', HttpStatus.NOT_FOUND);
-    }
-    form.isActive = param.isActive;
-    const data = await form.save();
-    return new FeedbackFormDto(data);
-  }
+  async changeRead(id: number) {
+    try {
+      const fb = await this.getForm(id);
+      if (!fb) {
+        throw new HttpException('FeedBack order not found.', HttpStatus.NOT_FOUND);
+      }
 
-  async delete(id: number) {
-    const form = await this.feedbackRepository.findByPk<FeedbackForm>(id);
-    if (!form) {
-      throw new HttpException('FeedbackForm not found.', HttpStatus.NOT_FOUND);
-    }
-    await form.destroy();
-    return new StatusResponseDto('deleted', HttpStatus.OK);
-  }
+      const updateFeedBackForm = {
+        userId: fb.userId,
+        text: fb.text,
+        isActive: true,
+      }
 
+      await FeedbackForm.update(updateFeedBackForm, { where: {id}});
+
+      return this.getForm(id);
+    } catch (e) {
+      throw new BadRequestException(e)
+    }
+  }
 
 }

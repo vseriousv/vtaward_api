@@ -6,7 +6,7 @@ export class FeedbackFormDto {
   id: number;
 
   @ApiProperty()
-  readonly name: string;
+  readonly userId: number;
 
   @ApiProperty()
   readonly text: string;
@@ -16,7 +16,7 @@ export class FeedbackFormDto {
 
   constructor(feedbackForm: FeedbackForm) {
     this.id = feedbackForm.id;
-    this.name = feedbackForm.name;
+    this.userId = feedbackForm.userId;
     this.text = feedbackForm.text;
     this.isActive = feedbackForm.isActive;
   }
