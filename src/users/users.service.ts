@@ -97,6 +97,9 @@ export class UsersService {
       user.cityName = createUserDto.cityName;
       user.positionName = createUserDto.positionName;
       user.sectionName = createUserDto.sectionName;
+      user.cityNameEng = createUserDto.cityNameEng;
+      user.positionNameEng = createUserDto.positionNameEng;
+      user.sectionNameEng = createUserDto.sectionNameEng;
       user.passwordText = createUserDto.password;
 
       const salt = await genSalt(10);
@@ -234,6 +237,9 @@ Welcome to our web site www.vtaward.ru !
     user.lastnameEn = updateUserDto.lastnameEn || user.lastnameEn;
     user.patronymicRu = updateUserDto.patronymicRu || user.patronymicRu;
     user.patronymicEn = updateUserDto.patronymicEn || user.patronymicEn;
+    user.cityNameEng = updateUserDto.cityNameEng || user.cityNameEng;
+    user.positionNameEng = updateUserDto.positionNameEng || user.positionNameEng;
+    user.sectionNameEng = updateUserDto.sectionNameEng || user.sectionNameEng;
     user.stateId = updateUserDto.stateId || user.stateId;
     user.role = updateUserDto.role || user.role;
     user.img = updateUserDto.img || user.img;

@@ -1,12 +1,15 @@
 import { BadRequestException, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import { FeedbackForm } from './feedbackForm.entity';
 import { FeedbackFormDto } from './dto/feedbackForm.dto';
-import { NominationOrderEntity } from '../nomination-order/nomination-order.entity';
+import { MailService } from '../mail/service/mail.service';
+import { UsersService} from '../users/users.service';
 
 export class FeedbackFormService {
   constructor(
     @Inject('FeedbackRepository')
     private readonly feedbackRepository: typeof FeedbackForm,
+    private readonly mailService: MailService,
+    private readonly userService: UsersService,
   ) {
   }
 
@@ -29,12 +32,29 @@ export class FeedbackFormService {
   }
 
   async create(params) {
-    console.log(params);
-    const form = new FeedbackForm(params);
-    console.log(form);
-    await form.save();
+    try {
+      const user = await this.userService.getUserById(params.userId);
+      console.log(params);
+      const form = new FeedbackForm(params);
+      console.log(form);
+      await form.save();
 
-    return new FeedbackFormDto(form);
+      const HTMLText = `
+Была заполнена форма на сайте.<br /><br />
+От: ${user.tabNumber} - ${user.lastnameRu} ${user.firstnameRu} ${user.patronymicRu}.<br />
+E-mail: ${user.email} <br /><br />
+Текст сообщения:<br />
+${params.text}
+        `;
+      await this.mailService.sendEWS({
+        userTo: 'vtaward@vost-tech.ru',
+        userFrom: user.email,
+        text: HTMLText
+      });
+      return new FeedbackFormDto(form);
+    } catch (e) {
+      throw new BadRequestException(e)
+    }
   }
 
   async changeRead(id: number) {
