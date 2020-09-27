@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, BelongsTo, ForeignKey, HasMany } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, BelongsTo, ForeignKey, HasMany, CreatedAt, UpdatedAt, DeletedAt } from 'sequelize-typescript';
 import { User } from '../users/user.entity';
 import { Nomination } from '../nomination/nomination.entity';
 import { NominationOrderFilesEntity } from '../nomination-order/nomination-order-files.entity';
@@ -37,6 +37,18 @@ export class NominationOrderEntity extends Model<NominationOrderEntity> {
   @Column({ field: 'is_new' })
   isNew: boolean;
 
+  @CreatedAt
+  @Column({ field: 'created_at' })
+  createdAt: Date;
+
+  @UpdatedAt
+  @Column({ field: 'updated_at' })
+  updatedAt: Date;
+
+  @DeletedAt
+  @Column({ field: 'deleted_at' })
+  deletedAt: Date;
+
   @BelongsTo(() => User)
   user: User;
 
@@ -48,4 +60,5 @@ export class NominationOrderEntity extends Model<NominationOrderEntity> {
 
   @HasMany(() => NominationOrderFilesEntity)
   files: NominationOrderFilesEntity[]
+
 }

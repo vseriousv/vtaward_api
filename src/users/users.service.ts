@@ -11,10 +11,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService } from '../shared/config/config.service';
 import { State } from '../state/state.entity';
 import { MailService } from '../mail/service/mail.service';
-import { UpdateNominationOrderDto } from '../nomination-order/dto/update-nomination-order.dto';
-import { NominationOrderEntity } from '../nomination-order/nomination-order.entity';
-import { Nomination } from '../nomination/nomination.entity';
-import { NominationOrderFilesEntity } from '../nomination-order/nomination-order-files.entity';
 
 @Injectable()
 export class UsersService {
