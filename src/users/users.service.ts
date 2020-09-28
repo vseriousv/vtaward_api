@@ -130,7 +130,38 @@ export class UsersService {
   async responsePassword(tabNumber): Promise<boolean>{
     if (tabNumber) {
       try {
-        const user = await this.getUserByTab(tabNumber);
+        const tabNumberInput = tabNumber.toUpperCase();
+        const tN = tabNumberInput.replace(/\s/g, '');
+        const user = await this.getUserByTab(tN);
+        const HTMLText = `
+VT Award<br />
+Восстановление пароля<br /><br />
+Вы запросили пароль для доступа на сайт www.vtaward.ru<br /><br />
+Логин (ваш табельный номер): ${tN}<br />
+Пароль: ${user.passwordText}<br /><br /><br />
+
+Password recovery<br /><br />
+Login (your Employee ID): ${tN}<br />
+Password: ${user.passwordText}<br />
+        `;
+        await this.mailService.sendEWS({
+          userTo: user.email,
+          userFrom: 'vtaward@vost-tech.ru',
+          text: HTMLText
+        });
+        return true;
+      } catch (e) {
+        throw new BadRequestException(e)
+      }
+    }
+  }
+
+  async passwordFollowing(tabNumber): Promise<boolean>{
+    if (tabNumber) {
+      try {
+        const tabNumberInput = tabNumber.toUpperCase();
+        const tN = tabNumberInput.replace(/\s/g, '');
+        const user = await this.getUserByTab(tN);
         const HTMLText = `
 <i>English text is below</i>
 <br /><br />
@@ -138,7 +169,7 @@ export class UsersService {
 <br /><br />
 Направляем Вам  персональный пароль для доступа на сайт www.vtaward.ru , на который вы сможете зайти в любое удобное для вас время с компьютера или смартфона, на работе или из дома.
 <br /><br />
-Логин (ваш табельный номер): ${tabNumber}<br />
+Логин (ваш табельный номер): ${tN}<br />
 Пароль: ${user.passwordText}<br />
 <br />
 <div style="color: red">
@@ -153,7 +184,7 @@ Dear colleague,
 <br /><br />
 Below are the details how to get access the site www.vtaward.ru.<br />
 <br />
-Login (your Employee ID): ${tabNumber}<br />
+Login (your Employee ID): ${tN}<br />
 Password: ${user.passwordText}<br />
 <br /><br />
 <div style="color: red">
@@ -184,7 +215,7 @@ Welcome to our web site www.vtaward.ru !
       const dataArr = await this.findAll();
 
       dataArr.forEach(async (item) => {
-        const resp = await this.responsePassword(item.tabNumber);
+        const resp = await this.passwordFollowing(item.tabNumber);
         console.log({
           '[TABN]:': item.tabNumber,
           '[SEND]:': resp
@@ -200,8 +231,11 @@ Welcome to our web site www.vtaward.ru !
 
 
   async login(userLoginRequestDto: UserLoginRequestDto) {
-    const tabNumber = userLoginRequestDto.tabNumber;
-    const password = userLoginRequestDto.password;
+    const tabNumberInput = userLoginRequestDto.tabNumber.toUpperCase();
+    const passwordInput = userLoginRequestDto.password;
+
+    const tabNumber = tabNumberInput.replace(/\s/g, '');
+    const password = passwordInput.replace(/\s/g, '');
 
     const user = await this.getUserByTab(tabNumber);
     if (!user) {
