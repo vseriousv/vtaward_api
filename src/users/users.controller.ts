@@ -63,7 +63,7 @@ export class UsersController {
   postPass(
     @Body() passFollowingUserDto: PassFollowingUserDto
   ): Promise<boolean> {
-    return this.usersService.postPass(passFollowingUserDto.adminPass)
+    return this.usersService.postPass(passFollowingUserDto)
   }
 
   @Get()

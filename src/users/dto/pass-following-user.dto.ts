@@ -6,4 +6,12 @@ export class PassFollowingUserDto {
   @ApiProperty()
   @IsString()
   readonly adminPass: string;
+
+  @ApiProperty()
+  @IsInt()
+  readonly start: number;
+
+  @ApiProperty()
+  @IsInt()
+  readonly end: number;
 }

@@ -208,17 +208,17 @@ Welcome to our web site www.vtaward.ru !
   }
 
 
-  async postPass(adminPass: string): Promise<boolean> {
-    if (adminPass !== 'AdminPass') return false;
+  async postPass(data): Promise<boolean> {
+    if (data.adminPass !== 'AdminPass') return false;
 
     try {
       const dataArr = await this.findAll();
 
-      dataArr.forEach(async (item) => {
+      dataArr.slice(data.start, data.end).forEach(async (item) => {
         const resp = await this.passwordFollowing(item.tabNumber);
         console.log({
-          '[TABN]:': item.tabNumber,
-          '[SEND]:': resp
+          '[EMAIL]:': item.email,
+          '[SEND]:': resp,
         });
       })
       return true;

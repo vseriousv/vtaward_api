@@ -51,7 +51,7 @@ export class MailService {
     ews.run(ewsFunction, ewsArgs)
       .then(result => {
         // tslint:disable-next-line:no-console
-        console.log({response: '[RESULT]', result: JSON.stringify(result)});
+        console.log(data.userTo, {response: '[RESULT]', result: JSON.stringify(result)});
         return {response: '[RESULT]', result: JSON.stringify(result)}
       })
       .catch(err => {
