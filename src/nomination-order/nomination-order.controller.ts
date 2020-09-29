@@ -1,16 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { NominationOrderService } from './nomination-order.service';
 import { NominationOrderDto } from './dto/nomination-order.dto';
 import { ApiBearerAuth, ApiConsumes, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { CreateNominationOrderDto } from './dto/create-nomination-order.dto';
 import { NominationOrderEntity } from './nomination-order.entity';
-import { orderFileFilter } from '../shared/utils/order-file-filter';
-import { generateFilename } from '../shared/utils/generation-file-name';
-import { UpdateNominationOrderDto } from './dto/update-nomination-order.dto';
 import { TNominationOrder, TNominationOrderBody } from './interfaces/TNominationOrder';
+import { ApiImplicitQuery } from '@nestjs/swagger/dist/decorators/api-implicit-query.decorator';
+import { ApiUtil } from '../shared/ApiUtil';
 
 
 interface CreateParams {
@@ -38,13 +34,24 @@ export class NominationOrderController {
   @Get('/public')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
+  @ApiImplicitQuery({ name: 'filter', type: String, required: false })
+  @ApiImplicitQuery({ name: 'limit', type: Number, required: false })
+  @ApiImplicitQuery({ name: 'offset', type: Number, required: false })
   @ApiOperation({
     description: 'Получить все опубликованные заявки на номинантов',
     summary: 'Получить все опубликованные заявки на номинантов',
   })
   @ApiOkResponse({type:[NominationOrderDto]})
-  findAllPublic(): Promise<{ rows: NominationOrderDto[]; count: number }> {
-    return this.service.findAllPublic()
+  findAllPublic(
+    @Query('filter') filterStr?: string,
+    @Query('limit') limitStr?: string,
+    @Query('offset') offsetStr?: string,
+  ): Promise<{ rows: NominationOrderDto[]; count: number }> {
+    const filter = ApiUtil.parseFilterJson<NominationOrderEntity>(filterStr);
+    const limit = parseInt(limitStr, 10) || undefined;
+    const offset = parseInt(offsetStr, 10) || undefined;
+
+    return this.service.findAllPublic(filter, limit, offset)
   }
 
   @Get('/selected')

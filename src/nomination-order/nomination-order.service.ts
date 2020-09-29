@@ -63,10 +63,16 @@ export class NominationOrderService {
     }
   }
 
-  async findAllPublic(): Promise<{count: number, rows: NominationOrderDto[]}> {
+  // tslint:disable-next-line:no-unnecessary-initializer
+  async findAllPublic(where, limit = undefined, offset = undefined): Promise<{count: number, rows: NominationOrderDto[]}> {
     try {
       const { count, rows } = await this.repository.findAndCountAll<NominationOrderEntity>({
-        where: { public: true },
+        where: {
+          public: true,
+          ...where
+        },
+        limit,
+        offset,
         include: [
           {
             model: User,
