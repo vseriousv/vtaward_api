@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { NominationOrderService } from './nomination-order.service';
-import { NominationOrderDto } from './dto/nomination-order.dto';
+import { NominationOrderService } from '../services/nomination-order.service';
+import { NominationOrderDto } from '../dto/nomination-order.dto';
 import { ApiBearerAuth, ApiConsumes, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { NominationOrderEntity } from './nomination-order.entity';
-import { TNominationOrder, TNominationOrderBody } from './interfaces/TNominationOrder';
+import { NominationOrderEntity } from '../entities/nomination-order.entity';
+import { TNominationOrder, TNominationOrderBody } from '../interfaces/TNominationOrder';
 import { ApiImplicitQuery } from '@nestjs/swagger/dist/decorators/api-implicit-query.decorator';
-import { ApiUtil } from '../shared/ApiUtil';
+import { ApiUtil } from '../../shared/ApiUtil';
 
 
 interface CreateParams {
@@ -22,13 +22,17 @@ export class NominationOrderController {
   @Get('')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
+  @ApiImplicitQuery({ name: 'noSelected', type: String, required: false })
   @ApiOperation({
     description: 'Получить все заявки на номинантов',
     summary: 'Получить все заявки на номинантов',
   })
   @ApiOkResponse({type:[NominationOrderDto]})
-  findAll(): Promise<{ rows: NominationOrderDto[]; count: number }> {
-    return this.service.findAll()
+  findAll(
+    @Query('noSelected') noSelectedStr?: string,
+    ): Promise<{ rows: NominationOrderDto[]; count: number }> {
+    const noSelected = Boolean(noSelectedStr) || undefined;
+    return this.service.findAll(noSelected)
   }
 
   @Get('/public')

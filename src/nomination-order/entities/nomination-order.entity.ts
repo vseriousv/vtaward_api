@@ -1,6 +1,6 @@
 import { BelongsTo, Column, CreatedAt, ForeignKey, HasMany, Model, Table, UpdatedAt } from 'sequelize-typescript';
-import { User } from '../users/user.entity';
-import { Nomination } from '../nomination/nomination.entity';
+import { User } from '../../users/user.entity';
+import { Nomination } from '../../nomination/nomination.entity';
 import { NominationOrderFilesEntity } from './nomination-order-files.entity';
 
 @Table({

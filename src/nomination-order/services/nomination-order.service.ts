@@ -1,13 +1,13 @@
 import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { NominationOrderEntity } from './nomination-order.entity';
-import { User } from '../users/user.entity';
-import { Nomination } from '../nomination/nomination.entity';
-import { NominationOrderFilesEntity } from './nomination-order-files.entity';
-import { NominationOrderDto } from './dto/nomination-order.dto';
-import { CreateNominationOrderDto } from './dto/create-nomination-order.dto';
-import { TFormData, TFormFileData } from '../shared/interfases/TFormData';
-import { UpdateNominationOrderDto } from './dto/update-nomination-order.dto';
-import { State } from '../state/state.entity';
+import { NominationOrderEntity } from '../entities/nomination-order.entity';
+import { User } from '../../users/user.entity';
+import { Nomination } from '../../nomination/nomination.entity';
+import { NominationOrderFilesEntity } from '../entities/nomination-order-files.entity';
+import { NominationOrderDto } from '../dto/nomination-order.dto';
+import { CreateNominationOrderDto } from '../dto/create-nomination-order.dto';
+import { TFormData, TFormFileData } from '../../shared/interfases/TFormData';
+import { UpdateNominationOrderDto } from '../dto/update-nomination-order.dto';
+import { State } from '../../state/state.entity';
 
 @Injectable()
 export class NominationOrderService {
@@ -25,9 +25,12 @@ export class NominationOrderService {
     });
   }
 
-  async findAll(): Promise<{count: number, rows: NominationOrderDto[]}> {
+  async findAll(noSelected: boolean): Promise<{count: number, rows: NominationOrderDto[]}> {
     try {
       const { count, rows } = await this.repository.findAndCountAll<NominationOrderEntity>({
+        where: noSelected === true ? {
+          isSelected: false
+        } : {},
         include: [
           {
             model: User,
@@ -67,9 +70,11 @@ export class NominationOrderService {
   async findAllPublic(where, limit = undefined, offset = undefined): Promise<{count: number, rows: NominationOrderDto[]}> {
     try {
       const { count, rows } = await this.repository.findAndCountAll<NominationOrderEntity>({
-        where: {
+        where:  where.nominationId ? {
           public: true,
-          ...where
+          nominationId: where.nominationId || '',
+        } : {
+          public: true,
         },
         limit,
         offset,
@@ -77,6 +82,9 @@ export class NominationOrderService {
           {
             model: User,
             as: 'user',
+            where: where.stateId ?  {
+              stateId: where.stateId,
+            } : {},
             identifier: 'userId',
             include: [
               { model: State, as: 'state',},

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { NominationOrderEntity } from '../nomination-order.entity';
+import { NominationOrderEntity } from '../entities/nomination-order.entity';
 import { UserDto } from '../../users/dto/user.dto';
 import { NominationDto } from '../../nomination/dto/nomination.dto';
 import { NominationOrderFilesDto } from './nomination-order-files.dto';
