@@ -4,11 +4,11 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateCommentDto {
   @ApiProperty()
   @IsInt()
-  user_from_id: number;
+  nominationOrderId: number;
 
   @ApiProperty()
   @IsInt()
-  user_to_id: number;
+  userFromId: number;
 
   @ApiProperty()
   @IsString()

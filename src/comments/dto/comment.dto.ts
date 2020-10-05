@@ -1,20 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserDto } from '../../users/dto/user.dto';
 import { Comment } from '../comment.entity';
-import { Column, CreatedAt } from 'sequelize-typescript';
+import { NominationOrderDto } from '../../nomination-order/dto/nomination-order.dto';
 
 export class CommentDto {
   @ApiProperty()
   id: number;
 
   @ApiProperty()
-  readonly user_from_id: number;
+  readonly userFromId: number;
 
   @ApiProperty()
-  readonly user_to_id: number;
+  readonly nominationOrderId: number;
 
   @ApiProperty()
   readonly comment: string;
+
+  @ApiProperty()
+  readonly public: boolean;
 
   @ApiProperty()
   readonly createdAt: Date;
@@ -23,15 +25,16 @@ export class CommentDto {
   readonly updatedAt: Date;
 
   @ApiProperty()
-  readonly userFrom: UserDto;
+  readonly nominationOrder: NominationOrderDto;
 
   constructor(comment: Comment) {
     this.id = comment.id;
-    this.user_from_id = comment.user_from_id;
-    this.user_to_id = comment.user_to_id;
+    this.userFromId = comment.userFromId;
+    this.nominationOrderId = comment.nominationOrderId;
     this.comment = comment.comment;
+    this.public = comment.public;
     this.createdAt = comment.createdAt;
     this.updatedAt = comment.updatedAt;
-    this.userFrom = new UserDto(comment.userFrom);
+    this.nominationOrder = new NominationOrderDto(comment.nominationOrder);
   }
 }

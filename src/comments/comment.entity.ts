@@ -1,6 +1,5 @@
-import { Table, Column, Model, DataType, BelongsTo, ForeignKey, CreatedAt, UpdatedAt } from 'sequelize-typescript';
-import { User } from '../users/user.entity';
-import { Voting } from '../voting/voting.entity';
+import { BelongsTo, Column, CreatedAt, ForeignKey, Model, Table, UpdatedAt } from 'sequelize-typescript';
+import { NominationOrderEntity } from '../nomination-order/entities/nomination-order.entity';
 
 @Table({
   tableName: 'comments',
@@ -12,15 +11,18 @@ export class Comment extends Model<Comment> {
   })
   id: number;
 
-  @ForeignKey(() => User)
-  @Column
-  user_from_id: number;
+  @ForeignKey(() => NominationOrderEntity)
+  @Column({field: 'nomination_order_id'})
+  nominationOrderId: number;
 
-  @Column
-  user_to_id: number;
+  @Column({field: 'user_to_id'})
+  userFromId: number;
 
   @Column
   comment: string;
+
+  @Column
+  public: boolean;
 
   @CreatedAt
   @Column({ field: 'created_at' })
@@ -30,6 +32,6 @@ export class Comment extends Model<Comment> {
   @Column({ field: 'updated_at' })
   updatedAt: Date;
 
-  @BelongsTo(() => User)
-  userFrom: User;
+  @BelongsTo(() => NominationOrderEntity)
+  nominationOrder: NominationOrderEntity;
 }

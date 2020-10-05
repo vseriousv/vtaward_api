@@ -1,9 +1,9 @@
-import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Comment } from './comment.entity';
 import { CommentDto } from './dto/comment.dto';
-import { CreateCommentDto } from './dto/creat-comment.dto';
+import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { User } from '../users/user.entity';
+import { NominationOrderEntity } from '../nomination-order/entities/nomination-order.entity';
 
 @Injectable()
 export class CommentService {
@@ -14,91 +14,63 @@ export class CommentService {
 
   async findAll() {
     const comments = await this.commentRepository.findAll<Comment>({
-      include: [User],
+      include: [NominationOrderEntity],
       order: [['id', 'ASC']],
     });
     return comments.map(comment => new CommentDto(comment));
   }
 
-  async findToById(userId: number) {
+  async findById(id: number) {
     const comments = await this.commentRepository.findAll<Comment>({
-      include: [User],
+      include: [NominationOrderEntity],
       where: {
-        user_to_id: userId,
+        id,
       },
       order: [['id', 'ASC']],
     });
     return comments.map(comment => new CommentDto(comment));
   }
-  //
-  // async findByUserIdTo(users:number[], votings:number[]) {
-  //   const comments = await this.commentRepository.findAll<Comment>({
-  //     include: [User],
-  //     where:{
-  //       'user_to_id': users,
-  //       'voting_id': votings
-  //     },
-  //     order: [['id', 'ASC']],
-  //   });
-  //   return comments.map(comment => new CommentDto(comment));
-  // }
-  //
-  // async getComment(id: string) {
-  //   const comment = await this.commentRepository.findByPk<Comment>(id);
-  //   if (!comment) {
-  //     throw new HttpException(
-  //       'Comment with given id not found',
-  //       HttpStatus.NOT_FOUND,
-  //     );
-  //   }
-  //   return new CommentDto(comment);
-  // }
 
-  // async getCommentFromId(from: string) {
-  //   const comments = await this.commentRepository.findAll<Comment>({
-  //     where:{
-  //       'user_from_id': from,
-  //     },
-  //     order: [['id', 'ASC']],
-  //   });
-  //   return comments.map(comment => new CommentDto(comment));
-  // }
-  //
-  // async getCommentToId(id: string) {
-  //   const comment = await this.commentRepository.findByPk<Comment>(id);
-  //   if (!comment) {
-  //     throw new HttpException(
-  //       'Comment with given id not found',
-  //       HttpStatus.NOT_FOUND,
-  //     );
-  //   }
-  //   return new CommentDto(comment);
-  // }
+  async findByNominationOrder(nominationOrderId: number) {
+    const comments = await this.commentRepository.findAll<Comment>({
+      include: [NominationOrderEntity],
+      where: {
+        nominationOrderId,
+      },
+      order: [['id', 'ASC']],
+    });
+    return comments.map(comment => new CommentDto(comment));
+  }
+
+
 
   async create(createCommentDto: CreateCommentDto) {
     try {
       const comment = new Comment();
 
-      comment.user_from_id = createCommentDto.user_from_id;
-      comment.user_to_id = createCommentDto.user_to_id;
+      comment.userFromId = createCommentDto.userFromId;
+      comment.nominationOrderId = createCommentDto.nominationOrderId;
       comment.comment = createCommentDto.comment;
 
       const commentsData = await comment.save();
 
-      return new CommentDto(commentsData);
+      return this.findByNominationOrder(comment.nominationOrderId);
     } catch (err) {
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  async update(id: string, updateCommentDto: UpdateCommentDto) {
+
+
+  async changeOneFiled(id: string, updateCommentDto: UpdateCommentDto) {
     const comment = await this.commentRepository.findByPk<Comment>(id);
     if (!comment) {
       throw new HttpException('Comment not found.', HttpStatus.NOT_FOUND);
     }
-    comment.user_from_id = updateCommentDto.user_from_id || comment.user_from_id;
-    comment.user_to_id = updateCommentDto.user_to_id || comment.user_to_id;
+    comment.userFromId = updateCommentDto.userFromId || comment.userFromId;
+    comment.nominationOrderId = updateCommentDto.nominationOrderId || comment.nominationOrderId;
     comment.comment = updateCommentDto.comment || comment.comment;
+    comment.public = updateCommentDto.public !== null ? updateCommentDto.public : comment.public;
 
     try {
       const data = await comment.save();
@@ -107,6 +79,8 @@ export class CommentService {
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+
 
   async delete(id: string) {
     const comment = await this.commentRepository.findByPk<Comment>(id);

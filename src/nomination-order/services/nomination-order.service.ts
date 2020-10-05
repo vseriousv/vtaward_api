@@ -216,7 +216,6 @@ export class NominationOrderService {
         throw new HttpException('Nomination order not found.', HttpStatus.NOT_FOUND);
       }
 
-      console.log("updateNominationOrderDto", updateNominationOrderDto)
 
       updateNominationOrderDto = {
         userId: updateNominationOrderDto.userId || nominationOrderOld.userId,
