@@ -23,11 +23,11 @@ export class CommentController {
   @Post('')
   @ApiBearerAuth()
   @ApiOperation({
-    description: 'Создать комментарий',
-    summary: 'Данный метод создает новый коментарий',
+    description: 'Данный метод создает новый коментарий',
+    summary: 'Создать комментарий',
   })
   @UseGuards(AuthGuard('jwt'))
-  register(@Body() createCommentDto: CreateCommentDto): Promise<CommentDto[]> {
+  register(@Body() createCommentDto: CreateCommentDto): Promise<CommentDto> {
     return this.commentService.create(createCommentDto);
   }
 
@@ -36,11 +36,11 @@ export class CommentController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @ApiOperation({
-    description: 'Получить все комментарии',
-    summary: 'Данный метод выдает все комментарии из таблицы комментов',
+    description: 'Данный метод выдает все комментарии из таблицы комментов',
+    summary: 'Получить все комментарии',
   })
   @ApiOkResponse({ type: [CommentDto] })
-  findAll(): Promise<CommentDto[]> {
+  findAll(): Promise<{count: number, rows: CommentDto[] }> {
     return this.commentService.findAll();
   }
 
@@ -48,25 +48,42 @@ export class CommentController {
   @ApiParam({ name: 'id', description: 'id', type: Number })
   @ApiBearerAuth()
   @ApiOperation({
-    description: 'Получить все комментарии для конкретного карточки номинанта',
-    summary: 'Данный метод выдает только те коменты, которые принадлежат данной заявке участника',
+    description: 'Данный метод выдает только те коменты, которые принадлежат данной заявке участника',
+    summary: 'Получить все комментарии для конкретного карточки номинанта',
   })
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: CommentDto })
-  async getCommentByNominationOrder(@Param('id') id): Promise<CommentDto[]> {
+  async getCommentByNominationOrder(
+    @Param('id') id
+  ): Promise<{count: number, rows: CommentDto[] }> {
     return this.commentService.findByNominationOrder(id);
+  }
+
+  @Get('/nomination-order/:id/public')
+  @ApiParam({ name: 'id', description: 'id', type: Number })
+  @ApiBearerAuth()
+  @ApiOperation({
+    description: 'Данный метод выдает только те коменты, которые были опубликованы к данной заявке участника',
+    summary: 'Получить опубликованные комментарии для конкретного карточки номинанта',
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOkResponse({ type: CommentDto })
+  async getPublicCommentByNominationOrder(
+    @Param('id') id
+  ): Promise<{count: number, rows: CommentDto[] }> {
+    return this.commentService.findByNominationOrderOnlyPublic(id);
   }
 
   @Get('/:id')
   @ApiParam({ name: 'id', description: 'id', type: Number })
   @ApiBearerAuth()
   @ApiOperation({
-    description: 'Показать конкетный коммент',
-    summary: 'Просто коммент по ID',
+    description: 'Просто коммент по ID',
+    summary: 'Показать конкетный коммент',
   })
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: CommentDto })
-  async getUser(@Param('id') id): Promise<CommentDto[]> {
+  async getUser(@Param('id') id): Promise<CommentDto> {
     return this.commentService.findById(id);
   }
 
@@ -74,8 +91,8 @@ export class CommentController {
   @Patch(':id')
   @ApiBearerAuth()
   @ApiOperation({
-    description: 'Изменить комментарий по конкретным полям',
-    summary: 'Данный метод можно отправлять одно конкретное поле',
+    description: 'Данный метод можно отправлять одно конкретное поле',
+    summary: 'Изменить комментарий по конкретным полям',
   })
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: CommentDto })
@@ -90,12 +107,12 @@ export class CommentController {
   @Delete(':id')
   @ApiBearerAuth()
   @ApiOperation({
-    description: 'Удалить комментарий',
-    summary: 'Данный метод удаляет коммент по ID',
+    description: 'Данный метод удаляет коммент по ID',
+    summary: 'Удалить комментарий',
   })
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: CommentDto })
-  delete(@Param('id') id): Promise<CommentDto> {
+  delete(@Param('id') id): Promise<boolean> {
     return this.commentService.delete(id);
   }
 }

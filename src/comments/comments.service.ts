@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Comment } from './comment.entity';
 import { CommentDto } from './dto/comment.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -13,33 +13,69 @@ export class CommentService {
   ) {}
 
   async findAll() {
-    const comments = await this.commentRepository.findAll<Comment>({
-      include: [NominationOrderEntity],
-      order: [['id', 'ASC']],
-    });
-    return comments.map(comment => new CommentDto(comment));
+    try {
+      const { count, rows } = await this.commentRepository.findAndCountAll<Comment>({
+        include: [NominationOrderEntity],
+        order: [['id', 'ASC']],
+      });
+      return {
+        count: rows.length,
+        rows: rows.map(comment => new CommentDto(comment)),
+      }
+    } catch (e){
+      throw new BadRequestException(e);
+    }
   }
 
-  async findById(id: number) {
-    const comments = await this.commentRepository.findAll<Comment>({
-      include: [NominationOrderEntity],
-      where: {
-        id,
-      },
-      order: [['id', 'ASC']],
-    });
-    return comments.map(comment => new CommentDto(comment));
+  async findById(id: number):Promise<CommentDto> {
+    try {
+      return this.commentRepository.findByPk<Comment>(id,{
+        include: [{
+          model: NominationOrderEntity
+        }],
+        order: [['id', 'ASC']],
+      });
+    } catch (e) {
+      throw new BadRequestException(e)
+    }
+
   }
 
   async findByNominationOrder(nominationOrderId: number) {
-    const comments = await this.commentRepository.findAll<Comment>({
-      include: [NominationOrderEntity],
-      where: {
-        nominationOrderId,
-      },
-      order: [['id', 'ASC']],
-    });
-    return comments.map(comment => new CommentDto(comment));
+    try {
+      const { count, rows } = await this.commentRepository.findAndCountAll<Comment>({
+        include: [NominationOrderEntity],
+        where: {
+          nominationOrderId,
+        },
+        order: [['id', 'ASC']],
+      });
+      return {
+        count: rows.length,
+        rows: rows.map(comment => new CommentDto(comment)),
+      }
+    } catch (e) {
+      throw new BadRequestException(e);
+    }
+  }
+
+  async findByNominationOrderOnlyPublic(nominationOrderId: number) {
+    try {
+      const { count, rows }  = await this.commentRepository.findAndCountAll<Comment>({
+        include: [NominationOrderEntity],
+        where: {
+          nominationOrderId,
+          public: true,
+        },
+        order: [['id', 'ASC']],
+      });
+      return {
+        count: rows.length,
+        rows: rows.map(comment => new CommentDto(comment)),
+      }
+    } catch (e) {
+      throw new BadRequestException(e);
+    }
   }
 
 
@@ -52,17 +88,17 @@ export class CommentService {
       comment.nominationOrderId = createCommentDto.nominationOrderId;
       comment.comment = createCommentDto.comment;
 
-      const commentsData = await comment.save();
+      await comment.save();
 
-      return this.findByNominationOrder(comment.nominationOrderId);
-    } catch (err) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+      return this.findById(comment.id);
+    } catch (e) {
+      throw new BadRequestException(e);
     }
   }
 
 
 
-  async changeOneFiled(id: string, updateCommentDto: UpdateCommentDto) {
+  async changeOneFiled(id: string, updateCommentDto: UpdateCommentDto): Promise<CommentDto> {
     const comment = await this.commentRepository.findByPk<Comment>(id);
     if (!comment) {
       throw new HttpException('Comment not found.', HttpStatus.NOT_FOUND);
@@ -73,8 +109,8 @@ export class CommentService {
     comment.public = updateCommentDto.public !== null ? updateCommentDto.public : comment.public;
 
     try {
-      const data = await comment.save();
-      return new CommentDto(data);
+      await comment.save();
+      return this.findById(comment.id);
     } catch (err) {
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -83,8 +119,12 @@ export class CommentService {
 
 
   async delete(id: string) {
-    const comment = await this.commentRepository.findByPk<Comment>(id);
-    await comment.destroy();
-    return new CommentDto(comment);
+    try {
+      const comment = await this.commentRepository.findByPk<Comment>(id);
+      await comment.destroy();
+      return true;
+    } catch (e){
+      throw new BadRequestException(e);
+    }
   }
 }
