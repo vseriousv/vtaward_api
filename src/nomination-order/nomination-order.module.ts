@@ -7,7 +7,10 @@ import { nominationOrderProvider } from './services/nomination-order.provider';
 @Module({
   imports: [DatabaseModule],
   controllers: [NominationOrderController],
-  providers: [NominationOrderService, ...nominationOrderProvider],
+  providers: [
+    NominationOrderService,
+    ...nominationOrderProvider
+  ],
   exports: [NominationOrderService],
 })
 export class NominationOrderModule {}
