@@ -219,7 +219,7 @@ export class NominationOrderService {
 
       updateNominationOrderDto = {
         userId: updateNominationOrderDto.userId || nominationOrderOld.userId,
-        userFrom: updateNominationOrderDto.userFrom || nominationOrderOld.userFrom,
+        userFrom: nominationOrderOld.userFrom,
         nominationId: updateNominationOrderDto.nominationId || nominationOrderOld.nominationId,
         textRu: updateNominationOrderDto.textRu || nominationOrderOld.textRu,
         textEn: updateNominationOrderDto.textEn || nominationOrderOld.textEn,
