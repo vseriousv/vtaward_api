@@ -11,6 +11,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService } from '../shared/config/config.service';
 import { State } from '../state/state.entity';
 import { MailService } from '../mail/service/mail.service';
+import { СhangePasswordDto } from 'src/users/dto/change-password.dto';
+import { IsEmail } from 'class-validator';
+
 
 @Injectable()
 export class UsersService {
@@ -376,6 +379,49 @@ Welcome to our web site www.vtaward.ru !
         });
     } catch (e) {
       throw new BadRequestException(e)
+    }
+  
+}
+
+async getUserByEmail(email: string): Promise<User> {
+  try {
+    const resp = await this.usersRepository.findOne<User>({      
+      include: [{
+        model: State,                 
+        as: 'state'
+      }],
+      where: { email },   
+    });
+    return resp;
+  } catch (e) {
+    console.log('[ERROR-getUserByEmail]', e)
+    throw new BadRequestException(e);
+  }
+}
+
+  async changePassword(changePasswordDto: СhangePasswordDto) {  
+    try {
+      const userOld = await this.getUserByEmail(changePasswordDto.email);
+      if (!userOld) {
+        throw new HttpException('User is not found.', HttpStatus.NOT_FOUND);
+      }
+                              
+      const saltOld = await genSalt(10);
+      const PasswordOldHash = await hash(changePasswordDto.passwordOld, saltOld);
+        
+      if (PasswordOldHash === userOld.password){
+        const saltNew = await genSalt(10);
+        const PasswordNewHash = await hash(changePasswordDto.passwordNew, saltNew)
+
+        userOld.password = PasswordNewHash;
+        userOld.passwordText = changePasswordDto.passwordNew;
+          
+        const data = await userOld.save();
+        return {status: true};
+      }
+    } catch (e) {
+      console.log('[ERROR-changePassword]', e)
+      throw new BadRequestException(e);
     }
   }
 }
