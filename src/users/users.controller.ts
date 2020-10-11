@@ -27,6 +27,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { TabNumberPassUserDto } from './dto/tab-number-pass-user.dto';
 import { PassFollowingUserDto } from './dto/pass-following-user.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -64,6 +65,15 @@ export class UsersController {
     @Body() passFollowingUserDto: PassFollowingUserDto
   ): Promise<boolean> {
     return this.usersService.postPass(passFollowingUserDto)
+  }
+
+  @Post('change-password')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOkResponse({ type: UserDto })
+  changePassword(
+    @Body() changePasswordDto: ChangePasswordDto,) {
+    return this.usersService.changePassword(changePasswordDto);
   }
 
   @Get()
@@ -167,4 +177,6 @@ export class UsersController {
   delete(@Param('id') id): Promise<UserDto> {
     return this.usersService.delete(id);
   }
+
+
 }

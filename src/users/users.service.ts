@@ -11,6 +11,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService } from '../shared/config/config.service';
 import { State } from '../state/state.entity';
 import { MailService } from '../mail/service/mail.service';
+import { ChangePasswordDto } from 'src/users/dto/change-password.dto';
+
 
 @Injectable()
 export class UsersService {
@@ -29,7 +31,7 @@ export class UsersService {
     const users = await this.usersRepository.findAll<User>({
       include: [{
         model: State,
-        as: 'state'
+        as: 'state',
       }],
       order: [['id', 'ASC']],
     });
@@ -46,10 +48,10 @@ export class UsersService {
   }
 
   async getUser(id: number) {
-    const user = await this.usersRepository.findByPk<User>(id,{
+    const user = await this.usersRepository.findByPk<User>(id, {
       include: [{
         model: State,
-        as: 'state'
+        as: 'state',
       }],
       order: [['id', 'ASC']],
     });
@@ -67,17 +69,16 @@ export class UsersService {
       const resp = await this.usersRepository.findOne<User>({
         include: [{
           model: State,
-          as: 'state'
+          as: 'state',
         }],
-        where: { tabNumber },
+        where: { tabNumber: tabNumber.trim().toUpperCase() },
       });
       return resp;
     } catch (e) {
-      console.log('[ERROR-getuserByTab]', e)
+      console.log('[ERROR-getuserByTab]', e);
       throw new BadRequestException(e);
     }
   }
-
 
 
   async create(createUserDto: CreateUserDto) {
@@ -126,8 +127,7 @@ export class UsersService {
   }
 
 
-
-  async responsePassword(tabNumber): Promise<boolean>{
+  async responsePassword(tabNumber): Promise<boolean> {
     if (tabNumber) {
       try {
         const tabNumberInput = tabNumber.toUpperCase();
@@ -147,16 +147,16 @@ Password: ${user.passwordText}<br />
         await this.mailService.sendEWS({
           userTo: user.email,
           userFrom: 'vtaward@vost-tech.ru',
-          text: HTMLText
+          text: HTMLText,
         });
         return true;
       } catch (e) {
-        throw new BadRequestException(e)
+        throw new BadRequestException(e);
       }
     }
   }
 
-  async passwordFollowing(tabNumber): Promise<boolean>{
+  async passwordFollowing(tabNumber): Promise<boolean> {
     if (tabNumber) {
       try {
         const tabNumberInput = tabNumber.toUpperCase();
@@ -198,11 +198,11 @@ Welcome to our web site www.vtaward.ru !
         await this.mailService.sendEWS({
           userTo: user.email,
           userFrom: 'vtaward@vost-tech.ru',
-          text: HTMLText
+          text: HTMLText,
         });
         return true;
       } catch (e) {
-        throw new BadRequestException(e)
+        throw new BadRequestException(e);
       }
     }
   }
@@ -220,14 +220,13 @@ Welcome to our web site www.vtaward.ru !
           '[EMAIL]:': item.email,
           '[SEND]:': resp,
         });
-      })
+      });
       return true;
     } catch (e) {
       console.log(e);
       throw new BadRequestException(e);
     }
   }
-
 
 
   async login(userLoginRequestDto: UserLoginRequestDto) {
@@ -348,10 +347,10 @@ Welcome to our web site www.vtaward.ru !
         positionNameEng: updateUserDto.positionNameEng || userOld.positionNameEng,
         cityNameEng: updateUserDto.cityNameEng || userOld.cityNameEng,
         sectionNameEng: updateUserDto.sectionNameEng || userOld.sectionNameEng,
-        passwordText: userOld.passwordText
-      }
+        passwordText: userOld.passwordText,
+      };
 
-      await User.update(updateUserDto, { where: {id}});
+      await User.update(updateUserDto, { where: { id } });
 
       return await this.getUserById(id);
     } catch (e) {
@@ -375,7 +374,37 @@ Welcome to our web site www.vtaward.ru !
           ],
         });
     } catch (e) {
-      throw new BadRequestException(e)
+      throw new BadRequestException(e);
+    }
+
+  }
+
+
+  async changePassword(changePasswordDto: ChangePasswordDto) {
+    try {
+      const userOld = await this.getUserByTab(changePasswordDto.tabNumber);
+      if (!userOld) {
+        throw new HttpException('User is not found.', HttpStatus.NOT_FOUND);
+      }
+
+      const isMatch = await compare(changePasswordDto.passwordOld, userOld.password);
+      if (!isMatch) {
+        throw new HttpException(
+          'Invalid passwordOld.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const salt = await genSalt(10);
+      userOld.password = await hash(changePasswordDto.passwordNew, salt);
+      userOld.passwordText = changePasswordDto.passwordNew;
+      const data = await userOld.save();
+      return new UserDto(data);
+
+
+    } catch (e) {
+      console.log('[ERROR-changePassword]', e);
+      throw new BadRequestException(e);
     }
   }
 }
