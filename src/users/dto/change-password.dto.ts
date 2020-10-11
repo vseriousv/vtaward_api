@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, IsEnum, IsInt, IsBoolean, IsEmail } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
-export class СhangePasswordDto {
+export class ChangePasswordDto {
   @ApiProperty()
   @IsString()
   readonly tabNumber: string;
-     
+
   @ApiProperty()
   @IsOptional()
   @IsString()
