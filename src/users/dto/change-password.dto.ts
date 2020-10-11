@@ -3,9 +3,8 @@ import { IsOptional, IsString, IsEnum, IsInt, IsBoolean, IsEmail } from 'class-v
 
 export class СhangePasswordDto {
   @ApiProperty()
-  @IsOptional()
-  @IsEmail()
-  readonly email: string;
+  @IsString()
+  readonly tabNumber: string;
      
   @ApiProperty()
   @IsOptional()

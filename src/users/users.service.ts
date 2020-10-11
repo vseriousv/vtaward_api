@@ -383,25 +383,10 @@ Welcome to our web site www.vtaward.ru !
   
 }
 
-async getUserByEmail(email: string): Promise<User> {
-  try {
-    const resp = await this.usersRepository.findOne<User>({      
-      include: [{
-        model: State,                 
-        as: 'state'
-      }],
-      where: { email },   
-    });
-    return resp;
-  } catch (e) {
-    console.log('[ERROR-getUserByEmail]', e)
-    throw new BadRequestException(e);
-  }
-}
 
   async changePassword(changePasswordDto: СhangePasswordDto) {  
     try {
-      const userOld = await this.getUserByEmail(changePasswordDto.email);
+      const userOld = await this.getUserByTab(changePasswordDto.tabNumber);
       if (!userOld) {
         throw new HttpException('User is not found.', HttpStatus.NOT_FOUND);
       }
