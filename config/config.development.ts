@@ -5,11 +5,11 @@ dotenv.config();
 export const  config = {
     database: {
         dialect: 'postgres' as Dialect,
-        host: 'localhost',
-        port: 5432,
-        username: 'postgres',
-        password: '19970708',
-        database: 'test',
+        host: process.env.DATABASE_HOST,
+        port: +process.env.DATABASE_PORT,
+        username: process.env.DATABASE_USER,
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE_DATABASE,
         logging: false,
         define: {
             timestamps: false

@@ -1,5 +1,7 @@
-import { giveVoteEntity } from 'src/voting-users/give-vote.entity';
+import { GiveVoteEntity } from 'src/voting-users/give-vote.entity';
+import { User } from '../users/user.entity';
 
-export const votingsUsersProviders = [
-  { provide: 'VotingUsersRepository', useValue: giveVoteEntity },
+export const votingUsersProviders = [
+  { provide: 'VotingUsersRepository', useValue: GiveVoteEntity },
+  { provide: 'UsersRepository', useValue: User },
 ];

@@ -1,30 +1,30 @@
-import { Table, CreatedAt, UpdatedAt, Column, Model, Unique, HasOne, BelongsTo, ForeignKey, HasMany } from 'sequelize-typescript';
+import { Column, CreatedAt, Model, Table, UpdatedAt } from 'sequelize-typescript';
 
 
 @Table({
   tableName: 'giveVote',
 })
-export class giveVoteEntity extends Model<giveVoteEntity> {
+export class GiveVoteEntity extends Model<GiveVoteEntity> {
   @Column({
     autoIncrement: true,
     primaryKey: true,
   })
   id: number;
 
-  @Column
-  user_id: number;
+  @Column({ field: 'user_id' })
+  userId: number;
 
 
-  @Column
-  nomination_order_id: number;
+  @Column({ field: 'nomination_order_id' })
+  nominationOrderId: number;
 
   @CreatedAt
-  @Column
-  create_at: Date;
+  @Column({ field: 'create_at' })
+  createAt: Date;
 
   @UpdatedAt
-  @Column
-  update_at: Date;
+  @Column({ field: 'update_at' })
+  updateAt: Date;
 
   @Column
   range: number;

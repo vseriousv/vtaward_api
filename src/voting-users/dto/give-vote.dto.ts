@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
 
 export class GiveVoteDto {
   @ApiProperty()
@@ -7,5 +6,5 @@ export class GiveVoteDto {
 
   @ApiProperty()
   readonly range: number;
-  
+
 }

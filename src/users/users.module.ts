@@ -9,7 +9,13 @@ import { MailService } from '../mail/service/mail.service';
 @Module({
   imports: [DatabaseModule],
   controllers: [UsersController],
-  providers: [UsersService, ...usersProviders, JwtStrategy, MailService],
+  providers: [
+    UsersService,
+    ...usersProviders,
+    MailService,
+    JwtStrategy,
+  ],
   exports: [UsersService],
 })
-export class UsersModule {}
+export class UsersModule {
+}
