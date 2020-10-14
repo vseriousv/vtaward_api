@@ -12,12 +12,12 @@ import { FeedbackForm } from '../feedbackForm/feedbackForm.entity';
 import { ContentMain } from '../ContentMain/contentMain.entity';
 import { NominationOrderEntity } from '../nomination-order/entities/nomination-order.entity';
 import { NominationOrderFilesEntity } from '../nomination-order/entities/nomination-order-files.entity';
+import { GiveVoteEntity } from '../voting-users/give-vote.entity';
 
 export const databaseProviders = [
   {
     provide: 'SEQUELIZE',
     useFactory: async (configService: ConfigService) => {
-      // @ts-ignore
       const sequelize = new Sequelize(configService.sequelizeOrmConfig);
       sequelize.addModels([
         User,
@@ -32,6 +32,7 @@ export const databaseProviders = [
         ContentMain,
         NominationOrderEntity,
         NominationOrderFilesEntity,
+        GiveVoteEntity,
       ]);
       await sequelize.sync();
       return sequelize;
