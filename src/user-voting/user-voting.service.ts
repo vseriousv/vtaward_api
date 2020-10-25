@@ -8,11 +8,35 @@ import { CreateUsersVotingDto } from './dto/create-users-voting.dto';
 import { NominationOrderService } from '../nomination-order/nomination-order.service';
 import { UsersService } from '../users/users.service';
 import { ResultUserVotingDto } from './dto/result-user-voting.dto';
-import { QueryTypes } from 'sequelize';
+import sequelize, { QueryTypes } from 'sequelize';
 
 export type TValidation = {
   status: boolean;
   error: string;
+}
+
+export type TGroupByNominationNumber = {
+  nomination_order_id: number;
+  sum_votes: number;
+  count_votes: number;
+  average: number;
+  firstname_en: string;
+  firstname_ru: string;
+  lastname_en: string;
+  lastname_ru: string;
+  img: string;
+}
+
+export type TGroupByNominationID = {
+  nomination_order_id: number;
+  sum_votes: string;
+  count_votes: string;
+  average: string;
+  firstname_en: string;
+  firstname_ru: string;
+  lastname_en: string;
+  lastname_ru: string;
+  img: string;
 }
 
 @Injectable()
@@ -215,32 +239,31 @@ export class UserVotingService {
     }
   }
 
-  async calculate(region: number, nomination: number)
-  // :Promise<ResultUserVotingDto[]>
+  async calculate(region: number, nomination: number):Promise<ResultUserVotingDto[]>
   {
     try {
-      const resultObject = [];
-      // получаем всех участников в данном регионе по этой номинации
-      // const allNominationOrderByNomination = await this.nominationOrderService.findAllPublic({ nominationId: nomination, stateId: region });
-      // console.log('allNominationOrderByNomination', allNominationOrderByNomination);
-
-
-      // получаем все голоса в данном регионе по данной номинации (Для ранжирования)
-      // const allVotesToNominationAndRegion = await this.findAllRegionAndNomination(region, nomination);
-      // console.log('allVotesToNominationAndRegion', allVotesToNominationAndRegion);
-
       // Поулчаем сгруппированный список из базы данных по nominationId
-      const groupByNominationID = await this.userVotingRepository.sequelize.query(`
+      const groupByNominationID: TGroupByNominationID[] = await this.userVotingRepository.sequelize.query(`
         SELECT uv.nomination_order_id,
-               SUM(uv.range)                            AS sum_votes,
-               COUNT(uv.range)                          AS count_votes,
-               SUM(uv.range)::decimal / COUNT(uv.range) AS average
+               SUM(uv.range)          AS sum_votes,
+               COUNT(uv.range)        AS count_votes,
+               AVG(uv.range)::decimal AS average,
+               u.firstname_en,
+               u.firstname_ru,
+               u.lastname_en,
+               u.lastname_ru,
+               u.img
         FROM user_voting uv
-                 INNER JOIN nomination_order no ON uv.nomination_order_id = no.id
-                 INNER JOIN users u ON no.user_id = u.id
-        WHERE no.nomination_id = 1
-          AND u.state_id = 6
-        GROUP BY uv.nomination_order_id;
+                 JOIN nomination_order no ON uv.nomination_order_id = no.id
+                 JOIN users u ON no.user_id = u.id
+        WHERE no.nomination_id = :nomination
+          AND u.state_id = :region
+        GROUP BY uv.nomination_order_id,
+                 u.firstname_en,
+                 u.firstname_ru,
+                 u.lastname_en,
+                 u.lastname_ru,
+                 u.img;
       `,
         {
           replacements: {nomination, region},
@@ -248,13 +271,180 @@ export class UserVotingService {
         },
       );
 
-      console.log(groupByNominationID);
+      const groupByNominationNumber: TGroupByNominationNumber[] = groupByNominationID.map(item => {
+        return {
+          nomination_order_id: Number(item.nomination_order_id),
+          sum_votes: Number(item.sum_votes),
+          count_votes: Number(item.count_votes),
+          average: Number(item.average),
+          firstname_en: 'Alina',
+          firstname_ru: 'Алина',
+          lastname_en: 'Muracheva',
+          lastname_ru: 'Мурачева',
+          img: 'eb7fea33bb360b1ce3e43fff95838eb3.jpg'
+        };
+      });
 
-      return '';
-      // resultObject.map(item => new ResultUserVotingDto(item));
+      return this.rankAll(groupByNominationNumber).map(item => new ResultUserVotingDto(
+        item.nomination_order_id,
+        item.firstname_en,
+        item.firstname_ru,
+        item.lastname_en,
+        item.lastname_ru,
+        item.img,
+        item.sum_votes,
+        item.count_votes,
+        item.average,
+        item.result_rank,
+      ));
     } catch (e) {
       throw new BadRequestException(e);
     }
+  }
+
+  rankSumF (arr) {
+    const arrSort = arr.sort((a,b) => a.sum_votes < b.sum_votes ? 1 : -1);
+    const result = [];
+    let value = 0;
+    let rank = 0
+    let vakant = arrSort.length;
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < arrSort.length; i++){
+      if (arrSort[i].sum_votes !== value) {
+        value = arrSort[i].sum_votes;
+        const sovp = arrSort.filter(item => item.sum_votes === arrSort[i].sum_votes).length;
+        let sumVakant = 0
+        for (let j = 0; j < sovp; j++) {
+          sumVakant += vakant;
+          vakant--;
+        }
+        rank = sumVakant / sovp;
+      }
+      result.push({
+        nomination_order_id: arrSort[i].nomination_order_id,
+        sum_votes: arrSort[i].sum_votes,
+        count_votes: arrSort[i].count_votes,
+        average: arrSort[i].average,
+        firstname_en: arrSort[i].firstname_en,
+        firstname_ru: arrSort[i].firstname_ru,
+        lastname_en: arrSort[i].lastname_en,
+        lastname_ru: arrSort[i].lastname_ru,
+        img: arrSort[i].img,
+        sum_rank: rank,
+      });
+    }
+    return result.sort((a,b) => a.nomination_order_id > b.nomination_order_id ? 1 : -1);
+  }
+
+  rankCountF(arr){
+    const arrSort = arr.sort((a,b) => a.count_votes < b.count_votes ? 1 : -1);
+    const result = [];
+    let value = 0;
+    let rank = 0
+    let vakant = arrSort.length;
+    for (let i = 0; i < arrSort.length; i++){
+      if (arrSort[i].count_votes !== value) {
+        value = arrSort[i].count_votes;
+        let sovp = arrSort.filter(item => item.count_votes === arrSort[i].count_votes).length;
+        let sumVakant = 0
+        for (let j = 0; j < sovp; j++) {
+          sumVakant += vakant;
+          vakant--;
+        }
+        rank = sumVakant / sovp;
+      }
+      result.push({
+        nomination_order_id: arrSort[i].nomination_order_id,
+        sum_votes: arrSort[i].sum_votes,
+        count_votes: arrSort[i].count_votes,
+        average: arrSort[i].average,
+        firstname_en: arrSort[i].firstname_en,
+        firstname_ru: arrSort[i].firstname_ru,
+        lastname_en: arrSort[i].lastname_en,
+        lastname_ru: arrSort[i].lastname_ru,
+        img: arrSort[i].img,
+        sum_rank: arrSort[i].sum_rank,
+        count_rank: rank,
+      });
+    }
+    return result.sort((a,b) => a.nomination_order_id > b.nomination_order_id ? 1 : -1);
+  }
+
+  rankAverageF(arr){
+    const arrSort = arr.sort((a,b) => a.average < b.average ? 1 : -1);
+    const result = [];
+    let value = 0;
+    let rank = 0
+    let vakant = arrSort.length;
+    for (let i = 0; i < arrSort.length; i++){
+      if (arrSort[i].average !== value) {
+        value = arrSort[i].average;
+        let sovp = arrSort.filter(item => item.average === arrSort[i].average).length;
+        let sumVakant = 0
+        for (let j = 0; j < sovp; j++) {
+          sumVakant += vakant;
+          vakant--;
+        }
+        rank = sumVakant / sovp;
+      }
+      result.push({
+        nomination_order_id: arrSort[i].nomination_order_id,
+        sum_votes: arrSort[i].sum_votes,
+        count_votes: arrSort[i].count_votes,
+        average: arrSort[i].average,
+        firstname_en: arrSort[i].firstname_en,
+        firstname_ru: arrSort[i].firstname_ru,
+        lastname_en: arrSort[i].lastname_en,
+        lastname_ru: arrSort[i].lastname_ru,
+        img: arrSort[i].img,
+        sum_rank: arrSort[i].sum_rank,
+        count_rank: arrSort[i].count_rank,
+        average_rank: rank,
+        sumAll_rank: arrSort[i].sum_rank + arrSort[i].count_rank + rank,
+      });
+    }
+    return result.sort((a,b) => a.nomination_order_id > b.nomination_order_id ? 1 : -1);
+  }
+
+  result_rankF(arr){
+    const arrSort = arr.sort((a,b) => a.sumAll_rank < b.sumAll_rank ? 1 : -1);
+    const result = [];
+    let value = 0;
+    let rank = 0
+    let vakant = arrSort.length;
+    for (let i = 0; i < arrSort.length; i++){
+      if (arrSort[i].sumAll_rank !== value) {
+        value = arrSort[i].sumAll_rank;
+        let sovp = arrSort.filter(item => item.sumAll_rank === arrSort[i].sumAll_rank).length;
+        let sumVakant = 0
+        for (let j = 0; j < sovp; j++) {
+          sumVakant += vakant;
+          vakant--;
+        }
+        rank = sumVakant / sovp;
+      }
+      result.push({
+        nomination_order_id: arrSort[i].nomination_order_id,
+        sum_votes: arrSort[i].sum_votes,
+        count_votes: arrSort[i].count_votes,
+        average: arrSort[i].average,
+        firstname_en: arrSort[i].firstname_en,
+        firstname_ru: arrSort[i].firstname_ru,
+        lastname_en: arrSort[i].lastname_en,
+        lastname_ru: arrSort[i].lastname_ru,
+        img: arrSort[i].img,
+        result_rank: rank,
+      });
+    }
+    return result;
+  }
+
+  rankAll(arr){
+    const rankSum = this.rankSumF(arr);
+    console.log(rankSum);
+    const rankCount = this.rankCountF(rankSum);
+    const rankAverage = this.rankAverageF(rankCount);
+    return this.result_rankF(rankAverage);
   }
 
 }

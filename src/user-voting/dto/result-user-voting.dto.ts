@@ -4,7 +4,22 @@ import { NominationOrderDto } from '../../nomination-order/dto/nomination-order.
 export class ResultUserVotingDto {
 
   @ApiProperty()
-  nominationOrder: NominationOrderDto;
+  nominationOrderId: number;
+
+  @ApiProperty()
+  firstnameEn: string;
+
+  @ApiProperty()
+  firstnameRu: string;
+
+  @ApiProperty()
+  lastnameEn: string;
+
+  @ApiProperty()
+  lastnameRu: string;
+
+  @ApiProperty()
+  img: string;
 
   @ApiProperty()
   sumVote: number;
@@ -19,13 +34,23 @@ export class ResultUserVotingDto {
   resultRange: number;
 
   constructor(
-    nominationOrder: NominationOrderDto,
+    nominationOrderId: number,
+    firstnameEn: string,
+    firstnameRu: string,
+    lastnameEn: string,
+    lastnameRu: string,
+    img: string,
     sumVote: number,
     countVote: number,
     average: number,
     resultRange: number,
   ) {
-    this.nominationOrder = nominationOrder;
+    this.nominationOrderId = nominationOrderId;
+    this.firstnameEn = firstnameEn;
+    this.firstnameRu = firstnameRu;
+    this.lastnameEn = lastnameEn;
+    this.lastnameRu = lastnameRu;
+    this.img = img;
     this.sumVote = sumVote;
     this.countVote = countVote;
     this.average = average;

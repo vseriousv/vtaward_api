@@ -65,8 +65,7 @@ export class UserVotingController {
   result(
     @Param('region') regionStr,
     @Param('nomination') nominationStr,
-  ) {
-    // : Promise<ResultUserVotingDto[]> {
+  ): Promise<ResultUserVotingDto[]> {
     const region = Number(regionStr);
     const nomination = Number(nominationStr);
     return this.service.calculate(region, nomination);
