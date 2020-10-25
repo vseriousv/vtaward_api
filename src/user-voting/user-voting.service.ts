@@ -7,6 +7,8 @@ import { UsersVotingDto } from './dto/users-voting.dto';
 import { CreateUsersVotingDto } from './dto/create-users-voting.dto';
 import { NominationOrderService } from '../nomination-order/nomination-order.service';
 import { UsersService } from '../users/users.service';
+import { ResultUserVotingDto } from './dto/result-user-voting.dto';
+import { QueryTypes } from 'sequelize';
 
 export type TValidation = {
   status: boolean;
@@ -40,6 +42,42 @@ export class UserVotingService {
           {
             model: NominationOrderEntity,
             as: 'nominationOrder',
+          },
+        ],
+      });
+      return {
+        count: rows.length,
+        rows: rows.map(item => new UsersVotingDto(item)),
+      };
+    } catch (e) {
+      throw new BadRequestException(e.message);
+    }
+  }
+
+  async findAllRegionAndNomination(stateId: number, nominationId: number): Promise<UsersVotingResponseDto> {
+    try {
+      const { rows } = await this.userVotingRepository.findAndCountAll<UserVotingEntity>({
+        order: [['id', 'ASC']],
+        include: [
+          {
+            model: User,
+            as: 'user',
+          },
+          {
+            model: NominationOrderEntity,
+            as: 'nominationOrder',
+            where: {
+              nominationId,
+            },
+            include: [
+              {
+                model: User,
+                as: 'user',
+                where: {
+                  stateId,
+                },
+              },
+            ],
           },
         ],
       });
@@ -116,7 +154,7 @@ export class UserVotingService {
     };
   }
 
-  async leftVotes(nominationId, userFromId, nominationOrderId): Promise<{votes: number[], error: string}>{
+  async leftVotes(nominationId, userFromId, nominationOrderId): Promise<{ votes: number[], error: string }> {
     try {
       // нельзя голосовать за себя, доступно 0 голосов
       const nominationOrder = await this.nominationOrderService.findById(nominationOrderId);
@@ -125,7 +163,7 @@ export class UserVotingService {
       }
 
       // уже голосовал за этого номинанта в этой номинации
-      const haveVoteIsNominationOrder = await this.findAll({userFromId}, undefined, undefined);
+      const haveVoteIsNominationOrder = await this.findAll({ userFromId }, undefined, undefined);
       if (haveVoteIsNominationOrder.rows.find(item => Number(item.nominationOrderId) === Number(nominationOrderId))) {
         return { votes: [], error: 'is-have' };
       }
@@ -137,12 +175,7 @@ export class UserVotingService {
       }
 
       // сколько участников в данном регионе в данной номеинации?
-      const allNominationOrderByNomination = await this.nominationOrderService.findAllPublic({nominationId, stateId: userFrom.stateId});
-
-      // если в данном регионе в данной номеинации 1 или 0 участников, то голосования нет
-      if (allNominationOrderByNomination.count <=1) {
-        return { votes: [], error: 'not-voting' };
-      }
+      const allNominationOrderByNomination = await this.nominationOrderService.findAllPublic({ nominationId, stateId: userFrom.stateId });
 
       // какие голоса пользователь уже отдал в данной номеинации?
       const userVotesAll = await this.userVotingRepository.findAndCountAll<UserVotingEntity>({
@@ -159,14 +192,14 @@ export class UserVotingService {
             as: 'nominationOrder',
             where: {
               nominationId,
-            }
+            },
           },
         ],
       });
       const votesHave = userVotesAll.rows.map(item => Number(item.range));
 
-      // если колчисетво участников равно двум, то общее колчисетво голосов 1 и 2 иначе 1, 2 и 3
-      const defaultVotes = allNominationOrderByNomination.count === 2 ? [1,2] : [1,2,3];
+      // если колчисетво участников равно двум, то общее колчисетво голосов 1  иначе 1, 2 и 3
+      const defaultVotes = allNominationOrderByNomination.count <= 3 ? [1] : [1, 2, 3];
 
       // отдаем оставшиеся голоса
       return {
@@ -175,8 +208,50 @@ export class UserVotingService {
             return item;
           }
         }),
-        error: ''
-      }
+        error: '',
+      };
+    } catch (e) {
+      throw new BadRequestException(e);
+    }
+  }
+
+  async calculate(region: number, nomination: number)
+  // :Promise<ResultUserVotingDto[]>
+  {
+    try {
+      const resultObject = [];
+      // получаем всех участников в данном регионе по этой номинации
+      // const allNominationOrderByNomination = await this.nominationOrderService.findAllPublic({ nominationId: nomination, stateId: region });
+      // console.log('allNominationOrderByNomination', allNominationOrderByNomination);
+
+
+      // получаем все голоса в данном регионе по данной номинации (Для ранжирования)
+      // const allVotesToNominationAndRegion = await this.findAllRegionAndNomination(region, nomination);
+      // console.log('allVotesToNominationAndRegion', allVotesToNominationAndRegion);
+
+      // Поулчаем сгруппированный список из базы данных по nominationId
+      const groupByNominationID = await this.userVotingRepository.sequelize.query(`
+        SELECT uv.nomination_order_id,
+               SUM(uv.range)                            AS sum_votes,
+               COUNT(uv.range)                          AS count_votes,
+               SUM(uv.range)::decimal / COUNT(uv.range) AS average
+        FROM user_voting uv
+                 INNER JOIN nomination_order no ON uv.nomination_order_id = no.id
+                 INNER JOIN users u ON no.user_id = u.id
+        WHERE no.nomination_id = 1
+          AND u.state_id = 6
+        GROUP BY uv.nomination_order_id;
+      `,
+        {
+          replacements: {nomination, region},
+          type: QueryTypes.SELECT,
+        },
+      );
+
+      console.log(groupByNominationID);
+
+      return '';
+      // resultObject.map(item => new ResultUserVotingDto(item));
     } catch (e) {
       throw new BadRequestException(e);
     }

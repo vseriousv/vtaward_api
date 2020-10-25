@@ -8,6 +8,7 @@ import { CreateUsersVotingDto } from './dto/create-users-voting.dto';
 import { ApiUtil } from '../shared/ApiUtil';
 import { UserVotingEntity } from './entities/user-voting.entity';
 import { ApiImplicitQuery } from '@nestjs/swagger/dist/decorators/api-implicit-query.decorator';
+import { ResultUserVotingDto } from './dto/result-user-voting.dto';
 
 @Controller('user-voting')
 @ApiTags('user-voting')
@@ -50,6 +51,25 @@ export class UserVotingController {
     @Body() data: CreateUsersVotingDto,
   ): Promise<UsersVotingDto> {
     return this.service.create(request.user.id, data);
+  }
+
+  @Get('/result/:region/:nomination')
+  @ApiParam({ name: 'region', description: 'номер региона' })
+  @ApiParam({ name: 'nomination', description: 'номер номинации' })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOkResponse({ type: ResultUserVotingDto, isArray: true})
+  @ApiOperation({
+    summary: 'Получить все результаты голосования по региону и номинации',
+  })
+  result(
+    @Param('region') regionStr,
+    @Param('nomination') nominationStr,
+  ) {
+    // : Promise<ResultUserVotingDto[]> {
+    const region = Number(regionStr);
+    const nomination = Number(nominationStr);
+    return this.service.calculate(region, nomination);
   }
 
   @Get(':id')
