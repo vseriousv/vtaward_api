@@ -47,7 +47,15 @@ export class NominationOrderDto {
   @IsOptional()
   readonly files?: NominationOrderFilesDto[];
 
-  constructor( nominationOrderEntity: NominationOrderEntity ) {
+  @ApiProperty()
+  @IsOptional()
+  readonly votes?: number[];
+
+  @ApiProperty()
+  @IsOptional()
+  readonly errorVotes?: string;
+
+  constructor( nominationOrderEntity: NominationOrderEntity, leftVotes?: number[], errorVotes?: string ) {
     this.id = nominationOrderEntity.id;
     this.userId = nominationOrderEntity.userId;
     this.userFrom = nominationOrderEntity.userFrom;
@@ -65,6 +73,8 @@ export class NominationOrderDto {
         file => new NominationOrderFilesDto(file),
       );
     }
+    if (leftVotes) this.votes = leftVotes;
+    if (errorVotes) this.errorVotes = errorVotes;
   }
 
 }

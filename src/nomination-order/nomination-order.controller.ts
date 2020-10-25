@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { NominationOrderService } from '../services/nomination-order.service';
-import { NominationOrderDto } from '../dto/nomination-order.dto';
+import { NominationOrderService } from './nomination-order.service';
+import { NominationOrderDto } from './dto/nomination-order.dto';
 import { ApiBearerAuth, ApiConsumes, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { NominationOrderEntity } from '../entities/nomination-order.entity';
-import { TNominationOrder, TNominationOrderBody } from '../interfaces/TNominationOrder';
+import { NominationOrderEntity } from './entities/nomination-order.entity';
+import { TNominationOrder, TNominationOrderBody } from './interfaces/TNominationOrder';
 import { ApiImplicitQuery } from '@nestjs/swagger/dist/decorators/api-implicit-query.decorator';
-import { ApiUtil } from '../../shared/ApiUtil';
+import { ApiUtil } from '../shared/ApiUtil';
 
 
 interface CreateParams {
@@ -80,7 +80,7 @@ export class NominationOrderController {
     summary: 'Создать заявку на номинанта для пользователя',
   })
   @ApiConsumes('multipart/form-data')
-  create(@Req() { files, body, user }): Promise<NominationOrderEntity> {
+  create(@Req() { files, body, user }): Promise<NominationOrderDto> {
 
     const createNominationOrder: TNominationOrder = {
       userId: Number(body.userId),
@@ -106,7 +106,7 @@ export class NominationOrderController {
   })
   @ApiOkResponse({type:NominationOrderDto})
   changeIsNew(
-    @Param('id') id): Promise<NominationOrderEntity> {
+    @Param('id') id): Promise<NominationOrderDto> {
     return this.service.changeIsNew(id);
   }
 
@@ -119,8 +119,11 @@ export class NominationOrderController {
     summary: 'Получить одну заявку на номинанта по ID',
   })
   @ApiOkResponse({type:NominationOrderDto})
-  findById(@Param('id') id): Promise<NominationOrderEntity> {
-    return this.service.findById(id);
+  findById(
+    @Req() { user },
+    @Param('id') id
+  ): Promise<NominationOrderDto> {
+    return this.service.findById(id, user.id);
   }
 
   @ApiParam({ name: 'id', description: 'Nomination id' })
@@ -135,7 +138,7 @@ export class NominationOrderController {
   changeFieldsById(
     @Body() body: TNominationOrderBody,
     @Req() { user },
-    @Param('id') id): Promise<NominationOrderEntity> {
+    @Param('id') id): Promise<NominationOrderDto> {
     const updateNominationOrder: TNominationOrder = {
       userId: body.hasOwnProperty('userId')  ? Number(body.userId) : null,
       userFrom: Number(user.id),

@@ -20,8 +20,9 @@ import { ContentMainModule } from './ContentMain/contentMain.module';
 import { NominationOrderModule } from './nomination-order/nomination-order.module';
 import { FilesMiddleware } from './shared/middlewares/files-middleware';
 
-import { NominationOrderController } from './nomination-order/controllers/nomination-order.controller';
+import { NominationOrderController } from './nomination-order/nomination-order.controller';
 import { MailModule } from './mail/mail.module';
+import { UserVotingModule } from './user-voting/user-voting.module';
 
 const config = new ConfigService();
 
@@ -47,6 +48,8 @@ const config = new ConfigService();
     MailerModule.forRoot({ ...config.transportConfig }),
 
     MailModule,
+
+    UserVotingModule,
   ],
   controllers: [],
   providers: [],

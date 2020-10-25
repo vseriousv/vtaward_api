@@ -1,19 +1,25 @@
-import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { NominationOrderEntity } from '../entities/nomination-order.entity';
-import { User } from '../../users/user.entity';
-import { Nomination } from '../../nomination/nomination.entity';
-import { NominationOrderFilesEntity } from '../entities/nomination-order-files.entity';
-import { NominationOrderDto } from '../dto/nomination-order.dto';
-import { CreateNominationOrderDto } from '../dto/create-nomination-order.dto';
-import { TFormData, TFormFileData } from '../../shared/interfases/TFormData';
-import { UpdateNominationOrderDto } from '../dto/update-nomination-order.dto';
-import { State } from '../../state/state.entity';
+import { BadRequestException, forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { NominationOrderEntity } from './entities/nomination-order.entity';
+import { User } from '../users/user.entity';
+import { Nomination } from '../nomination/nomination.entity';
+import { NominationOrderFilesEntity } from './entities/nomination-order-files.entity';
+import { NominationOrderDto } from './dto/nomination-order.dto';
+import { CreateNominationOrderDto } from './dto/create-nomination-order.dto';
+import { TFormData, TFormFileData } from '../shared/interfases/TFormData';
+import { UpdateNominationOrderDto } from './dto/update-nomination-order.dto';
+import { State } from '../state/state.entity';
+import { UserVotingService } from '../user-voting/user-voting.service';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class NominationOrderService {
   constructor(
     @Inject('NominationOrderRepository')
     private readonly repository: typeof NominationOrderEntity,
+    @Inject('NominationOrderFilesRepository')
+    private readonly filesRepository: typeof NominationOrderFilesEntity,
+    @Inject(forwardRef(() => UserVotingService))
+    private readonly userVotingService: UserVotingService,
   ) {}
 
   fileParseData(fileArray: TFormData[], id: number): TFormFileData[] {
@@ -143,7 +149,7 @@ export class NominationOrderService {
   async create(
     fileArray: [],
     createNominationOrderDto: CreateNominationOrderDto,
-  ): Promise<NominationOrderEntity> {
+  ): Promise<NominationOrderDto> {
     try {
       const nominationOrder = new NominationOrderEntity();
 
@@ -167,9 +173,9 @@ export class NominationOrderService {
   }
 
 
-  async findById(id: number): Promise<NominationOrderEntity> {
+  async findById(id: number, userFormId?: number): Promise<NominationOrderDto> {
     try {
-      return this.repository.findByPk<NominationOrderEntity>(
+      const nominationOrder = await this.repository.findByPk<NominationOrderEntity>(
         id,
         {
           include: [
@@ -198,7 +204,12 @@ export class NominationOrderService {
             ['id', 'ASC'],
             [{model: NominationOrderFilesEntity, as: 'files'}, 'id', 'ASC'],
           ]
-        });
+        }
+      );
+
+      const leftVotes = userFormId ? await this.userVotingService.leftVotes(nominationOrder.nominationId, userFormId, id) : {votes: [], error: ''}
+
+      return new NominationOrderDto(nominationOrder, leftVotes.votes, leftVotes.error);
     } catch (e) {
       throw new BadRequestException(e)
     }
@@ -209,7 +220,7 @@ export class NominationOrderService {
   async changeFieldsById(
     id: number,
     updateNominationOrderDto: UpdateNominationOrderDto,
-  ): Promise<NominationOrderEntity> {
+  ): Promise<NominationOrderDto> {
     try {
       const nominationOrderOld = await this.findById(id);
       if (!nominationOrderOld) {
@@ -238,7 +249,7 @@ export class NominationOrderService {
 
   async changeIsNew(
     id: number
-  ): Promise<NominationOrderEntity> {
+  ): Promise<NominationOrderDto> {
     try {
       const nominationOrderOld = await this.findById(id);
       if (!nominationOrderOld) {
