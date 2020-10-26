@@ -277,11 +277,11 @@ export class UserVotingService {
           sum_votes: Number(item.sum_votes),
           count_votes: Number(item.count_votes),
           average: Number(item.average),
-          firstname_en: 'Alina',
-          firstname_ru: 'Алина',
-          lastname_en: 'Muracheva',
-          lastname_ru: 'Мурачева',
-          img: 'eb7fea33bb360b1ce3e43fff95838eb3.jpg'
+          firstname_en: item.firstname_en,
+          firstname_ru: item.firstname_ru,
+          lastname_en: item.lastname_en,
+          lastname_ru: item.lastname_ru,
+          img: item.img,
         };
       });
 
