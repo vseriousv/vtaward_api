@@ -246,7 +246,7 @@ export class UserVotingService {
       const groupByNominationID: TGroupByNominationID[] = await this.userVotingRepository.sequelize.query(`
         SELECT uv.nomination_order_id,
                SUM(uv.range)          AS sum_votes,
-               COUNT(uv.range)        AS count_votes,
+               COUNT(uv.range) - 1    AS count_votes,
                AVG(uv.range)::decimal AS average,
                u.firstname_en,
                u.firstname_ru,
@@ -295,7 +295,7 @@ export class UserVotingService {
         item.sum_votes,
         item.count_votes,
         item.average,
-        item.result_rank,
+        item.count_votes === 0 ? 0 : item.result_rank,
       ));
     } catch (e) {
       throw new BadRequestException(e);
@@ -342,10 +342,11 @@ export class UserVotingService {
     let value = 0;
     let rank = 0
     let vakant = arrSort.length;
+    // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < arrSort.length; i++){
       if (arrSort[i].count_votes !== value) {
         value = arrSort[i].count_votes;
-        let sovp = arrSort.filter(item => item.count_votes === arrSort[i].count_votes).length;
+        const sovp = arrSort.filter(item => item.count_votes === arrSort[i].count_votes).length;
         let sumVakant = 0
         for (let j = 0; j < sovp; j++) {
           sumVakant += vakant;
@@ -376,10 +377,11 @@ export class UserVotingService {
     let value = 0;
     let rank = 0
     let vakant = arrSort.length;
+    // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < arrSort.length; i++){
       if (arrSort[i].average !== value) {
         value = arrSort[i].average;
-        let sovp = arrSort.filter(item => item.average === arrSort[i].average).length;
+        const sovp = arrSort.filter(item => item.average === arrSort[i].average).length;
         let sumVakant = 0
         for (let j = 0; j < sovp; j++) {
           sumVakant += vakant;
@@ -412,10 +414,11 @@ export class UserVotingService {
     let value = 0;
     let rank = 0
     let vakant = arrSort.length;
+    // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < arrSort.length; i++){
       if (arrSort[i].sumAll_rank !== value) {
         value = arrSort[i].sumAll_rank;
-        let sovp = arrSort.filter(item => item.sumAll_rank === arrSort[i].sumAll_rank).length;
+        const sovp = arrSort.filter(item => item.sumAll_rank === arrSort[i].sumAll_rank).length;
         let sumVakant = 0
         for (let j = 0; j < sovp; j++) {
           sumVakant += vakant;
@@ -441,7 +444,6 @@ export class UserVotingService {
 
   rankAll(arr){
     const rankSum = this.rankSumF(arr);
-    console.log(rankSum);
     const rankCount = this.rankCountF(rankSum);
     const rankAverage = this.rankAverageF(rankCount);
     return this.result_rankF(rankAverage);
