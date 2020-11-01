@@ -8,7 +8,7 @@ import { CreateUsersVotingDto } from './dto/create-users-voting.dto';
 import { NominationOrderService } from '../nomination-order/nomination-order.service';
 import { UsersService } from '../users/users.service';
 import { ResultUserVotingDto } from './dto/result-user-voting.dto';
-import sequelize, { QueryTypes } from 'sequelize';
+import sequelize, { QueryTypes, Op} from 'sequelize';
 
 export type TValidation = {
   status: boolean;
@@ -54,7 +54,12 @@ export class UserVotingService {
   async findAll(where, limit, offset): Promise<UsersVotingResponseDto> {
     try {
       const { count, rows } = await this.userVotingRepository.findAndCountAll<UserVotingEntity>({
-        where,
+				where: {
+					range: {
+						[Op.ne]: 0,
+					},
+					...where
+				},
         limit,
         offset,
         order: [['id', 'ASC']],
@@ -66,6 +71,12 @@ export class UserVotingService {
           {
             model: NominationOrderEntity,
             as: 'nominationOrder',
+						include: [
+							{
+								model: User,
+								as: 'user',
+							},
+						],
           },
         ],
       });

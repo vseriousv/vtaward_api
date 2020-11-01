@@ -32,6 +32,7 @@ export class UsersVotingDto {
     this.nominationOrderId = userVoting.nominationOrderId;
     this.range = userVoting.range;
     this.type = userVoting.type;
+    this.user = userVoting.user;
     this.nominationOrder = userVoting.nominationOrder;
   }
 }
