@@ -23,6 +23,7 @@ import { FilesMiddleware } from './shared/middlewares/files-middleware';
 import { NominationOrderController } from './nomination-order/nomination-order.controller';
 import { MailModule } from './mail/mail.module';
 import { UserVotingModule } from './user-voting/user-voting.module';
+import { ArchiveWinnersModule } from './archive-winners/archive-winners.module';
 
 const config = new ConfigService();
 
@@ -50,6 +51,8 @@ const config = new ConfigService();
     MailModule,
 
     UserVotingModule,
+
+    ArchiveWinnersModule,
   ],
   controllers: [],
   providers: [],
