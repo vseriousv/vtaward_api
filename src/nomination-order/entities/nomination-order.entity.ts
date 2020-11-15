@@ -40,6 +40,9 @@ export class NominationOrderEntity extends Model<NominationOrderEntity> {
   @Column({ field: 'is_new' })
   isNew: boolean;
 
+  @Column({field: 'step_2'})
+  step2: boolean;
+
   @CreatedAt
   @Column({ field: 'created_at' })
   createdAt: Date;

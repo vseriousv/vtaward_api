@@ -9,26 +9,38 @@ import { IsOptional } from 'class-validator';
 export class UpdateNominationOrderDto {
 
   @ApiProperty()
-  readonly userId: number;
+  @IsOptional()
+  readonly userId?: number;
 
   @ApiProperty()
-  readonly userFrom: number;
+  @IsOptional()
+  readonly userFrom?: number;
 
   @ApiProperty()
-  readonly nominationId: number;
+  @IsOptional()
+  readonly nominationId?: number;
 
   @ApiProperty()
-  readonly textRu: string;
+  @IsOptional()
+  readonly textRu?: string;
 
   @ApiProperty()
-  readonly textEn: string;
+  @IsOptional()
+  readonly textEn?: string;
 
   @ApiProperty()
-  readonly public: boolean;
+  @IsOptional()
+  readonly public?: boolean;
 
   @ApiProperty()
-  readonly isSelected: boolean;
+  @IsOptional()
+  readonly isSelected?: boolean;
 
   @ApiProperty()
-  readonly isNew: boolean;
+  @IsOptional()
+  readonly isNew?: boolean;
+
+  @ApiProperty() 
+  @IsOptional()
+  readonly step2?: boolean;
 }

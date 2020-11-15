@@ -145,7 +145,6 @@ export class NominationOrderService {
     }
   }
 
-
   async create(
     fileArray: [],
     createNominationOrderDto: CreateNominationOrderDto,
@@ -215,8 +214,6 @@ export class NominationOrderService {
     }
   }
 
-
-
   async changeFieldsById(
     id: number,
     updateNominationOrderDto: UpdateNominationOrderDto,
@@ -237,6 +234,7 @@ export class NominationOrderService {
         public: updateNominationOrderDto.public !== null ? updateNominationOrderDto.public : nominationOrderOld.public,
         isSelected: updateNominationOrderDto.isSelected !== null ? updateNominationOrderDto.isSelected : nominationOrderOld.isSelected,
         isNew: nominationOrderOld.isNew,
+        step2: updateNominationOrderDto.step2 !== null ? updateNominationOrderDto.step2 : nominationOrderOld.step2,
       }
 
       await NominationOrderEntity.update(updateNominationOrderDto, { where: {id}});
@@ -272,6 +270,37 @@ export class NominationOrderService {
       return this.findById(id);
     } catch (e) {
       throw new BadRequestException(e);
+    }
+  }
+
+  async findAllStep2(): Promise<{count: number, rows: NominationOrderDto[]}> {
+    try {
+      const { count, rows } = await this.repository.findAndCountAll<NominationOrderEntity>({
+        where: { step2: true },
+        include: [
+          {
+            model: User,
+            as: 'user',
+            identifier: 'userId',
+            include: [
+              { model: State, as: 'state',},
+            ],
+          },
+          { model: Nomination, as: 'nomination', },
+          { model: NominationOrderFilesEntity, as: 'files', }
+        ],
+        order: [
+          ['id', 'DESC'],
+          [{model: NominationOrderFilesEntity, as: 'files'}, 'id', 'ASC'],
+        ]
+      });
+
+      return {
+        count: rows.length,
+        rows: rows.map(item => new NominationOrderDto(item)),
+      }
+    } catch (e) {
+      throw new BadRequestException(e)
     }
   }
 

@@ -35,6 +35,9 @@ export class NominationOrderDto {
   readonly isNew: boolean;
 
   @ApiProperty()
+  readonly step2: boolean;
+
+  @ApiProperty()
   readonly user: UserDto;
 
   @ApiProperty()
@@ -65,6 +68,7 @@ export class NominationOrderDto {
     this.isNew = nominationOrderEntity.isNew;
     this.public = nominationOrderEntity.public;
     this.isSelected = nominationOrderEntity.isSelected;
+    this.step2 = nominationOrderEntity.step2;
     this.user = nominationOrderEntity.user;
     this.userOrder = nominationOrderEntity.userOrder;
     this.nomination = nominationOrderEntity.nomination;
