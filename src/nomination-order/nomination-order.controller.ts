@@ -70,7 +70,17 @@ export class NominationOrderController {
     return this.service.findAllSelected()
   }
 
-
+  @Get('/step2')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({
+    description: 'Получить список участников, прошедших во второй тур',
+    summary: 'Получить список участников, прошедших во второй тур',
+  })
+  @ApiOkResponse({type:[NominationOrderDto]})
+  findAllStep2(): Promise<{ rows: NominationOrderDto[]; count: number }> {
+    return this.service.findAllStep2()
+  }
 
   @Post('')
   @ApiBearerAuth()
@@ -91,6 +101,7 @@ export class NominationOrderController {
       public: false,
       isSelected: false,
       isNew: false,
+      step2: false,
     }
 
     return this.service.create(files, createNominationOrder);
@@ -148,10 +159,9 @@ export class NominationOrderController {
       public: body.hasOwnProperty('public') ? Boolean(body.public) : null,
       isSelected: body.hasOwnProperty('isSelected') ? Boolean(body.isSelected) : null,
       isNew: false,
+      step2: body.hasOwnProperty('step2') ? Boolean(body.step2) : null, 
     }
     return this.service.changeFieldsById(id, updateNominationOrder);
   }
-
-
 
 }
