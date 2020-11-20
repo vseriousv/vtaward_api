@@ -78,8 +78,10 @@ export class NominationOrderService {
       const { count, rows } = await this.repository.findAndCountAll<NominationOrderEntity>({
         where:  where.nominationId ? {
           public: true,
+					step2: true,
           nominationId: where.nominationId || '',
         } : {
+					step2: true,
           public: true,
         },
         limit,
