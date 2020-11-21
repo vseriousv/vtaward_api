@@ -68,7 +68,11 @@ export class UserVotingController {
   ): Promise<ResultUserVotingDto[]> {
     const region = Number(regionStr);
     const nomination = Number(nominationStr);
-    return this.service.calculate(region, nomination);
+    if (region === 999) {
+			return this.service.calculateCommission(nomination);
+		} else {
+			return this.service.calculate(region, nomination);
+		}
   }
 
   @Get(':id')

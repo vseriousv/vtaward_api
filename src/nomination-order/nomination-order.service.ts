@@ -10,6 +10,7 @@ import { UpdateNominationOrderDto } from './dto/update-nomination-order.dto';
 import { State } from '../state/state.entity';
 import { UserVotingService } from '../user-voting/user-voting.service';
 import { UsersService } from '../users/users.service';
+import { Role } from '../shared/enum/role';
 
 @Injectable()
 export class NominationOrderService {
@@ -20,6 +21,7 @@ export class NominationOrderService {
     private readonly filesRepository: typeof NominationOrderFilesEntity,
     @Inject(forwardRef(() => UserVotingService))
     private readonly userVotingService: UserVotingService,
+		private readonly _usersService: UsersService,
   ) {}
 
   fileParseData(fileArray: TFormData[], id: number): TFormFileData[] {
@@ -208,7 +210,17 @@ export class NominationOrderService {
         }
       );
 
-      const leftVotes = userFormId ? await this.userVotingService.leftVotes(nominationOrder.nominationId, userFormId, id) : {votes: [], error: ''}
+      let leftVotes;
+      if (userFormId) {
+				const userFrom = await this._usersService.getUserById(userFormId);
+      	if (userFrom.role === Role.comittee || userFrom.role === Role.admin) {
+					leftVotes = await this.userVotingService.leftVotesCommission(nominationOrder.nominationId, userFormId, id);
+				} else {
+					leftVotes = await this.userVotingService.leftVotes(nominationOrder.nominationId, userFormId, id);
+				}
+			} else {
+      	leftVotes = {votes: [], error: ''};
+			}
 
       return new NominationOrderDto(nominationOrder, leftVotes.votes, leftVotes.error);
     } catch (e) {
