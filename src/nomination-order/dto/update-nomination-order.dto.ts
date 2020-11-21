@@ -40,7 +40,11 @@ export class UpdateNominationOrderDto {
   @IsOptional()
   readonly isNew?: boolean;
 
-  @ApiProperty() 
+  @ApiProperty()
   @IsOptional()
   readonly step2?: boolean;
+
+  @ApiProperty()
+  @IsOptional()
+  readonly step3?: boolean;
 }

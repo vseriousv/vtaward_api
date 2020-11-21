@@ -249,6 +249,7 @@ export class NominationOrderService {
         isSelected: updateNominationOrderDto.isSelected !== null ? updateNominationOrderDto.isSelected : nominationOrderOld.isSelected,
         isNew: nominationOrderOld.isNew,
         step2: updateNominationOrderDto.step2 !== null ? updateNominationOrderDto.step2 : nominationOrderOld.step2,
+        step3: updateNominationOrderDto.step3 !== null ? updateNominationOrderDto.step3 : nominationOrderOld.step3,
       }
 
       await NominationOrderEntity.update(updateNominationOrderDto, { where: {id}});
@@ -291,6 +292,37 @@ export class NominationOrderService {
     try {
       const { count, rows } = await this.repository.findAndCountAll<NominationOrderEntity>({
         where: { step2: true },
+        include: [
+          {
+            model: User,
+            as: 'user',
+            identifier: 'userId',
+            include: [
+              { model: State, as: 'state',},
+            ],
+          },
+          { model: Nomination, as: 'nomination', },
+          { model: NominationOrderFilesEntity, as: 'files', }
+        ],
+        order: [
+          ['id', 'DESC'],
+          [{model: NominationOrderFilesEntity, as: 'files'}, 'id', 'ASC'],
+        ]
+      });
+
+      return {
+        count: rows.length,
+        rows: rows.map(item => new NominationOrderDto(item)),
+      }
+    } catch (e) {
+      throw new BadRequestException(e)
+    }
+  }
+
+  async findAllStep3(): Promise<{count: number, rows: NominationOrderDto[]}> {
+    try {
+      const { count, rows } = await this.repository.findAndCountAll<NominationOrderEntity>({
+        where: { step3: true },
         include: [
           {
             model: User,

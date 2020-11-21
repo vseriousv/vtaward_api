@@ -8,6 +8,7 @@ export interface TNominationOrder {
   isSelected: boolean,
   isNew: boolean,
   step2: boolean,
+  step3: boolean,
 }
 
 export interface TNominationOrderBody {
@@ -20,4 +21,5 @@ export interface TNominationOrderBody {
   isSelected?: boolean,
   isNew?: boolean,
   step2?: boolean,
+  step3?: boolean,
 }
