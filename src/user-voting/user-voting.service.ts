@@ -221,6 +221,7 @@ export class UserVotingService {
 			const userVotesAll = await this.userVotingRepository.findAndCountAll<UserVotingEntity>({
 				where: {
 					userFromId,
+					type: 'сommission',
 				},
 				include: [
 					{
