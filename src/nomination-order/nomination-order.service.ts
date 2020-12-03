@@ -81,10 +81,12 @@ export class NominationOrderService {
         where:  where.nominationId ? {
           public: true,
 					step2: true,
+					step3: true,
           nominationId: where.nominationId || '',
         } : {
 					step2: true,
           public: true,
+					step3: true,
         },
         limit,
         offset,
@@ -214,8 +216,12 @@ export class NominationOrderService {
       if (userFormId) {
 				const userFrom = await this._usersService.getUserById(userFormId);
       	if (userFrom.role === Role.comittee || userFrom.role === Role.admin) {
-					leftVotes = await this.userVotingService.leftVotesCommission(nominationOrder.nominationId, userFormId, id);
-				} else {
+					leftVotes = await this.userVotingService.leftVotesCommissionFinal(nominationOrder.nominationId, userFormId, id);
+				}
+      	if (userFrom.role === Role.comittee_main || userFrom.role === Role.admin) {
+					leftVotes = await this.userVotingService.leftVotesCommissionFinal(nominationOrder.nominationId, userFormId, id,'final');
+				}
+				if (userFrom.role === Role.user) {
 					leftVotes = await this.userVotingService.leftVotes(nominationOrder.nominationId, userFormId, id);
 				}
 			} else {
