@@ -36,7 +36,6 @@ export const databaseProviders = [
         NominationOrderFilesEntity,
         UserVotingEntity,
         ArchiveWinnersEntity,
-      
       ]);
       await sequelize.sync();
       return sequelize;
