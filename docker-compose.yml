@@ -5,7 +5,7 @@ services:
     build: .
     container_name: tokenoshi-api
     env_file:
-      - envs/vtaward-api.env
+      - ../envs/vtaward-api.env
     restart: always
     network_mode: host
     command:
