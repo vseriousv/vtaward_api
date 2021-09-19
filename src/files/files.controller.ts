@@ -18,7 +18,7 @@ export class FilesController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: config.dirFilesAvatar,
+        destination: config.dirFiles,
         filename: (req, file, cb) => {
           const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
           return cb(null, `${randomName}${extname(file.originalname)}`)
