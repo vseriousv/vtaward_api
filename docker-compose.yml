@@ -4,6 +4,8 @@ services:
   api:
     build: .
     container_name: vtaward-api
+    volumes:
+      - "/var/www/files:/app/files"
     env_file:
       - ../envs/vtaward-api.env
     restart: always
