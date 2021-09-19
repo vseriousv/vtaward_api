@@ -3,7 +3,7 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 export const  config = {
-	dirFiles: process.env.DIR_FILES || '../files/avatars',
+	dirFilesAvatar: process.env.DIR_FILES || '../files/avatars',
 	database: {
 		dialect: 'postgres' as Dialect,
 		host: 'localhost',
