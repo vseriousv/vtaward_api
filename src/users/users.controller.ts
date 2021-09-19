@@ -28,6 +28,7 @@ import { extname } from 'path';
 import { TabNumberPassUserDto } from './dto/tab-number-pass-user.dto';
 import { PassFollowingUserDto } from './dto/pass-following-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import config from '../../config';
 
 @Controller('users')
 @ApiTags('users')
@@ -106,7 +107,7 @@ export class UsersController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: '../files/avatars',
+        destination: config.dirFilesAvatar,
         filename: (req, file, cb) => {
           const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
           return cb(null, `${randomName}${extname(file.originalname)}`)
