@@ -2,7 +2,7 @@ version: "3"
 
 services:
   api:
-    build: .
+    image: vtaward-api:master
     container_name: vtaward-api
     volumes:
       - "/var/www/files:/app/files"
