@@ -1,4 +1,16 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Get,
+	HttpException, HttpStatus,
+	Param,
+	Patch,
+	Post,
+	Query,
+	Req, UploadedFile,
+	UseGuards,
+	UseInterceptors,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { NominationOrderService } from './nomination-order.service';
 import { NominationOrderDto } from './dto/nomination-order.dto';
@@ -7,6 +19,11 @@ import { NominationOrderEntity } from './entities/nomination-order.entity';
 import { TNominationOrder, TNominationOrderBody } from './interfaces/TNominationOrder';
 import { ApiImplicitQuery } from '@nestjs/swagger/dist/decorators/api-implicit-query.decorator';
 import { ApiUtil } from '../shared/ApiUtil';
+import { FileInterceptor } from '@nestjs/platform-express';
+import config from '../../config';
+import { extname } from 'path';
+import { diskStorage } from 'multer';
+import { UploadedFiles } from '@nestjs/common/decorators/http/route-params.decorator';
 
 
 interface CreateParams {
@@ -101,8 +118,39 @@ export class NominationOrderController {
     description: 'Создать заявку на номинанта. Разрешенные файлы: type must be: jpg, png, doc, xml, pdf',
     summary: 'Создать заявку на номинанта для пользователя',
   })
+	@UseInterceptors(
+		FileInterceptor('file', {
+			storage: diskStorage({
+				destination: config.dirFiles,
+				filename: (req, file, cb) => {
+					const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
+					return cb(null, `${randomName}${extname(file.originalname)}`)
+				}
+			}),
+			fileFilter: (req, file, cb) => {
+				const allow = ['image/jpeg', 'image/pjpeg', 'image/png'];
+
+				if (!allow.includes(file.mimetype)) {
+					return cb(
+						new HttpException(
+							{
+								status: 'error',
+								message: 'Incorrect type of file',
+							},
+							HttpStatus.BAD_REQUEST,
+						),
+						null,
+					);
+				}
+				cb(null, true);
+			},
+		}),
+	)
   @ApiConsumes('multipart/form-data')
-  create(@Req() { files, body, user }): Promise<NominationOrderDto> {
+  create(
+		@Req() { body, user },
+		@UploadedFiles() files
+	): Promise<NominationOrderDto> {
 
     const createNominationOrder: TNominationOrder = {
       userId: Number(body.userId),
