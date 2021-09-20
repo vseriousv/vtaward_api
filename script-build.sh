@@ -1,1 +1,1 @@
-docker build -t vtaward-api:master .
+docker build --no-cache -t vtaward-api:master .
