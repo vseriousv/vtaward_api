@@ -3,15 +3,15 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 export const  config = {
-	dirFiles: process.env.DIR_FILES || '../files/avatars',
-	dirFilesAvatar: process.env.DIR_FILES_AVATAR || '../files/avatars',
+	dirFiles: process.env.DIR_FILES || 'files',
+	dirFilesAvatar: process.env.DIR_FILES_AVATAR || 'files/avatars',
 	database: {
 		dialect: 'postgres' as Dialect,
-		host: 'localhost',
-		port: 5432,
-		username: 'postgres',
-		password: '19970708',
-		database: 'test',
+		host: process.env.DATABASE_HOST,
+		port: process.env.DATABASE_PORT,
+		username: process.env.DATABASE_USER,
+		password: process.env.DATABASE_PASSWORD,
+		database: process.env.DATABASE_DATABASE,
 		logging: false,
 		define: {
 			timestamps: false

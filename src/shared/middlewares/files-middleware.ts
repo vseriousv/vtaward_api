@@ -2,11 +2,12 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { generateFilename } from '../utils/generation-file-name';
 import multer,{ diskStorage } from 'multer';
 import { orderFileFilter } from '../utils/order-file-filter';
+import config from '../../../config';
 
 @Injectable()
 export class FilesMiddleware implements NestMiddleware {
   private storage = diskStorage({
-    destination: '../files/nomination-orders',
+    destination: config.dirFiles,
     filename: generateFilename,
   });
   private fileFilter = orderFileFilter;
