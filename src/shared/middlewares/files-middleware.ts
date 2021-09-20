@@ -7,7 +7,7 @@ import config from '../../../config';
 @Injectable()
 export class FilesMiddleware implements NestMiddleware {
   private storage = diskStorage({
-    destination: config.dirFiles + '/nomination-orders',
+    destination: `${config.dirFiles}/nomination-orders`,
     filename: generateFilename,
   });
   private fileFilter = orderFileFilter;
