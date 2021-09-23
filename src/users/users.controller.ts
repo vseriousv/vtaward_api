@@ -29,6 +29,8 @@ import { TabNumberPassUserDto } from './dto/tab-number-pass-user.dto';
 import { PassFollowingUserDto } from './dto/pass-following-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import config from '../../config';
+import { ApiImplicitParam } from '@nestjs/swagger/dist/decorators/api-implicit-param.decorator';
+import { ApiImplicitQuery } from '@nestjs/swagger/dist/decorators/api-implicit-query.decorator';
 
 @Controller('users')
 @ApiTags('users')
@@ -56,7 +58,8 @@ export class UsersController {
   responsePassword(
     @Body() tabNumberPassUserDto: TabNumberPassUserDto
   ): Promise<boolean> {
-    return this.usersService.responsePassword(tabNumberPassUserDto.tabNumber)
+    // return this.usersService.responsePassword(tabNumberPassUserDto.tabNumber);
+		return this.usersService.passwordFollowing(tabNumberPassUserDto.tabNumber);
   }
 
   @Post('pass-following')
@@ -65,7 +68,7 @@ export class UsersController {
   postPass(
     @Body() passFollowingUserDto: PassFollowingUserDto
   ): Promise<boolean> {
-    return this.usersService.postPass(passFollowingUserDto)
+    return this.usersService.postPass(passFollowingUserDto);
   }
 
   @Post('change-password')
@@ -78,11 +81,12 @@ export class UsersController {
   }
 
   @Get()
+	@ApiImplicitQuery({ name: 'isadmin', type: Boolean, required: false })
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
-  @ApiOkResponse({ type: [UserDto] })
-  findAll(): Promise<UserDto[]> {
-    return this.usersService.findAll();
+  @ApiOkResponse({ type: UserDto, isArray: true })
+  findAll(@Query('isadmin') isAdmin: boolean = null): Promise<UserDto[]> {
+    return this.usersService.findAll(isAdmin || null);
   }
 
   @Get('committee')

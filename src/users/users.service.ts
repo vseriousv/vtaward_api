@@ -12,6 +12,7 @@ import { ConfigService } from '../shared/config/config.service';
 import { State } from '../state/state.entity';
 import { MailService } from '../mail/service/mail.service';
 import { ChangePasswordDto } from 'src/users/dto/change-password.dto';
+import { Op } from 'sequelize';
 
 
 @Injectable()
@@ -27,8 +28,11 @@ export class UsersService {
     this.jwtPrivateKey = this.configService.jwtConfig.privateKey;
   }
 
-  async findAll() {
+  async findAll(isAdmin: boolean = null) {
+		const where = {};
+		if (isAdmin != null) where['id'] = { [Op.gt]: 1000 };
     const users = await this.usersRepository.findAll<User>({
+			where,
       include: [{
         model: State,
         as: 'state',
@@ -136,7 +140,7 @@ export class UsersService {
         const HTMLText = `
 VT Award<br />
 Восстановление пароля<br /><br />
-Вы запросили пароль для доступа на сайт www.vtaward.ru<br /><br />
+Вы запросили пароль для доступа на сайт <a href="http://www.vtaward.ru">www.vtaward.ru</a><br /><br />
 Логин (ваш табельный номер): ${tN}<br />
 Пароль: ${user.passwordText}<br /><br /><br />
 
@@ -167,30 +171,30 @@ Password: ${user.passwordText}<br />
 <br /><br />
 Уважаемый коллега,
 <br /><br />
-Направляем Вам  персональный пароль для доступа на сайт www.vtaward.ru , на который вы сможете зайти в любое удобное для вас время с компьютера или смартфона, на работе или из дома.
+Направляем Вам  персональный пароль для доступа на сайт <a href="http://vtaward.ru">vtaward.ru</a>, на который вы сможете зайти в любое удобное для вас время с компьютера или смартфона, на работе или из дома.
 <br /><br />
 Логин (ваш табельный номер): ${tN}<br />
 Пароль: ${user.passwordText}<br />
 <br />
 <div style="color: red">
 Прием заявок на участие в конкурсе «Лидер перемен ВТ - 2020» <br />
-<b>НАЧАЛО: 28 СЕНТЯБРЯ</b><br />
-<b>ЗАВЕРШЕНИЕ: 18 ОКТЯБРЯ</b> (до конца дня)<br />
+<b>НАЧАЛО: 27 СЕНТЯБРЯ</b><br />
+<b>ЗАВЕРШЕНИЕ: 10 ОКТЯБРЯ</b> (до конца дня)<br />
 </div>
 <br />
 Ждем Вас на нашем сайте www.vtaward.ru !<br />
 <hr />
 Dear colleague,
 <br /><br />
-Below are the details how to get access the site www.vtaward.ru.<br />
+Below are the details how to get access the site <a href="http://vtaward.ru">vtaward.ru</a>.<br />
 <br />
 Login (your Employee ID): ${tN}<br />
 Password: ${user.passwordText}<br />
 <br /><br />
 <div style="color: red">
 Application process for VT Change Maker 2020 Contest:<br />
-<b>START: 28 SEPTEMBER,</b><br />
-<b>CLOSURE: 18 OCTOBER</b> (by the end on the day)<br />
+<b>START: 27 SEPTEMBER,</b><br />
+<b>CLOSURE: 10 OCTOBER</b> (by the end on the day)<br />
 </div>
 <br />
 Welcome to our web site www.vtaward.ru !
@@ -214,14 +218,14 @@ Welcome to our web site www.vtaward.ru !
     try {
       const dataArr = await this.findAll();
 
-      dataArr.slice(data.start, data.end).forEach(async (item) => {
+      for (const item of dataArr.slice(data.start, data.end)) {
         const resp = await this.passwordFollowing(item.tabNumber);
         console.log({
           '[EMAIL]:': item.email,
           '[SEND]:': resp,
         });
-      });
-      return true;
+      }
+			return true;
     } catch (e) {
       console.log(e);
       throw new BadRequestException(e);

