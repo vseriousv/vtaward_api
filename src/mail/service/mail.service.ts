@@ -30,7 +30,7 @@ export class MailService {
       'Items' : {
         'Message' : {
           'ItemClass': 'IPM.Note',
-          'Subject' : 'Сообщение с сайта  VTAWARD.RU',
+          'Subject' : 'Лидер перемен ВТ: Сообщение с сайта конкурса VTAWARD.RU | Change Maker Award - VTAWARD.RU [Confidential]',
           'Body' : {
             'attributes': {
               'BodyType' : 'HTML'
@@ -48,11 +48,10 @@ export class MailService {
       }
     };
     // tslint:disable-next-line:no-console
-    console.log('[TEST]:', data)
-    ews.run(ewsFunction, ewsArgs)
+    await ews.run(ewsFunction, ewsArgs)
       .then(result => {
         // tslint:disable-next-line:no-console
-        console.log(data.userTo, {response: '[RESULT]', result: JSON.stringify(result)});
+        // console.log(data.userTo, {response: '[RESULT]', result: JSON.stringify(result)});
         return {response: '[RESULT]', result: JSON.stringify(result)}
       })
       .catch(err => {

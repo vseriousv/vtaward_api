@@ -63,8 +63,8 @@ export class UsersController {
   }
 
   @Post('pass-following')
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
+  // @ApiBearerAuth()
+  // @UseGuards(AuthGuard('jwt'))
   postPass(
     @Body() passFollowingUserDto: PassFollowingUserDto
   ): Promise<boolean> {

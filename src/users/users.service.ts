@@ -28,9 +28,10 @@ export class UsersService {
     this.jwtPrivateKey = this.configService.jwtConfig.privateKey;
   }
 
-  async findAll(isAdmin: boolean = null) {
-		const where = {};
+  async findAll(isAdmin: boolean = null, filter ={}) {
+		let where = {};
 		if (isAdmin != null) where['id'] = { [Op.gt]: 1000 };
+		if (Object.keys(filter).length) where = { ...where, ...filter};
     const users = await this.usersRepository.findAll<User>({
 			where,
       include: [{
@@ -175,11 +176,12 @@ Password: ${user.passwordText}<br />
 <br /><br />
 Логин (ваш табельный номер): ${tN}<br />
 Пароль: ${user.passwordText}<br />
+<p>(На сайте в личном кабинете вы можете поменять пароль на свой)</p>
 <br />
 <div style="color: red">
-Прием заявок на участие в конкурсе «Лидер перемен ВТ - 2020» <br />
+Прием заявок на участие в конкурсе «Лидер перемен ВТ - 2021» <br />
 <b>НАЧАЛО: 27 СЕНТЯБРЯ</b><br />
-<b>ЗАВЕРШЕНИЕ: 10 ОКТЯБРЯ</b> (до конца дня)<br />
+<b>ЗАВЕРШЕНИЕ: 15 ОКТЯБРЯ</b> (до конца дня)<br />
 </div>
 <br />
 Ждем Вас на нашем сайте www.vtaward.ru !<br />
@@ -190,11 +192,12 @@ Below are the details how to get access the site <a href="http://vtaward.ru">vta
 <br />
 Login (your Employee ID): ${tN}<br />
 Password: ${user.passwordText}<br />
+<p>(You can change the password to your own in your personal account on the website)</p>
 <br /><br />
 <div style="color: red">
-Application process for VT Change Maker 2020 Contest:<br />
+Application process for VT Change Maker 2021 Contest:<br />
 <b>START: 27 SEPTEMBER,</b><br />
-<b>CLOSURE: 10 OCTOBER</b> (by the end on the day)<br />
+<b>CLOSURE: 15 OCTOBER</b> (by the end on the day)<br />
 </div>
 <br />
 Welcome to our web site www.vtaward.ru !
@@ -216,15 +219,21 @@ Welcome to our web site www.vtaward.ru !
     if (data.adminPass !== 'AdminPass') return false;
 
     try {
-      const dataArr = await this.findAll();
-
-      for (const item of dataArr.slice(data.start, data.end)) {
+			const filter = {
+				id: { [Op.and]: [
+						{ [Op.gte]:  data.start },
+						{ [Op.lte]:  data.end }
+					],
+				},
+			};
+      const dataArr = await this.findAll(null, filter);
+			console.log('[START-FOLLOWING]');
+      for (const item of dataArr) {
         const resp = await this.passwordFollowing(item.tabNumber);
-        console.log({
-          '[EMAIL]:': item.email,
-          '[SEND]:': resp,
-        });
+        console.log(item.id, item.email, resp);
+				await this.delay(250);
       }
+			console.log('[FINISH-FOLLOWING]');
 			return true;
     } catch (e) {
       console.log(e);
@@ -232,6 +241,9 @@ Welcome to our web site www.vtaward.ru !
     }
   }
 
+	async delay(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
 
   async login(userLoginRequestDto: UserLoginRequestDto) {
     const tabNumberInput = userLoginRequestDto.tabNumber.toUpperCase();
