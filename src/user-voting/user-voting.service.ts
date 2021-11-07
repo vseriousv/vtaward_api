@@ -339,7 +339,7 @@ export class UserVotingService {
 			// Поулчаем сгруппированный список из базы данных по nominationId
 			const groupByNominationID: TGroupByNominationID[] = await this.userVotingRepository.sequelize.query(`
         SELECT uv.nomination_order_id,
-               SUM(uv.range) - 1      AS sum_votes,
+               SUM(uv.range)      		AS sum_votes,
                COUNT(uv.range) - 1    AS count_votes,
                u.firstname_en,
                u.firstname_ru,
@@ -400,7 +400,7 @@ export class UserVotingService {
 			// Поулчаем сгруппированный список из базы данных по nominationId
 			const groupByNominationID: TGroupByNominationID[] = await this.userVotingRepository.sequelize.query(`
         SELECT uv.nomination_order_id,
-               SUM(uv.range) - 1      AS sum_votes,
+               SUM(uv.range)		      AS sum_votes,
                COUNT(uv.range) - 1    AS count_votes,
                u.firstname_en,
                u.firstname_ru,
