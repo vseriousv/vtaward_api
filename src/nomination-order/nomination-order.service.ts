@@ -79,6 +79,8 @@ export class NominationOrderService {
     try {
 			const filter = { public: true };
 			if (where.nominationId) filter['nominationId'] = where.nominationId;
+			if (where.step2) filter['step2'] = where.step2;
+			if (where.step3) filter['step3'] = where.step3;
       const { count, rows } = await this.repository.findAndCountAll<NominationOrderEntity>({
         where: filter,
         limit,
